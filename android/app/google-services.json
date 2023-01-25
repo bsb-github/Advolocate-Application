@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "550436674713",
+    "firebase_url": "https://advolocate1234567-default-rtdb.firebaseio.com",
+    "project_id": "advolocate1234567",
+    "storage_bucket": "advolocate1234567.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:550436674713:android:19e8c7075ede7179812c08",
+        "android_client_info": {
+          "package_name": "com.example.advolocate_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "550436674713-cc4a2qhikmabdg1sn6knjb1ou6pd5fgu.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.advolocate_app",
+            "certificate_hash": "b5957b9e56965686fdd7ac57a89ada6c32de30ed"
+          }
+        },
+        {
+          "client_id": "550436674713-mt8mf63dqlvonpgl3edq7jrq76a5mqvs.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAqOExxS3lSGYoL_2LKdgbYJKkYum89Rfw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "550436674713-6qhgd8dpt5rijs9p8o4eteisrgduc1nl.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "550436674713-iochimtj5s4tn4905iqpcpaac8mkh9be.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.advolocateApp"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

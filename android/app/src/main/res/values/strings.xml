@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+<string name="app_name">advolocate</string>
+<string name="facebook_app_id">1040425857345695</string>
+<string name="fb_login_protocol_scheme">fb1040425857345695</string>
+<string name="facebook_client_token">6b50c9a6d55bb6dff69c00ba0f6d1073</string>
+
+</resources>
