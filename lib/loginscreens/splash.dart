@@ -143,13 +143,13 @@ class _splashscreenState extends State<splashscreen> {
     ProfileDataList.users[0] = ProfileData.fromJson(data['result']);
     print(ProfileDataList.users[0].email);
     if (userType == 1) {
-      Navigator.push(
+      Navigator.pushReplacement(
           context, MaterialPageRoute(builder: (context) => HomePage()));
     } else {
       // AdvocateResult result = AdvocateResult.fromJson(Provider.of<LawyerDataProvider>(context, listen: false).data.result);
 
       // ignore: use_build_context_synchronously
-      Navigator.push(
+      Navigator.pushReplacement(
           context,
           MaterialPageRoute(
               builder: (context) => LawyerPage(

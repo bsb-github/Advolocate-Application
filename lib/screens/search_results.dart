@@ -3,8 +3,10 @@ import 'dart:convert';
 import 'package:advolocate_app/Model/adovacate_data_model.dart';
 import 'package:advolocate_app/Model/searchResultModel.dart';
 import 'package:advolocate_app/config.dart';
+import 'package:advolocate_app/util/search_result/LawyerWidget.dart';
 import 'package:advolocate_app/utils/utils.dart';
 import 'package:flutter/foundation.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../util/search_result/lawyer_tile.dart';
 
@@ -56,8 +58,12 @@ class _ResultPageState extends State<ResultPage> {
   }
 
   Future<SearchResultModel> fetchAdovate() async {
+    final prefs = await SharedPreferences.getInstance();
+
+    final String? token = prefs.getString('token');
+    final int? userId = prefs.getInt('userId');
     var headers = {
-      'Authorization': 'Bearer $searchAdvocateToken',
+      'Authorization': 'Bearer $token',
       'Content-Type': 'application/json',
       'Accept': 'application/json'
     };
@@ -87,7 +93,7 @@ class _ResultPageState extends State<ResultPage> {
         "country_id": widget.countryID,
       });
     }
-
+    setState(() {});
     var response = await http.post(
         Uri.parse('http://www.advolocate.info/api/searchAdvocate?page=1'),
         headers: headers,
@@ -99,10 +105,13 @@ class _ResultPageState extends State<ResultPage> {
         return SearchResultModel.fromJson(jsonDecode(response.body));
       } else {
         Utils().toastMessage('No Adovocate Found');
+        // ignore: use_build_context_synchronously
         Navigator.pop(context);
-        return SearchResultModel.fromJson(jsonDecode(response.body));
+        throw Exception("Failed to load  post!");
       }
     } else {
+      print(response.body);
+      Utils().toastMessage(response.statusCode.toString());
       throw Exception("Failed to load  post!");
     }
   }
@@ -155,28 +164,17 @@ class _ResultPageState extends State<ResultPage> {
                             scrollDirection: Axis.vertical,
                             itemCount: snapshot.data!.result!.data!.length,
                             itemBuilder: (context, index) {
-                              return LawyerTile(
-                                name: snapshot.data!.result!.data![index].name!,
-                                city: snapshot
-                                    .data!.result!.data![index].cityName!,
-                                profession: snapshot.data!.result!.data![index]
-                                            .profession ==
-                                        null
-                                    ? 'NA'
-                                    : snapshot
-                                        .data!.result!.data![index].profession!,
-                                services: snapshot.data!.result!.data![index]
-                                            .services !=
-                                        null
-                                    ? snapshot
-                                        .data!.result!.data![index].services!
-                                    : "NA",
-                                probono: snapshot.data!.result!.data![index]
-                                            .probono !=
-                                        null
-                                    ? snapshot
-                                        .data!.result!.data![index].probono!
-                                    : "NA",
+                              return Card(
+                                child: LawyerWidget(
+                                  name:
+                                      snapshot.data!.result!.data![index].name!,
+                                  address: snapshot
+                                      .data!.result!.data![index].cityName!,
+                                  noOfClients: "0",
+                                  imgUrl:
+                                      "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png",
+                                  rating: index,
+                                ),
                               );
                             },
                           );
