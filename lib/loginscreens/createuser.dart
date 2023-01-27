@@ -1,3 +1,4 @@
+import 'package:advolocate_app/Model/AdvocatesData.dart';
 import 'package:advolocate_app/Providers/OtpProvider.dart';
 import 'package:advolocate_app/loginscreens/manuallogin.dart';
 import 'package:advolocate_app/loginscreens/verificationpassword.dart';
@@ -320,6 +321,9 @@ class _CreateUserAccountState extends State<CreateUserAccount> {
                         child: ElevatedButton(
                           onPressed: () async {
                             if (_formKey.currentState!.validate()) {
+                              var data = AdvocatesList.data.where((element) =>
+                                  element.email == emailController.text);
+
                               var header = {
                                 "Content-Type": "application/json",
                               };
@@ -330,35 +334,45 @@ class _CreateUserAccountState extends State<CreateUserAccount> {
                               String code = otpGenerator.generate();
                               Provider.of<OtpProvider>(context, listen: false)
                                   .setOTP(code);
-                              // var response = await http.post(emailJS,
-                              //     headers: header,
-                              //     body: json.encode({
-                              //       "service_id": "service_y0qy9wf",
-                              //       "template_id": "template_lk61b4l",
-                              //       "user_id": "DUuUd1QWscbZpx6yJ",
-                              //       "template_params": {
-                              //         "to_name": nameController.text,
-                              //         "otp_code": code,
-                              //         "subject":
-                              //             "${nameController.text} OTP For the Application ADVOLOCATE",
-                              //         "user_email": emailController.text,
-                              //       }
-                              //     }));
-                              if (23 == 200) {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => PasswordVerify(
-                                              type: '1',
-                                              address: addressController.text,
-                                              password: passwordController.text,
-                                              phone: phoneController.text,
-                                              otp: code,
-                                              email: emailController.text,
-                                              name: nameController.text,
-                                            )));
+                              if (data.isEmpty) {
+                                var response = await http.post(emailJS,
+                                    headers: header,
+                                    body: json.encode({
+                                      "service_id": "service_y0qy9wf",
+                                      "template_id": "template_lk61b4l",
+                                      "user_id": "DUuUd1QWscbZpx6yJ",
+                                      "template_params": {
+                                        "to_name": nameController.text,
+                                        "otp_code": code,
+                                        "subject":
+                                            "${nameController.text} OTP For the Application ADVOLOCATE",
+                                        "user_email": emailController.text,
+                                      }
+                                    }));
+                                print(response.reasonPhrase);
+                                // var data = jsonDecode(response.body);
+                                // print(data);
+                                if (response.statusCode == 200) {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => PasswordVerify(
+                                                type: '1',
+                                                address: addressController.text,
+                                                password:
+                                                    passwordController.text,
+                                                phone: phoneController.text,
+                                                otp: code,
+                                                email: emailController.text,
+                                                name: nameController.text,
+                                              )));
+                                } else {
+                                  Utils().toastMessage(
+                                      "check your Email and try again");
+                                  //print(response.body);
+                                }
                               } else {
-                                //print(response.body);
+                                Utils().toastMessage("User Already Exist");
                               }
                             }
                           },

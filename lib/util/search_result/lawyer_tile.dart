@@ -117,18 +117,7 @@ class _LawyerTileState extends State<LawyerTile> {
                                 padding: EdgeInsets.only(
                                     left: width * 0.07, right: width * 0.07),
                               ),
-                              onPressed: () {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => LawyerPage(
-                                              name: widget.name,
-                                              email: widget.profession,
-                                              information: widget.services,
-                                              address: widget.city,
-                                              probono: widget.probono,
-                                            )));
-                              },
+                              onPressed: () {},
                               child: const Text(
                                 'View',
                                 style: TextStyle(color: Colors.white),

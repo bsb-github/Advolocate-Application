@@ -40,11 +40,14 @@ class LawyerWidget extends StatelessWidget {
                     const SizedBox(
                       height: 20,
                     ),
-                    Text(
-                      name,
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
+                    Align(
+                      alignment: Alignment.topLeft,
+                      child: Text(
+                        name,
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                        ),
                       ),
                     ),
                     const SizedBox(
@@ -55,6 +58,9 @@ class LawyerWidget extends StatelessWidget {
                         Icon(
                           Icons.location_pin,
                           color: Colors.yellow,
+                        ),
+                        const SizedBox(
+                          width: 5,
                         ),
                         Text(
                           address,
@@ -75,6 +81,10 @@ class LawyerWidget extends StatelessWidget {
                             Icon(
                               Icons.circle,
                               color: Colors.yellow,
+                              size: 16,
+                            ),
+                            const SizedBox(
+                              width: 5,
                             ),
                             Text(
                               noOfClients + " Clients",
@@ -93,6 +103,7 @@ class LawyerWidget extends StatelessWidget {
                           width: 80,
                           decoration: BoxDecoration(
                             color: Colors.yellow[600],
+                            borderRadius: BorderRadius.circular(8),
                           ),
                           child: Center(
                             child: Text(

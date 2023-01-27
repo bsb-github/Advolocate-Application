@@ -52,6 +52,8 @@ dependencies:
   cloud_firestore: ^4.3.1
   firebase_auth: ^4.2.5
   flutter_svg: ^1.1.6
+  open_whatsapp: ^0.0.1
+  
   
 dev_dependencies:
   flutter_test:

@@ -1,5 +1,7 @@
+import 'package:advolocate_app/Model/profile_data_model.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:open_whatsapp/open_whatsapp.dart';
 
 import '../main.dart';
 
@@ -9,6 +11,7 @@ class LawyerPage extends StatefulWidget {
   final String information;
   final String address;
   final String probono;
+  final String contactNumber;
   const LawyerPage({
     Key? key,
     required this.name,
@@ -16,6 +19,7 @@ class LawyerPage extends StatefulWidget {
     required this.information,
     required this.address,
     required this.probono,
+    required this.contactNumber,
   }) : super(key: key);
 
   @override
@@ -23,22 +27,6 @@ class LawyerPage extends StatefulWidget {
 }
 
 class _LawyerPageState extends State<LawyerPage> {
-  int _selectedIndex = 0;
-  void navigateBottomBar(int index) {
-    setState(() {
-      _selectedIndex = index;
-      if (index == 0) {
-        Navigator.pushNamed(context, '/home');
-      } else if (index == 1) {
-        Navigator.pushNamed(context, '/profile');
-      } else if (index == 3) {
-        Navigator.pushNamed(context, '/cso_laws');
-      } else if (index == 2) {
-        Navigator.pushNamed(context, '/privacy_policy');
-      }
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
@@ -48,6 +36,11 @@ class _LawyerPageState extends State<LawyerPage> {
         child: Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
+        leading: IconButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            icon: Icon(Icons.arrow_back_ios)),
         elevation: 0,
         iconTheme: const IconThemeData(color: Colors.black),
         backgroundColor: Theme.of(context).primaryColor,
@@ -174,40 +167,47 @@ class _LawyerPageState extends State<LawyerPage> {
                   ),
                   Row(
                     children: [
-                      IconButton(
-                          onPressed: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => const MyApp(),
-                                ));
-                          },
-                          icon: Icon(
-                            Icons.power_settings_new,
-                            color: Colors.black,
-                            size: width * 0.07,
-                          )),
-                      SizedBox(
-                        width: width * 0.25,
-                      ),
-                      Container(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: width * 0.05,
-                        ),
-                        decoration: BoxDecoration(
-                            border: Border.all(
-                                width: 2, color: const Color(0xffFCD917)),
-                            borderRadius: BorderRadius.circular(15),
-                            color: const Color(0xffFCD917)),
-                        child: TextButton(
-                          child: const Text(
-                            'Contact',
+                      Column(
+                        children: [
+                          Text(
+                            'Contact Number',
                             style: TextStyle(
-                                color: Colors.white,
+                                color: Theme.of(context).primaryColor,
                                 fontSize: 17,
                                 fontWeight: FontWeight.bold),
                           ),
-                          onPressed: () {},
+                          Text(
+                            widget.contactNumber,
+                            style: TextStyle(
+                                fontSize: 17, fontWeight: FontWeight.bold),
+                          ),
+                        ],
+                      ),
+                      SizedBox(
+                        width: 50,
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          FlutterOpenWhatsapp.sendSingleMessage(
+                              widget.contactNumber,
+                              "Hi ${widget.name} My Name is ${ProfileDataList.users[0].name} Can you help Me");
+                        },
+                        child: Container(
+                          height: 50,
+                          width: 100,
+                          decoration: BoxDecoration(
+                              color: Colors.yellow,
+                              borderRadius: BorderRadius.circular(8)),
+                          child: Center(
+                            child: Text(
+                              "Contact",
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.w600,
+                                fontSize: 16,
+                              ),
+                            ),
+                          ),
                         ),
                       )
                     ],
@@ -218,20 +218,6 @@ class _LawyerPageState extends State<LawyerPage> {
           ],
         ),
       ),
-      bottomNavigationBar: BottomNavigationBar(
-          selectedItemColor: Theme.of(context).primaryColor,
-          unselectedItemColor: Colors.black,
-          currentIndex: _selectedIndex,
-          onTap: navigateBottomBar,
-          type: BottomNavigationBarType.fixed,
-          items: const [
-            BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-            BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
-            BottomNavigationBarItem(
-                icon: Icon(Icons.privacy_tip), label: 'Privacy Policy'),
-            BottomNavigationBarItem(
-                icon: Icon(Icons.description_outlined), label: 'CSO Laws'),
-          ]),
     ));
   }
 }

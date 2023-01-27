@@ -133,13 +133,11 @@ class _UserProfileState extends State<UserProfile> {
     // TODO: implement initState
     super.initState();
     print('token');
-
+    getData(context);
     if (profileDataModel.result == null) {
       if (data.userType <= 5) {
         loadingFun();
-      } else {
-        getData(context);
-      }
+      } else {}
     } else {
       loadingFun();
     }
@@ -325,7 +323,9 @@ class _UserProfileState extends State<UserProfile> {
                                         ),
                                       ],
                                     )
-                                  : CircularProgressIndicator()
+                                  : CircularProgressIndicator(
+                                      color: Colors.yellow,
+                                    )
                             ],
                           ),
                         ),
@@ -333,13 +333,13 @@ class _UserProfileState extends State<UserProfile> {
                         ///Lawyer name and address
                       )),
                   Positioned(
-                      top: height * 0.01,
-                      // right: width*0.35,
-                      child: GestureDetector(
-                        onTap: () {
-                          pickImage();
-                        },
-                        child: CircleAvatar(
+                    top: height * 0.01,
+                    // right: width*0.35,
+                    child: GestureDetector(
+                      onTap: () {
+                        pickImage();
+                      },
+                      child: CircleAvatar(
                           backgroundColor: Color(0xffFCD917),
                           radius: 60,
                           child: CircleAvatar(
@@ -349,11 +349,12 @@ class _UserProfileState extends State<UserProfile> {
                                       ? NetworkImage(context
                                           .watch<ImageUrlProvider>()
                                           .imageUrl)
-                                      : FileImage(File(
-                                          profileDataModel.result?.imgUrl
-                                              as String)) as ImageProvider),
-                        ),
-                      ))
+                                      : NetworkImage(
+                                          "https://www.advolocate.info" +
+                                              profileDataModel.result!.imgUrl
+                                                  .toString()))),
+                    ),
+                  )
                 ]),
               ),
             )
@@ -388,10 +389,6 @@ class _UserProfileState extends State<UserProfile> {
       print(jsonDecode(response.body));
       profileDataModel = ProfileDataModel.fromJson(jsonDecode(response.body));
     }
-
-    setState(() {
-      loading = false;
-    });
   }
 
   void navigateBottomBar(int index) {

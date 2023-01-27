@@ -53,7 +53,9 @@ void main() async {
       ChangeNotifierProvider(create: (_) => OtpProvider()),
     ],
     child: MaterialApp(
-      theme: ThemeData(primaryColor: const Color(0xffFCD917)),
+      theme: ThemeData(
+        primaryColor: const Color(0xffFCD917),
+      ),
       routes: {
         '/home': (context) => const HomeScreen(),
         '/profile': (context) => const UserProfile(),

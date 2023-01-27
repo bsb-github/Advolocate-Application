@@ -209,13 +209,14 @@ class _HomeScreenState extends State<HomeScreen> {
             )
           : ListView(
               children: [
+                const SizedBox(
+                  height: 10,
+                ),
                 //image
-                SizedBox(
-                  // padding: EdgeInsets.only(top: 12,bottom: 12),
-                  width: width,
-                  height: height / 3,
+                Container(
+                  height: 225,
                   child: const Image(
-                    image: AssetImage('asset/advo.jpg'),
+                    image: AssetImage('images/splashlogo.png'),
                     fit: BoxFit.cover,
                   ),
                 ),
@@ -496,7 +497,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
       lenght = metaDataModel.result!.cities!.length;
     }
-
     setState(() {
       loading = false;
     });

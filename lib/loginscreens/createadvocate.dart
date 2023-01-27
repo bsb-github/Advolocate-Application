@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:math';
 
+import 'package:advolocate_app/Model/AdvocatesData.dart';
 import 'package:advolocate_app/Model/meta_data_model.dart';
 import 'package:advolocate_app/home.dart';
 import 'package:advolocate_app/loginscreens/manuallogin.dart';
@@ -716,68 +718,80 @@ class _CreateAdvocateAccountState extends State<CreateAdvocateAccount> {
                                     if (image == null) {
                                       Utils().toastMessage('Select License');
                                     } else {
-                                      var emailJS = Uri.parse(
-                                          "https://api.emailjs.com/api/v1.0/email/send");
-                                      var header = {
-                                        "Content-Type": "application/json",
-                                      };
-                                      String code = otpGenerator.generate();
+                                      var data = AdvocatesList.data.where(
+                                          (element) =>
+                                              element.email ==
+                                              _emailController.text);
+                                      if (data.isEmpty) {
+                                        var emailJS = Uri.parse(
+                                            "https://api.emailjs.com/api/v1.0/email/send");
+                                        var header = {
+                                          "Content-Type": "application/json",
+                                        };
+                                        String code = otpGenerator.generate();
 
-                                      var response = await http.post(emailJS,
-                                          headers: header,
-                                          body: json.encode({
-                                            "service_id": "service_y0qy9wf",
-                                            "template_id": "template_lk61b4l",
-                                            "user_id": "DUuUd1QWscbZpx6yJ",
-                                            "template_params": {
-                                              "to_name":
-                                                  _fullNameController.text,
-                                              "otp_code": code,
-                                              "subject":
-                                                  "${_fullNameController.text} OTP For the Application ADVOLOCATE",
-                                              "user_email":
-                                                  _emailController.text,
-                                            }
-                                          }));
-                                      if (response.statusCode == 200) {
-                                        // ignore: use_build_context_synchronously
-                                        Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    AdvocateEmailVerify(
-                                                      otp: code,
-                                                      email:
-                                                          _emailController.text,
-                                                      name: _fullNameController
-                                                          .text,
-                                                      phone:
-                                                          _phoneNumberController
-                                                              .text,
-                                                      password:
-                                                          _passwordController
-                                                              .text,
-                                                      address:
-                                                          _addressController
-                                                              .text,
-                                                      type: "2",
-                                                      profession:
-                                                          _professionController
-                                                              .text,
-                                                      age: _ageController.text,
-                                                      coveredArea:
-                                                          _coveredAreaController
-                                                              .text,
-                                                      regions: regionsid!,
-                                                      country: countriesId!,
-                                                      city: citiesId,
-                                                      probono: probonoId!,
-                                                      fOfServices:
-                                                          services.toString(),
-                                                      image: image!,
-                                                    )));
+                                        var response = await http.post(emailJS,
+                                            headers: header,
+                                            body: json.encode({
+                                              "service_id": "service_y0qy9wf",
+                                              "template_id": "template_lk61b4l",
+                                              "user_id": "DUuUd1QWscbZpx6yJ",
+                                              "template_params": {
+                                                "to_name":
+                                                    _fullNameController.text,
+                                                "otp_code": code,
+                                                "subject":
+                                                    "${_fullNameController.text} OTP For the Application ADVOLOCATE",
+                                                "user_email":
+                                                    _emailController.text,
+                                              }
+                                            }));
+                                        if (response.statusCode == 200) {
+                                          // ignore: use_build_context_synchronously
+                                          Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      AdvocateEmailVerify(
+                                                        otp: code,
+                                                        email: _emailController
+                                                            .text,
+                                                        name:
+                                                            _fullNameController
+                                                                .text,
+                                                        phone:
+                                                            _phoneNumberController
+                                                                .text,
+                                                        password:
+                                                            _passwordController
+                                                                .text,
+                                                        address:
+                                                            _addressController
+                                                                .text,
+                                                        type: "2",
+                                                        profession:
+                                                            _professionController
+                                                                .text,
+                                                        age:
+                                                            _ageController.text,
+                                                        coveredArea:
+                                                            _coveredAreaController
+                                                                .text,
+                                                        regions: regionsid!,
+                                                        country: countriesId!,
+                                                        city: citiesId,
+                                                        probono: probonoId!,
+                                                        fOfServices:
+                                                            services.toString(),
+                                                        image: image!,
+                                                      )));
+                                        } else {
+                                          Utils().toastMessage(
+                                              "Unable to sent Message Check Your Email");
+                                        }
                                       } else {
-                                        print(response.body);
+                                        Utils().toastMessage(
+                                            "Email Already Exist");
                                       }
                                     }
                                   }

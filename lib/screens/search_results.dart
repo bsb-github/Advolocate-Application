@@ -1,14 +1,14 @@
 import 'dart:convert';
 
-import 'package:advolocate_app/Model/adovacate_data_model.dart';
+import 'package:advolocate_app/Model/AdvocatesData.dart';
+
 import 'package:advolocate_app/Model/searchResultModel.dart';
-import 'package:advolocate_app/config.dart';
+
+import 'package:advolocate_app/screens/lawyer_page.dart';
 import 'package:advolocate_app/util/search_result/LawyerWidget.dart';
 import 'package:advolocate_app/utils/utils.dart';
-import 'package:flutter/foundation.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
-import '../util/search_result/lawyer_tile.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -101,6 +101,7 @@ class _ResultPageState extends State<ResultPage> {
 
     if (response.statusCode == 200) {
       var data = jsonDecode(response.body.toString());
+      print(data);
       if (data['code'] == 0) {
         return SearchResultModel.fromJson(jsonDecode(response.body));
       } else {
@@ -123,48 +124,83 @@ class _ResultPageState extends State<ResultPage> {
     var width = size.width;
 
     return SafeArea(
-      child: Scaffold(
-          backgroundColor: Colors.white,
-          appBar: AppBar(
-            elevation: 0,
-            iconTheme: const IconThemeData(color: Colors.black),
-            backgroundColor: Theme.of(context).primaryColor,
-          ),
-          body: SingleChildScrollView(
-            child: Padding(
-              padding: EdgeInsets.only(
-                  top: height * 0.04, left: width * 0.08, right: width * 0.08),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Available Lawyers',
-                    style: TextStyle(
-                        fontSize: width * 0.08,
-                        fontWeight: FontWeight.bold,
-                        letterSpacing: 0.5),
-                  ),
-                  SizedBox(
-                    height: height * 0.01,
-                  ),
-                  Text(
-                    'View Lawyer Profile',
-                    style: TextStyle(
-                      fontSize: width * 0.065,
-                    ),
-                  ),
-                  FutureBuilder<SearchResultModel>(
-                      future: searchResult,
-                      builder: (context, snapshot) {
-                        if (snapshot.hasData) {
-                          return ListView.builder(
-                            controller: _scrollController,
-                            physics: ScrollPhysics(),
-                            shrinkWrap: true,
-                            scrollDirection: Axis.vertical,
-                            itemCount: snapshot.data!.result!.data!.length,
-                            itemBuilder: (context, index) {
-                              return Card(
+        child: Scaffold(
+      backgroundColor: Colors.white,
+      appBar: AppBar(
+        leading: IconButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            icon: Icon(Icons.arrow_back_ios)),
+        elevation: 0,
+        title: const Text(
+          'Lawyers',
+          style: TextStyle(
+              color: Colors.black,
+              fontWeight: FontWeight.bold,
+              letterSpacing: 1),
+        ),
+        centerTitle: true,
+        iconTheme: const IconThemeData(color: Colors.black),
+        backgroundColor: Theme.of(context).primaryColor,
+      ),
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: EdgeInsets.only(
+              top: height * 0.04, left: width * 0.08, right: width * 0.08),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Available Lawyers',
+                style: TextStyle(
+                    fontSize: width * 0.08,
+                    fontWeight: FontWeight.bold,
+                    letterSpacing: 0.5),
+              ),
+              SizedBox(
+                height: height * 0.01,
+              ),
+              Text(
+                'View Lawyer Profile',
+                style: TextStyle(
+                  fontSize: width * 0.065,
+                ),
+              ),
+              FutureBuilder<SearchResultModel>(
+                  future: searchResult,
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData) {
+                      return ListView.builder(
+                        controller: _scrollController,
+                        physics: ScrollPhysics(),
+                        shrinkWrap: true,
+                        scrollDirection: Axis.vertical,
+                        itemCount: snapshot.data!.result!.data!.length,
+                        itemBuilder: (context, index) {
+                          var data = snapshot.data!.result!.data![index];
+
+                          return Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 18.0),
+                            child: GestureDetector(
+                              onTap: () {
+                                var Data = AdvocatesList.data.where(
+                                    (element) => element.uid == data.userId);
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => LawyerPage(
+                                            name: Data.first.name,
+                                            contactNumber: Data.first.contact,
+                                            email: Data.first.email,
+                                            information: Data.first.services,
+                                            address: Data.first.address,
+                                            probono: Data.first.probono)));
+                              },
+                              child: Card(
+                                elevation: 8.0,
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(15)),
                                 child: LawyerWidget(
                                   name:
                                       snapshot.data!.result!.data![index].name!,
@@ -175,56 +211,32 @@ class _ResultPageState extends State<ResultPage> {
                                       "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png",
                                   rating: index,
                                 ),
-                              );
-                            },
+                              ),
+                            ),
                           );
-                        } else if (snapshot.hasError) {
-                          return Text('${snapshot.error}');
-                        }
+                        },
+                      );
+                    } else if (snapshot.hasError) {
+                      return Text('${snapshot.error}');
+                    }
 
-                        return Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Center(child: CircularProgressIndicator()),
-                          ],
-                        );
-                      }),
-                ],
-              ),
-            ),
+                    return Center(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          CircularProgressIndicator(
+                            color: Colors.yellow,
+                          ),
+                        ],
+                      ),
+                    );
+                  }),
+            ],
           ),
-          bottomNavigationBar: BottomNavigationBar(
-              selectedItemColor: Theme.of(context).primaryColor,
-              unselectedItemColor: Colors.black,
-              // currentIndex: _selectedIndex,
-              onTap: navigateBottomBar,
-              type: BottomNavigationBarType.fixed,
-              items: const [
-                BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-                BottomNavigationBarItem(
-                    icon: Icon(Icons.person), label: 'Profile'),
-                BottomNavigationBarItem(
-                    icon: Icon(Icons.privacy_tip), label: 'Privacy Policy'),
-                BottomNavigationBarItem(
-                    icon: Icon(Icons.description_outlined), label: 'CSO Laws'),
-              ])),
-    );
-  }
-
-  void navigateBottomBar(int index) {
-    setState(() {
-      _selectedIndex = index;
-      if (index == 0) {
-        Navigator.pushNamed(context, '/home');
-      } else if (index == 1) {
-        Navigator.pushNamed(context, '/profile');
-      } else if (index == 3) {
-        Navigator.pushNamed(context, '/cso_laws');
-      } else if (index == 2) {
-        Navigator.pushNamed(context, '/privacy_policy');
-      }
-    });
+        ),
+      ),
+    ));
   }
 
   void _scrollListener() {

@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:advolocate_app/Model/AdvocatesData.dart';
 import 'package:advolocate_app/Model/adovacate_data_model.dart';
 import 'package:advolocate_app/Providers/LawyerDataProvider.dart';
 import 'package:advolocate_app/home.dart';
@@ -31,10 +32,11 @@ class splashscreen extends StatefulWidget {
 }
 
 class _splashscreenState extends State<splashscreen> {
-  // SplashServicees splashscreen =SplashServicees();
+  // SplashServicees sp//lashscreen =SplashServicees();
   @override
   initState() {
     super.initState();
+    getAdvocatesData();
     getData();
     // splashscreen.isLogin(context);
     // _navigatetopageview();
@@ -55,10 +57,10 @@ class _splashscreenState extends State<splashscreen> {
     final String? userType = "manual";
 
     if (email != null && password != null) {
-      if (userType == "manual") {
+      if (userType == "manual" && token != "Bismillah Sharif Bhutta") {
         getUserData(1, token!, userId);
       } else {
-        getAdvoUserData(password);
+        getAdvoUserData(password.toString());
       }
     } else {
       Navigator.push(
@@ -148,18 +150,20 @@ class _splashscreenState extends State<splashscreen> {
     } else {
       // AdvocateResult result = AdvocateResult.fromJson(Provider.of<LawyerDataProvider>(context, listen: false).data.result);
 
-      // ignore: use_build_context_synchronously
-      Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-              builder: (context) => LawyerPage(
-                    address: profileDataModel.result!.address ?? "",
-                    email: profileDataModel.result!.email ?? "",
-                    information: profileDataModel.result!.contactNumber ?? '',
-                    name: profileDataModel.result!.name ?? "",
-                    probono: profileDataModel.result!.probono.toString(),
-                  )));
     }
+  }
+
+  void getAdvocatesData() async {
+    var response = await http
+        .post(Uri.parse("http://www.advolocate.info/api/getAdvocatesData"));
+    print(response.body);
+    var data = jsonDecode(response.body);
+    var advos = List.from(data["result"]);
+
+    for (var i = 0; i < advos.length; i++) {
+      AdvocatesList.data.add(AdvocatesData.fromJson(advos[i]));
+    }
+    print(AdvocatesList.data[34].email);
   }
 
   void loginUser(String email, String password) async {
@@ -236,7 +240,8 @@ class _splashscreenState extends State<splashscreen> {
         Provider.of<ConfigProvider>(context, listen: false)
             .setUserID(data['result']['user_id']);
 
-        Navigator.pushNamed(context, '/home');
+        Navigator.pushReplacement(
+            context, MaterialPageRoute(builder: (context) => HomePage()));
       }
     }
   }
@@ -270,8 +275,8 @@ class _splashscreenState extends State<splashscreen> {
         // ignore: use_build_context_synchronously
         Provider.of<ConfigProvider>(context, listen: false)
             .setUserID(data['result']['user_id']);
-
-        Navigator.pushNamed(context, '/home');
+        Navigator.pushReplacement(
+            context, MaterialPageRoute(builder: (context) => HomePage()));
       }
     }
   }
@@ -283,7 +288,8 @@ class _splashscreenState extends State<splashscreen> {
 
     // ProfileDataModel.fromJson(jsonDecode(data.toString()));
     print(ProfileDataList.users[0].email);
-    Navigator.pushNamed(context, '/home');
+    Navigator.pushReplacement(
+        context, MaterialPageRoute(builder: (context) => HomePage()));
   }
 }
 
