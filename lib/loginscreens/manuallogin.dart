@@ -340,12 +340,11 @@ class _ManualLoginScreenState extends State<ManualLoginScreen> {
         getAdvocatesData();
         var Data = AdvocatesList.data.where((element) =>
             element.status == 0 && element.coveredArea == "Supreme Court");
-        if (Data.isNotEmpty && Data.first.coveredArea == "Supreme Court") {
+        if (Data.isNotEmpty && Data.first.status == 0) {
           Navigator.push(context,
               MaterialPageRoute(builder: (context) => ProfilePending()));
-        } else if (Data.isNotEmpty) {
-          Navigator.push(context,
-              MaterialPageRoute(builder: (context) => ProfilePending()));
+        } else if (Data.first.status == 1) {
+          // Navigate if advocate is authenticated to deal
         } else {
           Navigator.push(
               context, MaterialPageRoute(builder: (context) => HomePage()));

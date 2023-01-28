@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:advolocate_app/Model/AdvocatesData.dart';
 import 'package:advolocate_app/Model/FacebookLoginData.dart';
 import 'package:advolocate_app/Model/profile_data_model.dart';
 import 'package:advolocate_app/Model/searchResultModel.dart';
@@ -8,9 +9,11 @@ import 'package:advolocate_app/Providers/ImageUrlProvider.dart';
 import 'package:advolocate_app/Providers/OtpProvider.dart';
 import 'package:advolocate_app/firebase_options.dart';
 import 'package:advolocate_app/home.dart';
+import 'package:advolocate_app/loginscreens/SelectionBottomScreens.dart';
 import 'package:advolocate_app/loginscreens/createadvocate.dart';
 import 'package:advolocate_app/loginscreens/manuallogin.dart';
 import 'package:advolocate_app/loginscreens/splash.dart';
+import 'package:advolocate_app/screens/HomePage.dart';
 import 'package:advolocate_app/screens/cso_laws.dart';
 import 'package:advolocate_app/screens/homepage.dart';
 import 'package:advolocate_app/screens/lawyer_page.dart';
@@ -204,54 +207,54 @@ class _MyAppState extends State<MyApp> {
     //   print(020);
   }
 
-  Future<void> createUser() async {
-    var headers = {
-      'Content-Type': 'application/json',
-      'Accept': 'application/json',
-    };
+  // Future<void> createUser() async {
+  //   var headers = {
+  //     'Content-Type': 'application/json',
+  //     'Accept': 'application/json',
+  //   };
 
-    var data = FacebookData.data[0];
-    print(data.id);
-    print(data.email);
+  //   var data = FacebookData.data[0];
+  //   print(data.id);
+  //   print(data.email);
 
-    var body = json.encode({
-      "email": data.email,
-      "user_type": 1,
-      "password": data.id,
-      "name": data.name,
-      //   "img_url": data.imageUrl,
-      "contact_number": data.id,
-      "social_id": data.id,
-      'address': "",
-      "link_type": 2,
-      "city_name": "Advolocate App"
-    });
-    var response = await http.post(
-        Uri.parse('http://www.advolocate.info/api/register_social_customer'),
-        headers: headers,
-        body: body);
+  //   var body = json.encode({
+  //     "email": data.email,
+  //     "user_type": 1,
+  //     "password": data.id,
+  //     "name": data.name,
+  //     //   "img_url": data.imageUrl,
+  //     "contact_number": data.id,
+  //     "social_id": data.id,
+  //     'address': "",
+  //     "link_type": 2,
+  //     "city_name": "Advolocate App"
+  //   });
+  //   var response = await http.post(
+  //       Uri.parse('http://www.advolocate.info/api/register_social_customer'),
+  //       headers: headers,
+  //       body: body);
 
-    if (response.statusCode == 200) {
-      var data = jsonDecode(response.body.toString());
-      print(data);
-      print(data['description']);
-      if (data['code'] == 0 || data['code'] == 5) {
-        loginGoogleUser(context,
-            type: 2, password: FacebookData.data[0].id.toString());
-      } else {
-        //   await createuser(
-        //       FacebookData.data[0].email.toString(),
-        //       2,
-        //       FacebookData.data[0].id.toString(),
-        //       FacebookData.data[0].name.toString(),
-        //       "Advolocate App",
-        //       2);
-        // }
-      }
-    } else {
-      print(response.reasonPhrase);
-    }
-  }
+  //   if (response.statusCode == 200) {
+  //     var data = jsonDecode(response.body.toString());
+  //     print(data);
+  //     print(data['description']);
+  //     if (data['code'] == 0 || data['code'] == 5) {
+  //       loginGoogleUser(context,
+  //           type: 2, password: FacebookData.data[0].id.toString());
+  //     } else {
+  //       //   await createuser(
+  //       //       FacebookData.data[0].email.toString(),
+  //       //       2,
+  //       //       FacebookData.data[0].id.toString(),
+  //       //       FacebookData.data[0].name.toString(),
+  //       //       "Advolocate App",
+  //       //       2);
+  //       // }
+  //     }
+  //   } else {
+  //     print(response.reasonPhrase);
+  //   }
+  // }
 
   // void LoginFacebookUser(BuildContext context,
   //     {required String email, required String password}) async {
@@ -308,54 +311,54 @@ class _MyAppState extends State<MyApp> {
   //   }
   // }
 
-  Future<void> createuser(String email, int userType, String id, String name,
-      String address, int type) async {
-    //_logout();
-    var headers = {
-      'Content-Type': 'application/json',
-      'Accept': 'application/json',
-    };
-    var body = json.encode({
-      "email": email,
-      "user_type": type,
-      "password": id,
-      "name": name,
-      "contact_number": "01",
-      //   "img_url": data.imageUrl,
-      "social_id": id,
-      'address': address,
-      "link_type": type,
-      "city_name": address,
-    });
-    var response = await http.post(
-        Uri.parse('http://www.advolocate.info/api/register_social_customer'),
-        headers: headers,
-        body: body);
-    var data = jsonDecode(response.body.toString());
-    print(data);
-    if (response.statusCode == 200) {
-      print(data);
-      print(data['description']);
-      if (data['code'] == 0 || data['code'] == 5) {
-        print(0);
-        if (type == 1) {
-          loginGoogleUser(
-            context,
-            type: 1,
-            password: id,
-          );
-        } else {
-          loginGoogleUser(context, type: type, password: id);
-        }
-      } else {
-        Utils().toastMessage(data['description'].toString());
-      }
-    } else {
-      print(-1);
-      print(data['description']);
-      print(response.body);
-    }
-  }
+  // Future<void> createuser(String email, int userType, String id, String name,
+  //     String address, int type) async {
+  //   //_logout();
+  //   var headers = {
+  //     'Content-Type': 'application/json',
+  //     'Accept': 'application/json',
+  //   };
+  //   var body = json.encode({
+  //     "email": email,
+  //     "user_type": type,
+  //     "password": id,
+  //     "name": name,
+  //     "contact_number": "01",
+  //     //   "img_url": data.imageUrl,
+  //     "social_id": id,
+  //     'address': address,
+  //     "link_type": type,
+  //     "city_name": address,
+  //   });
+  //   var response = await http.post(
+  //       Uri.parse('http://www.advolocate.info/api/register_social_customer'),
+  //       headers: headers,
+  //       body: body);
+  //   var data = jsonDecode(response.body.toString());
+  //   print(data);
+  //   if (response.statusCode == 200) {
+  //     print(data);
+  //     print(data['description']);
+  //     if (data['code'] == 0 || data['code'] == 5) {
+  //       print(0);
+  //       if (type == 1) {
+  //         loginGoogleUser(
+  //           context,
+  //           type: 1,
+  //           password: id,
+  //         );
+  //       } else {
+  //         loginGoogleUser(context, type: type, password: id);
+  //       }
+  //     } else {
+  //       Utils().toastMessage(data['description'].toString());
+  //     }
+  //   } else {
+  //     print(-1);
+  //     print(data['description']);
+  //     print(response.body);
+  //   }
+  // }
 
   Future<void> createFBUser(String email, int userType, String id, String name,
       String address, int type) async {
@@ -388,7 +391,7 @@ class _MyAppState extends State<MyApp> {
       if (data['code'] == 0 || data['code'] == 5) {
         print(0);
 
-        loginGoogleUser(context, type: type, password: id);
+        // loginGoogleUser(context, type: type, password: id);
       } else {
         Utils().toastMessage(data['description'].toString());
       }
@@ -399,13 +402,15 @@ class _MyAppState extends State<MyApp> {
     }
   }
 
-  Future<void> loginGoogleUser(BuildContext context,
-      {required int type, required String password}) async {
+  Future<void> loginGoogleUser(
+    BuildContext context, {
+    required int type,
+    required String password,
+  }) async {
     var headers = {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
     };
-    print(password);
     var body = json.encode({"social_id": password, "link_type": type});
     var response = await http.post(
         Uri.parse('http://www.advolocate.info/api/login_social_customer'),
@@ -425,11 +430,6 @@ class _MyAppState extends State<MyApp> {
       } else if (data['description'].toString() == 'Login Successful') {
         print(data['result']['token']);
 
-        Provider.of<ConfigProvider>(context, listen: false)
-            .setToken(data['result']['token']);
-        Provider.of<ConfigProvider>(context, listen: false)
-            .setUserID(data['result']['user_id']);
-
         setState(() {
           prefs.setString('email', password);
           prefs.setString('password', password);
@@ -437,13 +437,16 @@ class _MyAppState extends State<MyApp> {
           prefs.setString('token', data['result']['token'].toString());
           prefs.setInt('userId', data['result']['user_id']);
         });
+        AdvocatesList.data.clear();
+        getAdvocatesData();
+
         if (type == 1) {
           googleSignIn.disconnect();
         } else {
           _logout();
         }
-
-        Navigator.pushNamed(context, '/home');
+        getUserData(
+            1, data['result']['token'].toString(), data['result']['user_id']);
       } else if (data["description"] == "Please register your account") {
         Utils().toastMessage("Sign in methods " + data['description']);
         await createFBUser(
@@ -461,6 +464,46 @@ class _MyAppState extends State<MyApp> {
       Utils().toastMessage(response.body);
       print(response.body);
     }
+  }
+
+  Future<void> getUserData(int userType, String token, id) async {
+    var url = Uri.parse('http://www.advolocate.info/api/getCustomerInfo');
+
+    print('get data token');
+    var getCustomerInfoToken =
+        Provider.of<ConfigProvider>(context, listen: false).token;
+    print(token);
+    var headers = {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Authorization': 'Bearer ${token}',
+    };
+    var response = await http.post(url,
+        body: jsonEncode({"user_id": id}), headers: headers);
+    var data = jsonDecode(response.body.toString());
+    print(data);
+    ProfileDataList.users[0] = ProfileData.fromJson(data['result']);
+    print(ProfileDataList.users[0].email);
+    if (userType == 1) {
+      Navigator.pushReplacement(
+          context, MaterialPageRoute(builder: (context) => HomePage()));
+    } else {
+      // AdvocateResult result = AdvocateResult.fromJson(Provider.of<LawyerDataProvider>(context, listen: false).data.result);
+
+    }
+  }
+
+  void getAdvocatesData() async {
+    var response = await http
+        .post(Uri.parse("http://www.advolocate.info/api/getAdvocatesData"));
+    print(response.body);
+    var data = jsonDecode(response.body);
+    var advos = List.from(data["result"]);
+
+    for (var i = 0; i < advos.length; i++) {
+      AdvocatesList.data.add(AdvocatesData.fromJson(advos[i]));
+    }
+    print(AdvocatesList.data[34].email);
   }
 
   _logout() async {
@@ -490,7 +533,21 @@ class _MyAppState extends State<MyApp> {
         return;
       }
       // ignore: use_build_context_synchronously
-      addGoogleUserData(data: reslut);
+      var Data = AdvocatesList.data.where(
+        (element) => element.email == reslut.email,
+      );
+      if (Data.isEmpty) {
+        showModalBottomSheet(
+          context: context,
+          builder: (context) => SelectionBottomScreen(
+              name: reslut.displayName.toString(),
+              social_id: reslut.id,
+              type: 1,
+              email: reslut.email),
+        );
+      } else {
+        loginGoogleUser(context, type: 1, password: reslut.id);
+      }
     } catch (error) {
       print(error);
       setState(() {
@@ -527,8 +584,8 @@ class _MyAppState extends State<MyApp> {
         print(reslut.id);
 
         //await signupUser(reslut.email, reslut.id);
-        await createuser(reslut.email, 1, reslut.id,
-            reslut.displayName.toString(), "Hello", 1);
+        // await createuser(reslut.email, 1, reslut.id,
+        //     reslut.displayName.toString(), "Hello", 1);
       } else if (data['description'].toString() == 'Login Successful') {
         print(data['result']['token']);
         Provider.of<ConfigProvider>(context, listen: false)

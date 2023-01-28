@@ -6,6 +6,7 @@ import 'package:advolocate_app/screens/search_results.dart';
 import 'package:advolocate_app/screens/user_profile.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../Model/meta_data_model.dart';
 import '../util/homepage/multiselect_dropdown.dart';
@@ -183,13 +184,9 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         actions: [
           IconButton(
-              onPressed: () {
-                if (ProfileDataList.users[0].userType == 1) {
-                  GoogleSignIn googleSignIn = GoogleSignIn();
-                  //googleSignIn.disconnect();
-                } else {
-                  //_logout();
-                }
+              onPressed: () async {
+                final prefs = await SharedPreferences.getInstance();
+                await prefs.clear();
                 Navigator.push(
                     context,
                     MaterialPageRoute(
@@ -446,11 +443,11 @@ class _HomeScreenState extends State<HomeScreen> {
                                 setState(() {
                                   countriesId = '';
                                   // countries=[];
-                                  cities = [];
-                                  services = [];
-                                  probono = [];
+                                  cities.clear();
+                                  services.clear();
+                                  probono.clear();
                                   probonoId = '2';
-                                  loading = true;
+                                  countries.clear();
                                 });
                                 getData();
                               },
