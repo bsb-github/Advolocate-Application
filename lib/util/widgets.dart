@@ -2,12 +2,13 @@ import 'package:flutter/material.dart';
 
 Widget Button(bgcolor, btext, textColor, width, height, onPressed) {
   return Padding(
-    padding: EdgeInsets.only(left: width*0.001, top: height*0.02),
+    padding: EdgeInsets.only(left: width * 0.001, top: height * 0.02),
     child: Container(
-      padding: EdgeInsets.symmetric(horizontal: width*0.09),
+      padding: EdgeInsets.symmetric(horizontal: width * 0.09),
       decoration: BoxDecoration(
-          border: Border.all(width: width*0.008, color: const Color(0xffFCD917)),
-          borderRadius: BorderRadius.circular(width*0.06),
+          border:
+              Border.all(width: width * 0.008, color: const Color(0xffFCD917)),
+          borderRadius: BorderRadius.circular(width * 0.06),
           color: bgcolor),
       child: TextButton(
         onPressed: onPressed,
@@ -16,7 +17,7 @@ Widget Button(bgcolor, btext, textColor, width, height, onPressed) {
           style: TextStyle(
               // letterSpacing: 1,
               color: textColor,
-              fontSize: width*0.046,
+              fontSize: width * 0.046,
               fontWeight: FontWeight.bold),
         ),
       ),
@@ -26,10 +27,9 @@ Widget Button(bgcolor, btext, textColor, width, height, onPressed) {
 
 //text with icon in profile screen
 
-Widget RowInfo(Width, height, icon, topText, bottomText) {
-  
+Widget RowInfo(Width, height, icon, topText, bottomText, BuildContext context) {
   return Padding(
-    padding: EdgeInsets.only(top: height*0.01, left: Width * 0.1),
+    padding: EdgeInsets.only(top: height * 0.01, left: Width * 0.1),
     child: Row(
       children: [
         Container(
@@ -46,13 +46,24 @@ Widget RowInfo(Width, height, icon, topText, bottomText) {
         ),
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
               topText,
-              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+              maxLines: 5,
+              softWrap: false,
+              overflow: TextOverflow.ellipsis,
+              textAlign: TextAlign.center,
+              style: const TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 18,
+              ),
             ),
-            Text(bottomText,
-                style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18))
+            Text(
+              bottomText.toString(),
+              // style: const TextStyle(
+              //     fontWeight: FontWeight.bold, fontSize: 16)),
+            )
           ],
         )
       ],

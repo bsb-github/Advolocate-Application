@@ -4,11 +4,16 @@ import 'package:advolocate_app/screens/cso_laws.dart';
 import 'package:advolocate_app/screens/privacy_policy.dart';
 import 'package:advolocate_app/screens/search_results.dart';
 import 'package:advolocate_app/screens/user_profile.dart';
+import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
+import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:multi_select_flutter/multi_select_flutter.dart';
+import 'package:multiple_search_selection/multiple_search_selection.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../Model/meta_data_model.dart';
+import '../Model/searchResultModel.dart';
 import '../util/homepage/multiselect_dropdown.dart';
 import '../util/widgets.dart';
 
@@ -28,6 +33,10 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   //bottom Navigation bar
   int _selectedIndex = 0;
+  var selectedVal = [
+    0,
+  ];
+//  var services = [];
 
   MetaDataModel metaDataModel = MetaDataModel();
   void navigateBottomBar(int index) {
@@ -53,7 +62,9 @@ class _HomeScreenState extends State<HomeScreen> {
 
   List<dynamic> regions = [];
   List<dynamic> countries = [];
-  List<dynamic> cities = [];
+  List<dynamic> cities = [
+    {"label": "City"}
+  ];
   List<dynamic> probono = [];
   // List<dynamic> services = [];
 
@@ -62,6 +73,7 @@ class _HomeScreenState extends State<HomeScreen> {
   List services = [];
 
   List<MultiSelectDialogItem<int>> multiItem = [];
+  var Item = [];
   final valuestopopulate = {
     15: "CIVIL RIGHTS LAW",
     16: "CRIMINAL LAW",
@@ -99,6 +111,12 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
+  void populateMulti() {
+    for (String v in valuestopopulate.values) {
+      Item.add(v);
+    }
+  }
+
   void _showMultiSelect(BuildContext context) async {
     // multiItem = [];
     populateMultiselect();
@@ -114,16 +132,20 @@ class _HomeScreenState extends State<HomeScreen> {
     final selectedValues = await showDialog<Set<int>>(
       context: context,
       builder: (BuildContext context) {
-        return MultiSelectDialog(
-          items: items,
-          initialSelectedValues: services.isEmpty ? {0} : sel,
-        );
+        return Container();
       },
     );
 
     // print('services as set');
-    // print(sel);
+    // print();
+    selectedVal.clear();
+    setState(() {
+      // for (var element in selectedValues!.toList()) {
+      //   selectedVal.add(element);
+      // }
+    });
     // debugPrint(selectedValues);
+    print(selectedVal);
     getvaluefromkey(selectedValues!);
   }
 
@@ -139,6 +161,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
+    populateMulti();
 
     if (metaDataModel.result == null) {
       getData();
@@ -169,6 +192,7 @@ class _HomeScreenState extends State<HomeScreen> {
     var size = MediaQuery.of(context).size;
     var height = size.height;
     var width = size.width;
+    // final listServices = sel.where((element) => element.);
 
     return SafeArea(
         child: Scaffold(
@@ -187,7 +211,7 @@ class _HomeScreenState extends State<HomeScreen> {
               onPressed: () async {
                 final prefs = await SharedPreferences.getInstance();
                 await prefs.clear();
-                Navigator.push(
+                Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(
                       builder: (context) => const MyApp(),
@@ -202,7 +226,9 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       body: loading == true
           ? Center(
-              child: CircularProgressIndicator(),
+              child: CircularProgressIndicator(
+                color: Theme.of(context).primaryColor,
+              ),
             )
           : ListView(
               children: [
@@ -220,12 +246,13 @@ class _HomeScreenState extends State<HomeScreen> {
 
                 //text heading
                 Container(
-                    padding: EdgeInsets.only(left: width * 0.1),
-                    child: Text(
+                    padding: const EdgeInsets.only(left: 10),
+                    alignment: Alignment.center,
+                    child: const Text(
                       'Search Advocate Here',
                       style: TextStyle(
-                        fontSize: 30,
-                        fontWeight: FontWeight.bold,
+                        fontSize: 22,
+                        //  fontWeight: FontWeight.w600,
                         // letterSpacing: 1
                       ),
                     )),
@@ -242,7 +269,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
                         FormHelper.dropDownWidget(
                           context,
-                          '    Country',
+                          'Country',
                           countriesId,
                           countries,
                           (onChangedval) {
@@ -252,7 +279,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           },
                           (onValidate) {
                             if (onValidate == null) {
-                              return '    Required';
+                              return 'Required';
                             }
                             return null;
                           },
@@ -261,7 +288,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           textColor: Colors.black,
                           borderColor: Colors.white,
                           borderWidth: 1,
-                          hintFontSize: width * 0.045,
+                          hintFontSize: width * 0.040,
                           hintColor: Colors.black,
                           borderFocusColor: Colors.white,
                           validationColor: Colors.red,
@@ -274,32 +301,71 @@ class _HomeScreenState extends State<HomeScreen> {
                           height: height * 0.03,
                         ),
 
-                        //State
-                        FormHelper.dropDownWidget(
-                          context,
-                          '    City',
-                          citiesId,
-                          cities,
-                          (onChangedval) {
-                            citiesId = onChangedval;
-                          },
-                          (onValidate) {
-                            // if(onValidate == null)
-                            // {
-                            //   return '    Required';
-                            // }
-                            // return null;
-                          },
-                          optionValue: 'value',
-                          optionLabel: 'label',
-                          textColor: Colors.black,
-                          borderColor: Colors.white,
-                          borderWidth: 1,
-                          hintFontSize: width * 0.045,
-                          hintColor: Colors.black,
-                          borderFocusColor: Colors.white,
-                          validationColor: Colors.red,
+                        // MultiSelectDialogField(
+                        //   items: cities
+                        //       .map((e) => MultiSelectItem(e, e["label"]))
+                        //       .toList(),
+                        //   searchable: true,
+                        //   onConfirm: (values) {
+                        //     print(values);
+                        //   },
+
+                        // ),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 24, right: 12),
+                          child: DropdownSearch<String>(
+                            onChanged: (value) {
+                              var obj = cities.where(
+                                  (element) => element["label"] == value);
+                              setState(() {
+                                citiesId = obj.first["value"].toString();
+                              });
+
+                              print(citiesId);
+                            },
+                            items: List.from(cities.map((e) => e["label"])),
+                            dropdownDecoratorProps: DropDownDecoratorProps(
+                                baseStyle: TextStyle(
+                                    color: Colors.black,
+                                    fontSize: width * 0.035),
+                                dropdownSearchDecoration:
+                                    InputDecoration(border: InputBorder.none)),
+                            selectedItem: cities.first["label"],
+                            popupProps: const PopupProps.dialog(
+                                fit: FlexFit.loose,
+                                showSearchBox: true,
+                                searchFieldProps: TextFieldProps(
+                                    decoration:
+                                        InputDecoration(hintText: "Search"))),
+                          ),
                         ),
+
+                        // FormHelper.dropDownWidget(
+                        //   context,
+                        //   '    City',
+                        //   citiesId,
+                        //   cities,
+                        //   (onChangedval) {
+                        //     print(cities.first['label']);
+                        //     citiesId = onChangedval;
+                        //   },
+                        //   (onValidate) {
+                        //     // if(onValidate == null)
+                        //     // {
+                        //     //   return '    Required';
+                        //     // }
+                        //     // return null;
+                        //   },
+                        //   optionValue: 'value',
+                        //   optionLabel: 'label',
+                        //   textColor: Colors.black,
+                        //   borderColor: Colors.white,
+                        //   borderWidth: 1,
+                        //   hintFontSize: width * 0.045,
+                        //   hintColor: Colors.black,
+                        //   borderFocusColor: Colors.white,
+                        //   validationColor: Colors.red,
+                        // ),
                         Divider(
                           thickness: width * 0.006,
                           color: Theme.of(context).primaryColor,
@@ -311,7 +377,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         //field of services
                         FormHelper.dropDownWidget(
                           context,
-                          '    Select Probono',
+                          'Select Probono',
                           probonoId,
                           probono,
                           (onChangedval) {
@@ -329,7 +395,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           textColor: Colors.black,
                           borderColor: Colors.white,
                           borderWidth: 1,
-                          hintFontSize: width * 0.045,
+                          hintFontSize: width * 0.040,
                           hintColor: Colors.black,
                           borderFocusColor: Colors.white,
                           validationColor: Colors.red,
@@ -342,67 +408,91 @@ class _HomeScreenState extends State<HomeScreen> {
                           endIndent: width * 0.03,
                           height: height * 0.03,
                         ),
-                        InkWell(
-                            child: Container(
-                              margin: EdgeInsets.only(
-                                left: width * 0.05,
-                                //    right: width * 0.05
-                              ),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(30),
-                                //color: Colors.pink,
-                                // border:Border.all(
-                                //   color: Color(0xffFCD917),
-                                //
-                                // ),
-                              ),
-                              padding: EdgeInsets.only(
-                                  left: width * 0.068,
-                                  top: height * 0.02,
-                                  // right: width * 0.065,
-                                  bottom: height * 0.01),
-                              child: Row(
-                                //mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text('Field Of Services',
-                                      style: TextStyle(
-                                        fontSize: width * 0.045,
-                                        color: Colors.black,
-                                      )),
-                                  SizedBox(
-                                    width: width * 0.22,
+                        Padding(
+                          padding: const EdgeInsets.all(13.0),
+                          child: MultipleSearchSelection(
+                            items: Item, // List<Country>
+
+                            fieldToCheck: (c) {
+                              return c; // String
+                            },
+                            itemBuilder: (country) {
+                              return Padding(
+                                padding: const EdgeInsets.all(6.0),
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(6),
+                                    color: Theme.of(context).primaryColor,
                                   ),
-                                  const Icon(
-                                    Icons.arrow_drop_down,
-                                    color: Colors.black,
-                                  )
-                                ],
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                      vertical: 20.0,
+                                      horizontal: 12,
+                                    ),
+                                    child: Text(
+                                      country,
+                                      style: const TextStyle(
+                                          color: Colors.black,
+                                          fontWeight: FontWeight.w600),
+                                    ),
+                                  ),
+                                ),
+                              );
+                            },
+                            pickedItemBuilder: (country) {
+                              return Container(
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(6),
+                                  border: Border.all(
+                                      color: Theme.of(context).primaryColor),
+                                ),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8),
+                                  child: Text(
+                                    country,
+                                    style: TextStyle(
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                ),
+                              );
+                            },
+                            onTapShowedItem: () {},
+                            onPickedChange: (items) {},
+                            onItemAdded: (item) {
+                              services.add(Item.indexOf(item) + 15);
+                            },
+                            onItemRemoved: (item) {
+                              services.remove(Item.indexOf(item) + 15);
+                            },
+                            onTapClearAll: () {
+                              services.clear();
+                            },
+                            onTapSelectAll: () {
+                              services.clear();
+                              services.addAll(valuestopopulate.keys);
+                            },
+                            sortShowedItems: true,
+                            sortPickedItems: true,
+                            fuzzySearch: FuzzySearch.jaro,
+                            itemsVisibility: ShowedItemsVisibility.alwaysOn,
+                            title: Padding(
+                              padding: EdgeInsets.only(bottom: 8.0, left: 4.0),
+                              child: Text(
+                                'Field of Services',
+                                style: TextStyle(
+                                  fontSize: width * 0.045,
+                                ),
                               ),
                             ),
-                            onTap: () => _showMultiSelect(context)),
-                        //field of nature
-                        // FormHelper.dropDownWidget(
-                        //   context,
-                        //   'Field Of Nature',
-                        //   natureid,
-                        //   fNature,
-                        //   (onChangedval) {
-                        //     natureid = onChangedval;
-                        //   },
-                        //   (onValidateVal) {
-                        //     if (onValidateVal == null) {
-                        //       return 'Please select a field';
-                        //     }
-                        //     return null;
-                        //   },
-                        //   optionValue: 'id',
-                        //   optionLabel: 'label',
-                        //   borderColor: Colors.white,
-                        //   hintFontSize: width*0.046,
-                        //   hintColor: Colors.black,
-                        //   borderFocusColor: Colors.white,
-                        //   validationColor: Theme.of(context).primaryColor,
-                        // ),
+                            showSelectAllButton: true,
+                            // :
+                            //     const EdgeInsets.symmetric(horizontal: 10),
+                            maximumShowItemsHeight: 200,
+                          ),
+                        ),
                         Divider(
                           thickness: width * 0.006,
                           color: Theme.of(context).primaryColor,
@@ -417,18 +507,22 @@ class _HomeScreenState extends State<HomeScreen> {
                         Row(
                           children: [
                             Button(const Color(0xffFCD917), 'Search',
-                                Colors.white, width, height, () {
+                                Colors.white, width, height, () async {
                               if (_formKey.currentState!.validate()) {
                                 print(countriesId);
                                 print(citiesId);
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => ResultPage(
-                                              countryID: int.parse(countriesId),
-                                              cityID: int.parse(citiesId),
-                                              probonoID: int.parse(probonoId),
-                                            )));
+                                fetchAdovate(int.parse(countriesId),
+                                    int.parse(citiesId), int.parse(probonoId),
+                                    servicesList: services);
+                                // Navigator.push(
+                                //     context,
+                                //     MaterialPageRoute(
+                                //         builder: (context) => ResultPage(
+                                //               countryID: int.parse(countriesId),
+                                //               cityID: int.parse(citiesId),
+                                //               probonoID: int.parse(probonoId),
+                                //               ServicesList: services,
+                                //             )));
                               }
                             }),
                             const Spacer(),
@@ -441,13 +535,21 @@ class _HomeScreenState extends State<HomeScreen> {
                               () {
                                 //print('workgin reset');
                                 setState(() {
-                                  countriesId = '';
+                                  // countriesId = '';
                                   // countries=[];
+                                  countries.clear();
                                   cities.clear();
+                                  cities = [
+                                    {"label": "City"}
+                                  ];
                                   services.clear();
                                   probono.clear();
-                                  probonoId = '2';
+                                  // probonoId = '2';
                                   countries.clear();
+                                  countriesId = '';
+                                  citiesId = '-1';
+                                  probonoId = '-1';
+                                  servicesId = '-1';
                                 });
                                 getData();
                               },
@@ -461,6 +563,140 @@ class _HomeScreenState extends State<HomeScreen> {
               ],
             ),
     ));
+  }
+
+  Future<void> fetchAdovate(int countryID, int cityID, int probonoID,
+      {required List servicesList}) async {
+    final prefs = await SharedPreferences.getInstance();
+
+    final String? token = prefs.getString('token');
+    final int? userId = prefs.getInt('userId');
+    var headers = {
+      'Authorization': 'Bearer $token',
+      'Content-Type': 'application/json',
+      'Accept': 'application/json'
+    };
+
+    var body;
+    // var bodyApi
+    print(servicesList);
+    if (servicesList.isNotEmpty) {
+      if (cityID != 0 && probonoID != -1) {
+        print('print 1');
+        body = jsonEncode({
+          "country_id": countryID,
+          "city_id": cityID,
+          "probono": probonoID,
+          "services": servicesList,
+        });
+      } else if (cityID != 0) {
+        print('print 2');
+        body = jsonEncode({
+          "country_id": countryID,
+          "city_id": cityID,
+          "services": servicesList,
+        });
+      } else if (probonoID != -1) {
+        print('print 3');
+        body = jsonEncode({
+          "country_id": countryID,
+          "probono": probonoID,
+          "services": servicesList,
+        });
+      } else {
+        print('print 4');
+        body = jsonEncode({
+          "country_id": countryID,
+          "services": servicesList,
+        });
+      }
+      setState(() {});
+    } else {
+      if (cityID != 0 && probonoID != -1) {
+        print('print 1');
+        body = jsonEncode({
+          "country_id": countryID,
+          "city_id": cityID,
+          "probono": probonoID,
+        });
+      } else if (cityID != 0) {
+        print('print 2');
+        body = jsonEncode({
+          "country_id": countryID,
+          "city_id": cityID,
+        });
+      } else if (probonoID != -1) {
+        print('print 3');
+        body = jsonEncode({
+          "country_id": countryID,
+          "probono": probonoID,
+        });
+      } else {
+        print('print 4');
+        body = jsonEncode({
+          "country_id": countryID,
+        });
+      }
+      setState(() {});
+    }
+    print(body);
+
+    var response = await http.post(
+        Uri.parse('http://www.advolocate.info/api/searchAdvocate?page=1'),
+        headers: headers,
+        body: body);
+    print(response.body);
+    if (response.statusCode == 200) {
+      var data = jsonDecode(response.body.toString());
+      print(data);
+      if (data['code'] == 0) {
+        Get.to(ResultPage(
+            searchResultModel:
+                SearchResultModel.fromJson(jsonDecode(response.body))));
+
+        //   return;
+      } else {
+        // Utils().toastMessage('No Adovocate Found');
+        showDialog(
+            context: context,
+            builder: (context) {
+              return AlertDialog(
+                title: Text("Unavailable Advocates in your Area"),
+                actions: [
+                  TextButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      child: Text(
+                        "OK",
+                        style: TextStyle(color: Theme.of(context).primaryColor),
+                      ))
+                ],
+              );
+            });
+
+        // ignore: use_build_context_synchronously
+      }
+    } else {
+      print(response.body);
+      showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              title: Text("Unavailable Advocates"),
+              actions: [
+                TextButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    child: Text(
+                      "OK",
+                      style: TextStyle(color: Theme.of(context).primaryColor),
+                    ))
+              ],
+            );
+          });
+    }
   }
 
   Future<void> getData() async {
@@ -494,9 +730,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
       lenght = metaDataModel.result!.cities!.length;
     }
-    setState(() {
-      loading = false;
-    });
+    loadingFun();
   }
 
   void getCities(Map<String, dynamic> data, int lenght) {
@@ -505,7 +739,7 @@ class _HomeScreenState extends State<HomeScreen> {
     print(citiesId);
     print(cities);
 
-    cities.clear();
+    // cities.clear();
 
     int countryID = int.parse(countriesId!);
 
@@ -514,6 +748,7 @@ class _HomeScreenState extends State<HomeScreen> {
         cities.add(data['result']['cities'][i]);
       }
     }
+    print(cities.first);
 
     setState(() {});
   }

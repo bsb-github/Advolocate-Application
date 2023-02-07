@@ -117,13 +117,13 @@ class _ProfileState extends State<Profile> {
                                 )),
                               ),
                               RowInfo(width, height, Icons.location_on,
-                                  'Location', '[Lawyer address]'),
+                                  'Location', '[Lawyer address]', context),
                               RowInfo(width, height, Icons.balance, 'Lawsuits',
-                                  '[No of clients]'),
+                                  '[No of clients]', context),
                               RowInfo(width, height, Icons.file_open_rounded,
-                                  'File Achievement', '90%'),
+                                  'File Achievement', '90%', context),
                               RowInfo(width, height, Icons.warehouse_rounded,
-                                  'Experience', '10+ years'),
+                                  'Experience', '10+ years', context),
                               // contact me
                               Padding(
                                 padding: EdgeInsets.only(
@@ -138,9 +138,9 @@ class _ProfileState extends State<Profile> {
                               ),
 
                               RowInfo(width, height, Icons.phone,
-                                  'Phone Number', '0333-*******'),
+                                  'Phone Number', '0333-*******', context),
                               RowInfo(width, height, Icons.mail, 'Mail',
-                                  'name@gmail.com'),
+                                  'name@gmail.com', context),
                             ],
                           ),
                         ),

@@ -8,7 +8,18 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../screens/HomePage.dart';
 
 class UpdateBottomSheet extends StatefulWidget {
-  const UpdateBottomSheet({super.key});
+  final String name;
+  final String contact_number;
+  final String address;
+  final String city;
+  final String email;
+  const UpdateBottomSheet(
+      {super.key,
+      required this.name,
+      required this.contact_number,
+      required this.address,
+      required this.city,
+      required this.email});
 
   @override
   State<UpdateBottomSheet> createState() => _UpdateBottomSheetState();
@@ -24,10 +35,10 @@ class _UpdateBottomSheetState extends State<UpdateBottomSheet> {
   @override
   void initState() {
     // TODO: implement initState
-    nameController.text = data.name;
-    emailController.text = data.email;
-    phoneController.text = data.contact_number;
-    addressController.text = data.address;
+    nameController.text = widget.name;
+    emailController.text = widget.email;
+    phoneController.text = widget.contact_number;
+    addressController.text = widget.address;
     super.initState();
   }
 
@@ -109,6 +120,7 @@ class _UpdateBottomSheetState extends State<UpdateBottomSheet> {
                   decoration: InputDecoration(
                     //fillColor: Colors.white,
                     hintText: 'Email Address',
+                    enabled: false,
                     fillColor: Colors.white,
                     filled: true,
                     prefixIcon: const Icon(Icons.email, color: Colors.black),
@@ -272,14 +284,15 @@ class _UpdateBottomSheetState extends State<UpdateBottomSheet> {
                         "address": addressController.text,
                         "selectedCountry": 1,
                         "img_url":
-                            'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png'
+                            "data:image/jpeg;base64,'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"
                       });
                       var response = await http.post(
                           Uri.parse(
                               'http://www.advolocate.info/api/updateCustomerInfo'),
                           headers: headers,
                           body: body);
-                      var data = jsonDecode(response.body.toString());
+                      var data = jsonDecode(response.body);
+
                       print(response.body);
                       if (data["description"] != "Unable  to update data") {
                         getUserData(1, token!, userId);
@@ -336,7 +349,6 @@ class _UpdateBottomSheetState extends State<UpdateBottomSheet> {
       // AdvocateResult result = AdvocateResult.fromJson(Provider.of<LawyerDataProvider>(context, listen: false).data.result);
 
       // ignore: use_build_context_synchronously
-
     }
   }
 }

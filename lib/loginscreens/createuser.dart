@@ -7,6 +7,7 @@ import 'package:advolocate_app/screens/homepage.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import 'package:random_string_generator/random_string_generator.dart';
 import 'package:snippet_coder_utils/FormHelper.dart';
@@ -83,7 +84,7 @@ class _CreateUserAccountState extends State<CreateUserAccount> {
                       height: 30,
                     ),
                     Padding(
-                      padding: const EdgeInsets.only(left: 10.0),
+                      padding: const EdgeInsets.only(left: 18.0),
                       child: Align(
                         alignment: Alignment.topLeft,
                         child: Text(
@@ -96,7 +97,7 @@ class _CreateUserAccountState extends State<CreateUserAccount> {
                       ),
                     ),
                     SizedBox(
-                      height: 10,
+                      height: 12,
                     ),
                     Container(
                       margin: EdgeInsets.only(
@@ -132,7 +133,7 @@ class _CreateUserAccountState extends State<CreateUserAccount> {
                       ),
                     ),
                     SizedBox(
-                      height: height * 0.04,
+                      height: height * 0.03,
                     ),
                     Container(
                       margin: EdgeInsets.only(
@@ -169,7 +170,7 @@ class _CreateUserAccountState extends State<CreateUserAccount> {
                       ),
                     ),
                     SizedBox(
-                      height: height * 0.04,
+                      height: height * 0.03,
                     ),
                     Container(
                       margin: EdgeInsets.only(
@@ -217,7 +218,7 @@ class _CreateUserAccountState extends State<CreateUserAccount> {
                       ),
                     ),
                     SizedBox(
-                      height: height * 0.04,
+                      height: height * 0.03,
                     ),
                     Container(
                       margin: EdgeInsets.only(
@@ -255,7 +256,7 @@ class _CreateUserAccountState extends State<CreateUserAccount> {
                       ),
                     ),
                     SizedBox(
-                      height: height * 0.04,
+                      height: height * 0.03,
                     ),
                     Container(
                       margin: EdgeInsets.only(
@@ -303,11 +304,11 @@ class _CreateUserAccountState extends State<CreateUserAccount> {
                       ),
                     ),
                     SizedBox(
-                      height: height * 0.1,
+                      height: height * 0.03,
                     ),
                     Container(
                         height: height * 0.075,
-                        width: width * 0.85,
+                        width: width * 0.70,
                         decoration: BoxDecoration(
                           borderRadius:
                               BorderRadius.all(Radius.circular(width * 0.2)),
@@ -345,13 +346,14 @@ class _CreateUserAccountState extends State<CreateUserAccount> {
                                         "to_name": nameController.text,
                                         "otp_code": code,
                                         "subject":
-                                            "${nameController.text} OTP For the Application ADVOLOCATE",
+                                            "OTP For the Application Advolocate",
                                         "user_email": emailController.text,
                                       }
                                     }));
                                 print(response.reasonPhrase);
                                 // var data = jsonDecode(response.body);
                                 // print(data);
+                                print(response.body);
                                 if (response.statusCode == 200) {
                                   Navigator.push(
                                       context,
@@ -367,12 +369,22 @@ class _CreateUserAccountState extends State<CreateUserAccount> {
                                                 name: nameController.text,
                                               )));
                                 } else {
-                                  Utils().toastMessage(
-                                      "check your Email and try again");
+                                  Get.snackbar(
+                                      "Error", "check your Email and try again",
+                                      snackPosition: SnackPosition.BOTTOM,
+                                      colorText: Colors.white,
+                                      backgroundColor: Colors.red,
+                                      margin: EdgeInsets.all(8));
+
                                   //print(response.body);
                                 }
                               } else {
-                                Utils().toastMessage("User Already Exist");
+                                Get.snackbar("User Already have Account",
+                                    "User Already Exist",
+                                    snackPosition: SnackPosition.BOTTOM,
+                                    colorText: Colors.white,
+                                    backgroundColor: Colors.red,
+                                    margin: EdgeInsets.all(8));
                               }
                             }
                           },

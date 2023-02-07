@@ -1,40 +1,34 @@
 import 'dart:convert';
-
 import 'package:advolocate_app/Model/AdvocatesData.dart';
 import 'package:advolocate_app/Model/FacebookLoginData.dart';
 import 'package:advolocate_app/Model/profile_data_model.dart';
-import 'package:advolocate_app/Model/searchResultModel.dart';
 import 'package:advolocate_app/Providers/ConfigProviders.dart';
 import 'package:advolocate_app/Providers/ImageUrlProvider.dart';
+import 'package:advolocate_app/Providers/LawyerDataProvider.dart';
 import 'package:advolocate_app/Providers/OtpProvider.dart';
 import 'package:advolocate_app/firebase_options.dart';
-import 'package:advolocate_app/home.dart';
 import 'package:advolocate_app/loginscreens/SelectionBottomScreens.dart';
-import 'package:advolocate_app/loginscreens/createadvocate.dart';
 import 'package:advolocate_app/loginscreens/manuallogin.dart';
 import 'package:advolocate_app/loginscreens/splash.dart';
+import 'package:advolocate_app/screens/AdvocateHomePage.dart';
 import 'package:advolocate_app/screens/HomePage.dart';
+import 'package:advolocate_app/screens/ProfilePending.dart';
 import 'package:advolocate_app/screens/cso_laws.dart';
 import 'package:advolocate_app/screens/homepage.dart';
-import 'package:advolocate_app/screens/lawyer_page.dart';
 import 'package:advolocate_app/screens/privacy_policy.dart';
 import 'package:advolocate_app/screens/search_results.dart';
 import 'package:advolocate_app/screens/user_profile.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
+import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'Model/registerCustomer_api.dart';
 import 'custom_button.dart';
 import 'loginscreens/selection.dart';
-import 'loginscreens/signup.dart';
 import 'package:http/http.dart' as http;
-
 import 'utils/utils.dart';
 
 void main() async {
@@ -54,8 +48,9 @@ void main() async {
       ChangeNotifierProvider(create: (_) => ConfigProvider()),
       ChangeNotifierProvider(create: (_) => ImageUrlProvider()),
       ChangeNotifierProvider(create: (_) => OtpProvider()),
+      ChangeNotifierProvider(create: (_) => LawyerDataProvider()),
     ],
-    child: MaterialApp(
+    child: GetMaterialApp(
       theme: ThemeData(
         primaryColor: const Color(0xffFCD917),
       ),
@@ -64,7 +59,7 @@ void main() async {
         '/profile': (context) => const UserProfile(),
         '/privacy_policy': (context) => const PrivacyPolicy(),
         '/cso_laws': (context) => const CsoLaws(),
-        '/result_page': (context) => ResultPage(),
+        //
       },
       // home: const SignUpScreen(),
       home: splashscreen(),
@@ -198,8 +193,29 @@ class _MyAppState extends State<MyApp> {
 
       FacebookData.data[0] = FaceBookLoginData.fromJson(userData);
       setState(() {});
+      var data = FacebookData.data[0];
       print(3);
-      addFBUserData();
+      getAdvocatesData();
+      var Data = AdvocatesList.data.where(
+        (element) => element.email == data.email,
+      );
+      print("sasdfghjkoll");
+      print("A~PI  DAta" + Data.first.email);
+
+      if (Data.isEmpty) {
+        showModalBottomSheet(
+          context: context,
+          builder: (context) => SelectionBottomScreen(
+              name: data.name.toString(),
+              social_id: data.id.toString(),
+              type: 2,
+              email: data.email.toString()),
+        );
+      } else {
+        loginGoogleUser(context,
+            type: 2, password: FacebookData.data[0].id.toString());
+      }
+
       setState(() {
         loading = false;
       });
@@ -429,7 +445,12 @@ class _MyAppState extends State<MyApp> {
         Utils().toastMessage('please check give correct email and password');
       } else if (data['description'].toString() == 'Login Successful') {
         print(data['result']['token']);
-
+        Get.snackbar(
+          "Account Registeration",
+          data["description"],
+          backgroundColor: Colors.green,
+          snackStyle: SnackStyle.FLOATING,
+        );
         setState(() {
           prefs.setString('email', password);
           prefs.setString('password', password);
@@ -441,28 +462,36 @@ class _MyAppState extends State<MyApp> {
         getAdvocatesData();
 
         if (type == 1) {
-          googleSignIn.disconnect();
+          //  googleSignIn.disconnect();
         } else {
           _logout();
         }
         getUserData(
             1, data['result']['token'].toString(), data['result']['user_id']);
       } else if (data["description"] == "Please register your account") {
-        Utils().toastMessage("Sign in methods " + data['description']);
-        await createFBUser(
-            FacebookData.data[0].email.toString(),
-            2,
-            FacebookData.data[0].id.toString(),
-            FacebookData.data[0].name.toString(),
-            "Advolocate App",
-            2);
+        Get.snackbar(
+          "Account Registeration",
+          data["description"],
+          backgroundColor: Colors.red,
+          snackStyle: SnackStyle.FLOATING,
+        );
+        //Utils().toastMessage(data['description']);
       } else {
-        Utils().toastMessage(response.body);
+        Get.snackbar(
+          "Account Registeration",
+          data["description"],
+          backgroundColor: Colors.red,
+          snackStyle: SnackStyle.FLOATING,
+        );
         print(response.body);
       }
     } else {
-      Utils().toastMessage(response.body);
-      print(response.body);
+      Get.snackbar(
+        "Account Registeration",
+        "Cant Create Account (Check Your Internet Connection)",
+        backgroundColor: Colors.red,
+        snackStyle: SnackStyle.FLOATING,
+      );
     }
   }
 
@@ -470,8 +499,6 @@ class _MyAppState extends State<MyApp> {
     var url = Uri.parse('http://www.advolocate.info/api/getCustomerInfo');
 
     print('get data token');
-    var getCustomerInfoToken =
-        Provider.of<ConfigProvider>(context, listen: false).token;
     print(token);
     var headers = {
       'Content-Type': 'application/json',
@@ -483,13 +510,29 @@ class _MyAppState extends State<MyApp> {
     var data = jsonDecode(response.body.toString());
     print(data);
     ProfileDataList.users[0] = ProfileData.fromJson(data['result']);
+    var advData = AdvocatesList.data.where(
+      (element) => element.email == ProfileDataList.users[0].email,
+    );
     print(ProfileDataList.users[0].email);
-    if (userType == 1) {
+    if (ProfileDataList.users[0].profession == "profession" ||
+        ProfileDataList.users[0].profession == "123") {
       Navigator.pushReplacement(
           context, MaterialPageRoute(builder: (context) => HomePage()));
-    } else {
+    } else if (advData.first.status >= 1) {
+      context.read<LawyerDataProvider>().setAdvData(advData.first);
+      Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => AdvocateHomePage(),
+          ));
+      // push to advocate home
       // AdvocateResult result = AdvocateResult.fromJson(Provider.of<LawyerDataProvider>(context, listen: false).data.result);
-
+    } else {
+      Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => ProfilePending(),
+          ));
     }
   }
 
@@ -523,19 +566,22 @@ class _MyAppState extends State<MyApp> {
 
     try {
       var reslut = await googleSignIn.signIn();
-
+      googleSignIn.disconnect();
       setState(() {
         loading = false;
       });
 
       if (reslut == null) {
-        //  googleSignIn.disconnect();
+        googleSignIn.disconnect();
         return;
       }
       // ignore: use_build_context_synchronously
+      getAdvocatesData();
       var Data = AdvocatesList.data.where(
         (element) => element.email == reslut.email,
       );
+      print("sasdfghjkoll");
+      //print("A~PI  DAta" + Data.first.email);
       if (Data.isEmpty) {
         showModalBottomSheet(
           context: context,
@@ -630,7 +676,7 @@ class _MyAppState extends State<MyApp> {
         prefs.setInt('userId', 2343);
         prefs.setString("loginType", "google");
       });
-      getAdvoUserData();
+      //  getAdvoUserData();
       Navigator.pushNamed(context, '/home');
     });
   }
@@ -657,19 +703,9 @@ class _MyAppState extends State<MyApp> {
         prefs.setInt('userId', 2343);
         prefs.setString("loginType", "google");
       });
-      getAdvoUserData();
+      // getAdvoUserData();
       Navigator.pushNamed(context, '/home');
     });
-  }
-
-  void getAdvoUserData() async {
-    final prefs = await SharedPreferences.getInstance();
-
-    final String? id = prefs.getString('password');
-    var data =
-        await FirebaseFirestore.instance.collection("user").doc(id).get();
-    ProfileDataList.users[0] = ProfileData.fromSnapshot(data);
-    print(ProfileDataList.users[0].email);
   }
 
   @override

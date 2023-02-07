@@ -4,27 +4,31 @@ import 'dart:math';
 
 import 'package:advolocate_app/Model/AdvocatesData.dart';
 import 'package:advolocate_app/Model/meta_data_model.dart';
+import 'package:advolocate_app/Model/profile_data_model.dart';
+import 'package:advolocate_app/Providers/LawyerDataProvider.dart';
 import 'package:advolocate_app/home.dart';
 import 'package:advolocate_app/loginscreens/manuallogin.dart';
 import 'package:advolocate_app/loginscreens/verification.dart';
 import 'package:advolocate_app/main.dart';
+import 'package:advolocate_app/screens/AdvocateHomePage.dart';
 import 'package:advolocate_app/utils/utils.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:provider/provider.dart';
 import 'package:random_string_generator/random_string_generator.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:snippet_coder_utils/FormHelper.dart';
 import 'package:http/http.dart' as http;
 
 import '../util/homepage/multiselect_dropdown.dart';
 
-class CreateSocialAdvocate extends StatefulWidget {
+class UpdateAdvocateBottomSheet extends StatefulWidget {
   final String email;
   final String social_id;
   final String name;
   final int type;
-  const CreateSocialAdvocate(
+  const UpdateAdvocateBottomSheet(
       {super.key,
       required this.email,
       required this.social_id,
@@ -32,10 +36,11 @@ class CreateSocialAdvocate extends StatefulWidget {
       required this.type});
 
   @override
-  State<CreateSocialAdvocate> createState() => _CreateSocialAdvocateState();
+  State<UpdateAdvocateBottomSheet> createState() =>
+      _UpdateAdvocateBottomSheetState();
 }
 
-class _CreateSocialAdvocateState extends State<CreateSocialAdvocate> {
+class _UpdateAdvocateBottomSheetState extends State<UpdateAdvocateBottomSheet> {
   String? regionsid;
   String? countriesId;
   String citiesId = '';
@@ -94,6 +99,19 @@ class _CreateSocialAdvocateState extends State<CreateSocialAdvocate> {
     40: "MEDIA LAW",
     42: "CONTRACT LAW",
   };
+  void getAdvocatesData() async {
+    var response = await http
+        .post(Uri.parse("http://www.advolocate.info/api/getAdvocatesData"));
+    print(response.body);
+    var data = jsonDecode(response.body);
+    var advos = List.from(data["result"]);
+
+    for (var i = 0; i < advos.length; i++) {
+      AdvocatesList.data.add(AdvocatesData.fromJson(advos[i]));
+    }
+    print(AdvocatesList.data[34].email);
+  }
+
   Set<int> sel = {};
   void populateMultiselect() {
     for (int v in valuestopopulate.keys) {
@@ -113,12 +131,45 @@ class _CreateSocialAdvocateState extends State<CreateSocialAdvocate> {
 
     // print('services as list');
     // print(services);
-    final selectedValues = await showDialog<Set<int>>(
+    Set<int>? selected = Set<int>();
+
+    var l = Provider.of<LawyerDataProvider>(context, listen: false)
+        .advData
+        .services
+        .split(",");
+    var a = List.from(valuestopopulate.keys);
+    var b = List.from(valuestopopulate.values);
+
+    // for (int i = 0; i < l.length; i++) {
+    //   String val = l[i].toLowerCase();
+    //   for (int j = 0; j < b.length; j++) {
+    //     if (val == b[j].toString().toLowerCase()) {
+    //       setState(() {
+    //         sel.add(a[j]);
+    //       });
+    //       continue;
+    //     }
+    //   }
+    // }
+    var li = <int>[];
+    for (var element in l) {
+      int count = 0;
+      for (var el in b) {
+        if (element.toUpperCase().trim() == el) {
+          li.add(a[count]);
+        }
+        count++;
+      }
+    }
+    sel.addAll(li);
+    setState(() {});
+    Set<int>? selectedValues = sel;
+    selectedValues = await showDialog<Set<int>>(
       context: context,
       builder: (BuildContext context) {
         return MultiSelectDialog(
           items: items,
-          initialSelectedValues: services.isEmpty ? {0} : sel,
+          initialSelectedValues: sel,
         );
       },
     );
@@ -126,7 +177,11 @@ class _CreateSocialAdvocateState extends State<CreateSocialAdvocate> {
     // print('services as set');
     // print(sel);
     // debugPrint(selectedValues);
-    getvaluefromkey(selectedValues!);
+    if (selectedValues == null) {
+      getvaluefromkey(sel);
+    } else {
+      getvaluefromkey(selectedValues);
+    }
   }
 
   var otpGenerator = RandomStringGenerator(
@@ -135,6 +190,7 @@ class _CreateSocialAdvocateState extends State<CreateSocialAdvocate> {
     hasAlpha: false,
     hasSymbols: false,
   );
+
   void getvaluefromkey(Set<int> selection) {
     sel = selection;
     for (int x in selection.toList()) {
@@ -144,7 +200,7 @@ class _CreateSocialAdvocateState extends State<CreateSocialAdvocate> {
     }
   }
 
-  String? City = 'Ciy';
+  String? City = 'City';
 
   TextEditingController _fullNameController = TextEditingController();
   TextEditingController _emailController = TextEditingController();
@@ -166,11 +222,18 @@ class _CreateSocialAdvocateState extends State<CreateSocialAdvocate> {
   // List<dynamic> services = [];
   Map<String, dynamic>? data;
   int lenght = 0;
+
   @override
   void initState() {
+    var data = Provider.of<LawyerDataProvider>(context, listen: false).advData;
     super.initState();
     setState(() {
       _emailController.text = widget.email;
+      _addressController.text = data.address;
+      _professionController.text = data.profession;
+      _coveredAreaController.text = data.coveredArea;
+      _phoneNumberController.text = data.contact;
+
       _fullNameController.text = widget.name;
     });
     getData();
@@ -180,108 +243,38 @@ class _CreateSocialAdvocateState extends State<CreateSocialAdvocate> {
 
   //final usernameController =TextEditingController();
   // bool loading = false;
-  Future<void> createFBUser(int type) async {
-    //_logout();
-    var headers = {
-      'Content-Type': 'application/json',
-      'Accept': 'application/json',
-    };
-    var body = json.encode({
-      'name': _fullNameController.text.toString(),
-      'email': _emailController.text.toString(),
-      'password': widget.social_id,
-      'contact_number': _phoneNumberController.text.toString(),
-      'address': _addressController.text.toString(),
-      'profession': _professionController.text.toString(),
-      'covered_area': _coveredAreaController.text.toString(),
-      'region_id': regionsid!,
-      'country_id': countriesId!,
-      'city_id': citiesId,
-      'probono': probonoId!,
-      'field_of_service': services.toString(),
-      'age': _ageController.text,
-      'gender': 'Male',
-      "social_id": widget.social_id,
-      "link_type": type
-    });
-    var response = await http.post(
-        Uri.parse('http://www.advolocate.info/api/register_social_advocate'),
-        headers: headers,
-        body: body);
-    var data = jsonDecode(response.body.toString());
-    print(data);
-    if (response.statusCode == 200) {
-      print(data);
-      print(data['description']);
-      if (data['code'] == 0 || data['code'] == 5) {
-        Get.snackbar(
-          "Login Suceess",
-          "Wait for admin to approve your profile",
-          colorText: Colors.white,
-          snackPosition: SnackPosition.BOTTOM,
-          margin: EdgeInsets.all(8),
-          backgroundColor: Colors.yellow[700],
-          snackStyle: SnackStyle.FLOATING,
-        );
-        Navigator.pushReplacement(
-            context, MaterialPageRoute(builder: (context) => MyApp()));
-      } else {
-        Get.snackbar(
-          "Log In",
-          "Unable to Login",
-          colorText: Colors.white,
-          snackPosition: SnackPosition.BOTTOM,
-          margin: EdgeInsets.all(8),
-          backgroundColor: Colors.red,
-          snackStyle: SnackStyle.FLOATING,
-        );
-      }
-    } else {
-      Get.snackbar(
-        "Log In",
-        "Check your credential and try again",
-        colorText: Colors.white,
-        snackPosition: SnackPosition.BOTTOM,
-        margin: EdgeInsets.all(8),
-        backgroundColor: Colors.red,
-        snackStyle: SnackStyle.FLOATING,
-      );
-    }
-  }
 
   final _formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
     var height = MediaQuery.of(context).size.height;
     var width = MediaQuery.of(context).size.width;
+
     return SafeArea(
       child: Scaffold(
         body: loading == false
             ?
             // color: Color(0xffff5722),
             Column(children: [
-                Image.asset(
-                  'images/splashlogo.png',
-                  height: 250,
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 18.0),
-                  child: Align(
-                      alignment: Alignment.topLeft,
-                      child: Text(
-                        'Create Account',
-                        style: TextStyle(
-                            fontSize: 35,
-                            color: Colors.black,
-                            fontWeight: FontWeight.bold),
-                      )),
-                ),
                 Form(
                   key: _formKey,
                   child: Expanded(
                     child: SingleChildScrollView(
                       child: Column(
                         children: [
+                          SizedBox(
+                            height: 10,
+                          ),
+                          Align(
+                              alignment: Alignment.center,
+                              child: Text(
+                                'Update Account',
+                                style: TextStyle(
+                                    fontSize: 35,
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.bold),
+                              )),
+
                           SizedBox(
                             height: 20,
                           ),
@@ -291,7 +284,6 @@ class _CreateSocialAdvocateState extends State<CreateSocialAdvocate> {
                             child: TextFormField(
                               controller: _fullNameController,
                               maxLines: 1,
-                              enabled: false,
                               style: const TextStyle(
                                   //color: Colors.black
                                   ),
@@ -595,69 +587,46 @@ class _CreateSocialAdvocateState extends State<CreateSocialAdvocate> {
                           ),
                           // city
                           Padding(
-                            padding: const EdgeInsets.only(left: 24, right: 12),
-                            child: DropdownSearch<String>(
-                              onChanged: (value) {
-                                var obj = cities.where(
-                                    (element) => element["label"] == value);
-                                setState(() {
-                                  citiesId = obj.first["value"].toString();
-                                });
+                              padding:
+                                  const EdgeInsets.only(left: 20, right: 20),
+                              child: DropdownSearch<String>(
+                                onChanged: (value) {
+                                  var obj = cities.where(
+                                      (element) => element["label"] == value);
+                                  setState(() {
+                                    citiesId = obj.first["value"].toString();
+                                  });
 
-                                print(citiesId);
-                              },
-                              items: List.from(cities.map((e) => e["label"])),
-                              dropdownDecoratorProps: DropDownDecoratorProps(
-                                  baseStyle: TextStyle(
-                                    color: Colors.black,
-                                  ),
-                                  dropdownSearchDecoration: InputDecoration(
-                                    enabledBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(
-                                            color:
-                                                Theme.of(context).primaryColor),
-                                        borderRadius:
-                                            BorderRadius.circular(200)),
-                                    border: OutlineInputBorder(
-                                        borderSide: BorderSide(
-                                            color:
-                                                Theme.of(context).primaryColor),
-                                        borderRadius:
-                                            BorderRadius.circular(200)),
-                                  )),
-                              selectedItem: cities.first["label"],
-                              popupProps: const PopupProps.dialog(
-                                  fit: FlexFit.loose,
-                                  showSearchBox: true,
-                                  searchFieldProps: TextFieldProps(
-                                      decoration:
-                                          InputDecoration(hintText: "Search"))),
-                            ),
-                          ),
-                          // FormHelper.dropDownWidget(
-                          //   context,
-                          //   '    ${City}',
-                          //   citiesId,
-                          //   cities,
-                          //   (onChangedval) {
-                          //     citiesId = onChangedval;
-                          //   },
-                          //   (onValidate) {
-                          //     if (onValidate == null) {
-                          //       return '    Required';
-                          //     }
-                          //     return null;
-                          //   },
-                          //   optionValue: 'value',
-                          //   optionLabel: 'label',
-                          //   textColor: Colors.black,
-                          //   borderColor: const Color(0xffFCD917),
-                          //   borderWidth: 1,
-                          //   hintFontSize: width * 0.045,
-                          //   hintColor: Colors.black,
-                          //   borderFocusColor: const Color(0xffFCD917),
-                          //   validationColor: Colors.red,
-                          // ),
+                                  print(citiesId);
+                                },
+                                items: List.from(cities.map((e) => e["label"])),
+                                dropdownDecoratorProps: DropDownDecoratorProps(
+                                    baseStyle: TextStyle(
+                                      color: Colors.black,
+                                    ),
+                                    dropdownSearchDecoration: InputDecoration(
+                                      enabledBorder: OutlineInputBorder(
+                                          borderSide: BorderSide(
+                                              color: Theme.of(context)
+                                                  .primaryColor),
+                                          borderRadius:
+                                              BorderRadius.circular(200)),
+                                      border: OutlineInputBorder(
+                                          borderSide: BorderSide(
+                                              color: Theme.of(context)
+                                                  .primaryColor),
+                                          borderRadius:
+                                              BorderRadius.circular(200)),
+                                    )),
+                                selectedItem: cities.first["label"],
+                                popupProps: const PopupProps.dialog(
+                                    fit: FlexFit.loose,
+                                    showSearchBox: true,
+                                    searchFieldProps: TextFieldProps(
+                                        decoration: InputDecoration(
+                                            hintText: "Search"))),
+                              )),
+
                           SizedBox(
                             height: height * 0.04,
                           ),
@@ -734,8 +703,8 @@ class _CreateSocialAdvocateState extends State<CreateSocialAdvocate> {
                               getImage();
                             },
                             child: Container(
-                              height: height * 0.065,
-                              width: width * 0.85,
+                              height: height * 0.07,
+                              width: width * 0.9,
                               margin: EdgeInsets.only(
                                   left: width * 0.05, right: width * 0.05),
                               decoration: BoxDecoration(
@@ -800,41 +769,73 @@ class _CreateSocialAdvocateState extends State<CreateSocialAdvocate> {
                                 ),
                               ),
                               // color: Colors.green,
-                              child: ElevatedButton(
-                                onPressed: () async {
-                                  debugPrint('printing services');
-                                  print(services.toString());
+                              child: Consumer(
+                                builder: (context, value, child) =>
+                                    ElevatedButton(
+                                  onPressed: () async {
+                                    debugPrint('printing services');
+                                    print(services.toString());
 
-                                  if (_formKey.currentState!.validate()) {
-                                    if (image == null) {
-                                      Utils().toastMessage('Select License');
-                                    } else {
+                                    {
+                                      getAdvocatesData();
                                       var data = AdvocatesList.data.where(
                                           (element) =>
                                               element.email ==
                                               _emailController.text);
-                                      registerUser();
+                                      registerUser(context);
+                                      final prefs =
+                                          await SharedPreferences.getInstance();
+
+                                      final String? token =
+                                          prefs.getString('token');
+                                      final int? userId =
+                                          prefs.getInt('userId');
+                                      var dataAdvocate = AdvocatesList.data
+                                          .where((element) =>
+                                              element.Uid == userId)
+                                          .first;
+                                      var headers = {
+                                        'Content-Type': 'application/json',
+                                        'Accept': 'application/json',
+                                        "Authorization": "Bearer $token"
+                                      };
+                                      var resp = await http.post(
+                                          Uri.parse(
+                                              "http://www.advolocate.info/api/getCustomerInfo"),
+                                          headers: headers,
+                                          body:
+                                              jsonEncode({"user_id": userId}));
+                                      Provider.of<LawyerDataProvider>(context,
+                                              listen: false)
+                                          .setData(ProfileData.fromJson(
+                                              jsonDecode(resp.body)["result"]));
+                                      Future.delayed(Duration(seconds: 2));
+                                      Navigator.pushReplacement(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  AdvocateHomePage()));
                                     }
-                                  }
-                                  // Navigator.push(context, MaterialPageRoute(builder: (context) => const home(),));
-                                },
-                                style: ElevatedButton.styleFrom(
-                                  shadowColor: Colors.black,
-                                  backgroundColor: const Color(0xffFCD917),
-                                  elevation: width * 0.03,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius:
-                                        BorderRadius.circular(width * 0.1),
-                                    // <-- Radius
+                                    // Navigator.push(context, MaterialPageRoute(builder: (context) => const home(),));
+                                  },
+                                  style: ElevatedButton.styleFrom(
+                                    shadowColor: Colors.black,
+                                    backgroundColor: const Color(0xffFCD917),
+                                    elevation: width * 0.03,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius:
+                                          BorderRadius.circular(width * 0.1),
+                                      // <-- Radius
+                                    ),
                                   ),
-                                ),
-                                child: Text(
-                                  'Create Account',
-                                  style: TextStyle(
-                                    // fontWeight: FontWeight.bold,
-                                    fontSize: width * 0.05,
-                                    letterSpacing: width * 0.002,
-                                    // color: Colors.black,
+                                  child: Text(
+                                    'Update Data',
+                                    style: TextStyle(
+                                      // fontWeight: FontWeight.bold,
+                                      fontSize: width * 0.05,
+                                      letterSpacing: width * 0.002,
+                                      // color: Colors.black,
+                                    ),
                                   ),
                                 ),
                               )),
@@ -855,67 +856,75 @@ class _CreateSocialAdvocateState extends State<CreateSocialAdvocate> {
     );
   }
 
-  Future<void> registerUser() async {
+  Future<void> registerUser(BuildContext context) async {
+    final prefs = await SharedPreferences.getInstance();
+
+    final String? token = prefs.getString('token');
+    final int? userId = prefs.getInt('userId');
+    var dataAdvocate =
+        AdvocatesList.data.where((element) => element.Uid == userId).first;
     var headers = {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
+      "Authorization": "Bearer $token"
     };
+    var a = List.from(valuestopopulate.values);
+    print(a);
+    var list = [];
+    print(services.remove(0).toString());
+    for (int i = 0; i < services.length; i++) {
+      list.add({
+        "value": services[i],
+      });
+    }
+    print(list);
     var response = await http.post(
-        Uri.parse('http://www.advolocate.info/api/register_social_advocate'),
+        Uri.parse('http://www.advolocate.info/api/updateCustomerInfo'),
         headers: headers,
         body: jsonEncode({
+          "user_id": userId,
           'name': _fullNameController.text.toString(),
           'email': _emailController.text.toString(),
-          'password': _passwordController.text.toString(),
           'contact_number': _phoneNumberController.text.toString(),
           'address': _addressController.text.toString(),
           'profession': _professionController.text.toString(),
           'covered_area': _coveredAreaController.text.toString(),
-          'region_id': regionsid!,
-          'country_id': countriesId!,
+          'region_id': regionsid,
+          'country_id': countriesId,
           'city_id': citiesId,
-          'probono': probonoId!,
-          'field_of_service': services.toString(),
+          'probono': probonoId,
+          'selectedFieldService': list,
           'age': _ageController.text,
-          'gender': 'Male',
-          "social_id": widget.social_id,
-          "link_type": widget.type,
+          'gender': 0,
+          "languages": ["English"],
           "user_type": widget.type.toString(),
-          //      'license': image!.path.toString()
+          "img_url":
+              "data:image/jpeg;base64,'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"
         }));
 
     var data = jsonDecode(response.body);
-    print(data);
+    print(response.body);
 
+    // print("new Data");
+    // print(resp.body);
     if (response.statusCode == 200) {
       // print();
 
       if (data['code'] == 0) {
-        //Utils().toastMessage(data['description'].toString());
-        Get.snackbar(
-          "Account Registeration",
-          data["description"],
-          colorText: Colors.white,
-          snackPosition: SnackPosition.BOTTOM,
-          margin: EdgeInsets.all(8),
-          backgroundColor: Colors.green,
-          snackStyle: SnackStyle.FLOATING,
-        );
-        Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-              builder: (context) => const MyApp(),
-            ));
+        Utils().toastMessage(data['description'].toString());
+        getAdvocatesData();
+        return;
+        // print(
+        //     AdvocatesList.data.where((element) => element.Uid == userId).first);
+        // ignore: use_build_context_synchronously
+
+        // Provider.of<LawyerDataProvider>(context, listen: false)
+        //     .setData(ProfileData.fromJson(jsonDecode(resp.body)["result"]));
+        // context
+        //     .watch<LawyerDataProvider>()
+        //     .setData(ProfileData.fromJson(jsonDecode(resp.body)["result"]));
       } else {
-        Get.snackbar(
-          "Account Registeration",
-          data['description'],
-          colorText: Colors.white,
-          snackPosition: SnackPosition.BOTTOM,
-          margin: EdgeInsets.all(8),
-          backgroundColor: Colors.red,
-          snackStyle: SnackStyle.FLOATING,
-        );
+        Utils().toastMessage(data['description'].toString());
       }
       //
       // print(await response.stream.bytesToString());

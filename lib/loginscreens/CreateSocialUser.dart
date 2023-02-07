@@ -1,16 +1,9 @@
-import 'package:advolocate_app/Model/AdvocatesData.dart';
-import 'package:advolocate_app/Providers/OtpProvider.dart';
-import 'package:advolocate_app/loginscreens/manuallogin.dart';
-import 'package:advolocate_app/loginscreens/verificationpassword.dart';
 import 'package:advolocate_app/main.dart';
 import 'dart:convert';
-import 'package:advolocate_app/screens/homepage.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:get/get.dart';
 import 'package:random_string_generator/random_string_generator.dart';
-import 'package:snippet_coder_utils/FormHelper.dart';
 import 'package:http/http.dart' as http;
 
 import '../utils/utils.dart';
@@ -278,7 +271,9 @@ class _CreateSocialUserState extends State<CreateSocialUser> {
                         // color: Colors.green,
                         child: ElevatedButton(
                           onPressed: () async {
-                            if (_formKey.currentState!.validate()) {}
+                            if (_formKey.currentState!.validate()) {
+                              createUser();
+                            }
                           },
                           style: ElevatedButton.styleFrom(
                             shadowColor: Colors.black,
@@ -319,14 +314,20 @@ class _CreateSocialUserState extends State<CreateSocialUser> {
     };
 
     var body = json.encode({
+      "probono": "probono",
+      "covered_area": "covered_area",
+      "profession": "profession",
+      "gender": "male",
+      "age": 40,
       "email": widget.email,
-      "user_type": 1,
-      "password": widget.social_id,
+      "user_type": widget.type.toString(),
+      "password": widget.social_id.toString(),
       "name": widget.name,
       "contact_number": phoneController.text,
       "address": addressController.text,
       "social_id": widget.social_id,
-      "link_type": widget.type
+      "link_type": widget.type,
+      "city_id": 200,
     });
     var response = await http.post(
         Uri.parse('http://www.advolocate.info/api/register_social_customer'),
@@ -336,15 +337,24 @@ class _CreateSocialUserState extends State<CreateSocialUser> {
     if (response.statusCode == 200) {
       var data = jsonDecode(response.body.toString());
       print(data);
-      print(data['description']);
-      if (data['code'] == 0) {
-        Navigator.push(
-            context, MaterialPageRoute(builder: (context) => MyApp()));
+      //print(data['description']);
+      if (data['code'] == 0 || data["code"] == 5) {
+        Navigator.pushReplacement(
+            context, MaterialPageRoute(builder: (context) => const MyApp()));
       } else {
-        Utils().toastMessage(data['description'].toString());
+        Get.snackbar(
+          "Account Registeration",
+          data["description"],
+          backgroundColor: Colors.red,
+          colorText: Colors.white,
+          snackPosition: SnackPosition.BOTTOM,
+          margin: EdgeInsets.all(8),
+          snackStyle: SnackStyle.FLOATING,
+        );
+        //  Utils().toastMessage(data['description'].toString());
       }
     } else {
-      print(response.reasonPhrase);
+      print(response.body);
     }
   }
 }

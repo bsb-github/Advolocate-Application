@@ -2,11 +2,13 @@ import 'dart:convert';
 
 import 'package:advolocate_app/Model/login_model.dart';
 import 'package:advolocate_app/Providers/ConfigProviders.dart';
+import 'package:advolocate_app/Providers/LawyerDataProvider.dart';
 import 'package:advolocate_app/config.dart';
 import 'package:advolocate_app/loginscreens/createuser.dart';
 import 'package:advolocate_app/loginscreens/forgotpass.dart';
 import 'package:advolocate_app/loginscreens/selection.dart';
 import 'package:advolocate_app/loginscreens/signup.dart';
+import 'package:advolocate_app/screens/AdvocateHomePage.dart';
 import 'package:advolocate_app/screens/ProfilePending.dart';
 import 'package:advolocate_app/screens/homepage.dart';
 import 'package:advolocate_app/utils/utils.dart';
@@ -56,7 +58,7 @@ class _ManualLoginScreenState extends State<ManualLoginScreen> {
               height: 250,
             ),
             Padding(
-              padding: const EdgeInsets.all(8.0),
+              padding: const EdgeInsets.symmetric(horizontal: 18.0),
               child: Form(
                 key: _formKey,
                 child: SingleChildScrollView(
@@ -89,115 +91,110 @@ class _ManualLoginScreenState extends State<ManualLoginScreen> {
                       SizedBox(
                         height: 20,
                       ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                        child: Column(
-                          children: [
-                            Container(
-                              decoration: BoxDecoration(
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.grey.withOpacity(0.4),
-                                    spreadRadius: 2,
-                                    blurRadius: 8,
-                                  ),
-                                ],
-                              ),
-                              child: TextFormField(
-                                controller: emailComtroller,
-                                maxLines: 1,
-
-                                style: const TextStyle(
-
-                                    //color: Colors.black
-                                    ),
-                                decoration: InputDecoration(
-                                  //fillColor: Colors.white,
-                                  hintText: 'Email',
-                                  fillColor: Colors.white,
-                                  filled: true,
-                                  prefixIcon: const Icon(Icons.email_outlined,
-                                      color: Colors.black),
-                                  hintStyle:
-                                      const TextStyle(color: Colors.black87),
-                                  contentPadding:
-                                      const EdgeInsets.only(left: 30),
-                                  border: myinputborder(),
-                                  enabledBorder: myinputborder(),
+                      Column(
+                        children: [
+                          Container(
+                            decoration: BoxDecoration(
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.grey.withOpacity(0.4),
+                                  spreadRadius: 2,
+                                  blurRadius: 8,
                                 ),
-
-                                validator: (value) {
-                                  if (value!.isEmpty) {
-                                    return 'Email is required';
-                                  }
-                                  return null;
-                                },
-                                // onChanged: (val) {
-                                //
-                                // },
-                              ),
+                              ],
                             ),
-                            SizedBox(
-                              height: 30,
-                            ),
-                            Container(
-                              decoration: BoxDecoration(
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.grey.withOpacity(0.4),
-                                    spreadRadius: 2,
-                                    blurRadius: 8,
-                                  ),
-                                ],
-                              ),
-                              child: TextFormField(
-                                controller: passwordComtroller,
-                                maxLines: 1,
-                                obscureText: _isObscure,
-                                style: const TextStyle(
-                                    //color: Colors.black
-                                    ),
+                            child: TextFormField(
+                              controller: emailComtroller,
+                              maxLines: 1,
 
-                                decoration: InputDecoration(
-                                  //fillColor: Colors.white,
-                                  // hintText: '●●●●●●',
-                                  hintText: 'Enter Password',
-                                  fillColor: Colors.white,
-                                  filled: true,
-                                  prefixIcon: const Icon(Icons.lock,
-                                      color: Colors.black),
-                                  suffixIcon: IconButton(
-                                    onPressed: () {
-                                      setState(() {
-                                        _isObscure = !_isObscure;
-                                      });
-                                    },
-                                    icon: Icon(_isObscure
-                                        ? Icons.visibility
-                                        : Icons.visibility_off),
+                              style: const TextStyle(
+
+                                  //color: Colors.black
                                   ),
-                                  hintStyle: const TextStyle(
-                                    color: Colors.black87,
-                                    // Colors.grey,
-                                  ),
-                                  contentPadding:
-                                      const EdgeInsets.only(left: 30),
-                                  border: myinputborder(),
-                                  enabledBorder: myinputborder(),
+                              decoration: InputDecoration(
+                                //fillColor: Colors.white,
+                                hintText: 'Email',
+                                fillColor: Colors.white,
+                                filled: true,
+                                prefixIcon: const Icon(Icons.email_outlined,
+                                    color: Colors.black),
+                                hintStyle:
+                                    const TextStyle(color: Colors.black87),
+                                contentPadding: const EdgeInsets.only(left: 30),
+                                border: myinputborder(),
+                                enabledBorder: myinputborder(),
+                              ),
+
+                              validator: (value) {
+                                if (value!.isEmpty) {
+                                  return 'Email is required';
+                                }
+                                return null;
+                              },
+                              // onChanged: (val) {
+                              //
+                              // },
+                            ),
+                          ),
+                          SizedBox(
+                            height: 30,
+                          ),
+                          Container(
+                            decoration: BoxDecoration(
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.grey.withOpacity(0.4),
+                                  spreadRadius: 2,
+                                  blurRadius: 8,
                                 ),
-                                validator: (value) {
-                                  if (value!.isEmpty) {
-                                    return 'Password is required';
-                                  }
-                                  return null;
-                                },
-                                // onChanged: (value) {
-                                //   // do something
-                                // },
-                              ),
+                              ],
                             ),
-                          ],
-                        ),
+                            child: TextFormField(
+                              controller: passwordComtroller,
+                              maxLines: 1,
+                              obscureText: _isObscure,
+                              style: const TextStyle(
+                                  //color: Colors.black
+                                  ),
+
+                              decoration: InputDecoration(
+                                //fillColor: Colors.white,
+                                // hintText: '●●●●●●',
+                                hintText: 'Enter Password',
+                                fillColor: Colors.white,
+                                filled: true,
+                                prefixIcon:
+                                    const Icon(Icons.lock, color: Colors.black),
+                                suffixIcon: IconButton(
+                                  onPressed: () {
+                                    setState(() {
+                                      _isObscure = !_isObscure;
+                                    });
+                                  },
+                                  icon: Icon(_isObscure
+                                      ? Icons.visibility
+                                      : Icons.visibility_off),
+                                ),
+                                hintStyle: const TextStyle(
+                                  color: Colors.black87,
+                                  // Colors.grey,
+                                ),
+                                contentPadding: const EdgeInsets.only(left: 30),
+                                border: myinputborder(),
+                                enabledBorder: myinputborder(),
+                              ),
+                              validator: (value) {
+                                if (value!.isEmpty) {
+                                  return 'Password is required';
+                                }
+                                return null;
+                              },
+                              // onChanged: (value) {
+                              //   // do something
+                              // },
+                            ),
+                          ),
+                        ],
                       ),
                       // Padding(
                       //   padding: EdgeInsets.only(right: width*0.45),
@@ -238,7 +235,7 @@ class _ManualLoginScreenState extends State<ManualLoginScreen> {
                           child: ElevatedButton(
                             onPressed: () async {
                               if (_formKey.currentState!.validate()) {
-                                loginUser(context,
+                                loginUser(
                                     email: emailComtroller.text,
                                     password: passwordComtroller.text);
                               }
@@ -304,8 +301,10 @@ class _ManualLoginScreenState extends State<ManualLoginScreen> {
     );
   }
 
-  void loginUser(BuildContext context,
-      {required String email, required String password}) async {
+  void loginUser({
+    required String email,
+    required String password,
+  }) async {
     var headers = {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
@@ -334,20 +333,33 @@ class _ManualLoginScreenState extends State<ManualLoginScreen> {
         prefs.setString('password', password);
         prefs.setString('token', data['result']['token'].toString());
         prefs.setInt('userId', data['result']['user_id']);
-        prefs.setString("userType", "manual");
-        getUserData(
-            1, data['result']['token'].toString(), data['result']['user_id']);
-        getAdvocatesData();
-        var Data = AdvocatesList.data.where((element) =>
-            element.status == 0 && element.coveredArea == "Supreme Court");
-        if (Data.isNotEmpty && Data.first.status == 0) {
+
+        // getUserData(
+        //     1, data['result']['token'].toString(), data['result']['user_id']);
+        await getAdvocatesData();
+        setState(() {});
+        var Data = AdvocatesList.data
+            .where((element) => element.email == emailComtroller.text);
+        //  print(Data.first.profession);
+        //print(Data.first.status);
+        if (Data.isEmpty) {
+          prefs.setString("userType", "manual");
+          Navigator.push(
+              context, MaterialPageRoute(builder: (context) => HomePage()));
+        } else if (Data.first.status == 0) {
+          prefs.setString("userType", Data.first.status.toString());
           Navigator.push(context,
               MaterialPageRoute(builder: (context) => ProfilePending()));
         } else if (Data.first.status == 1) {
+          prefs.setString("userType", Data.first.status.toString());
+          Provider.of<LawyerDataProvider>(context, listen: false)
+              .setAdvData(Data.first);
+          Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (context) => AdvocateHomePage(),
+              ));
           // Navigate if advocate is authenticated to deal
-        } else {
-          Navigator.push(
-              context, MaterialPageRoute(builder: (context) => HomePage()));
         }
       }
     } else {
@@ -355,7 +367,7 @@ class _ManualLoginScreenState extends State<ManualLoginScreen> {
     }
   }
 
-  void getAdvocatesData() async {
+  Future<void> getAdvocatesData() async {
     AdvocatesList.data.clear();
     var response = await http
         .post(Uri.parse("http://www.advolocate.info/api/getAdvocatesData"));
@@ -366,35 +378,36 @@ class _ManualLoginScreenState extends State<ManualLoginScreen> {
     for (var i = 0; i < advos.length; i++) {
       AdvocatesList.data.add(AdvocatesData.fromJson(advos[i]));
     }
+
     print(AdvocatesList.data[34].email);
   }
 
-  Future<void> getUserData(int userType, String token, id) async {
-    var url = Uri.parse('http://www.advolocate.info/api/getCustomerInfo');
+  // Future<void> getUserData(int userType, String token, id) async {
+  //   var url = Uri.parse('http://www.advolocate.info/api/getCustomerInfo');
 
-    print('get data token');
-    var getCustomerInfoToken =
-        Provider.of<ConfigProvider>(context, listen: false).token;
-    print(token);
-    var headers = {
-      'Content-Type': 'application/json',
-      'Accept': 'application/json',
-      'Authorization': 'Bearer ${token}',
-    };
-    var response = await http.post(url,
-        body: jsonEncode({"user_id": id}), headers: headers);
-    var data = jsonDecode(response.body.toString());
-    print(data);
-    ProfileDataList.users[0] = ProfileData.fromJson(data['result']);
-    print(ProfileDataList.users[0].email);
-    if (userType == 1) {
-      Navigator.pushReplacement(
-          context, MaterialPageRoute(builder: (context) => HomePage()));
-    } else {
-      // AdvocateResult result = AdvocateResult.fromJson(Provider.of<LawyerDataProvider>(context, listen: false).data.result);
+  //   print('get data token');
+  //   var getCustomerInfoToken =
+  //       Provider.of<ConfigProvider>(context, listen: false).token;
+  //   print(token);
+  //   var headers = {
+  //     'Content-Type': 'application/json',
+  //     'Accept': 'application/json',
+  //     'Authorization': 'Bearer ${token}',
+  //   };
+  //   var response = await http.post(url,
+  //       body: jsonEncode({"user_id": id}), headers: headers);
+  //   var data = jsonDecode(response.body.toString());
+  //   print(data);
+  //   ProfileDataList.users[0] = ProfileData.fromJson(data['result']);
+  //   print(ProfileDataList.users[0].email);
+  //   if (userType == 1) {
+  //     Navigator.pushReplacement(
+  //         context, MaterialPageRoute(builder: (context) => HomePage()));
+  //   } else {
+  //     // AdvocateResult result = AdvocateResult.fromJson(Provider.of<LawyerDataProvider>(context, listen: false).data.result);
 
-    }
-  }
+  //   }
+  // }
 }
 
 OutlineInputBorder myinputborder() {

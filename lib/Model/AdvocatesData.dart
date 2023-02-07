@@ -12,6 +12,7 @@ class AdvocatesData {
   final String probono;
   final String city;
   final String profession;
+  final String country;
 
   AdvocatesData(
       {required this.email,
@@ -26,6 +27,7 @@ class AdvocatesData {
       required this.coveredArea,
       required this.services,
       required this.city,
+      required this.country,
       required this.profession});
   int get Uid => this.uid;
   static AdvocatesData fromJson(Map<String, dynamic> Json) {
@@ -35,6 +37,7 @@ class AdvocatesData {
       uid: Json["user_id"] ?? "",
       name: Json["name"] ?? "",
       address: Json["address"] ?? "",
+      country: Json["country"] ?? "",
       extra_contact_info: Json["extra_contact_info"] ?? "",
       languages: Json["languages"] ?? "",
       status: Json["status"] ?? 2,

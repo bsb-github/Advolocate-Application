@@ -1,7 +1,9 @@
 import 'package:advolocate_app/Model/profile_data_model.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_phone_direct_caller/flutter_phone_direct_caller.dart';
 import 'package:http/http.dart' as http;
 import 'package:open_whatsapp/open_whatsapp.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../main.dart';
 
@@ -187,10 +189,14 @@ class _LawyerPageState extends State<LawyerPage> {
                         width: 50,
                       ),
                       GestureDetector(
-                        onTap: () {
-                          FlutterOpenWhatsapp.sendSingleMessage(
-                              widget.contactNumber,
-                              "Hi ${widget.name} My Name is ${ProfileDataList.users[0].name} Can you help Me");
+                        onTap: () async {
+                          Uri phoneno =
+                              Uri.parse('tel:' + widget.contactNumber);
+                          if (await launchUrl(phoneno)) {
+                            //dialer opened
+                          } else {
+                            //dailer is not opened
+                          }
                         },
                         child: Container(
                           height: 50,

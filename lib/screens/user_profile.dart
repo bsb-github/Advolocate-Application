@@ -13,6 +13,7 @@ import 'package:provider/provider.dart';
 import 'package:random_string_generator/random_string_generator.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../Model/AdvocatesData.dart';
 import '../util/widgets.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
@@ -27,7 +28,6 @@ class UserProfile extends StatefulWidget {
 class _UserProfileState extends State<UserProfile> {
   int _selectedIndex = 1;
   File? image;
-
   bool loading = true;
   ProfileDataModel profileDataModel = ProfileDataModel();
 
@@ -134,6 +134,8 @@ class _UserProfileState extends State<UserProfile> {
     super.initState();
     print('token');
     getData(context);
+    setState(() {});
+
     if (profileDataModel.result == null) {
       if (data.userType <= 5) {
         loadingFun();
@@ -164,7 +166,20 @@ class _UserProfileState extends State<UserProfile> {
                   onPressed: () {
                     showModalBottomSheet(
                         context: context,
-                        builder: (context) => UpdateBottomSheet());
+                        builder: (context) => UpdateBottomSheet(
+                              name: profileDataModel.result?.name.toString() ??
+                                  data.name,
+                              contact_number:
+                                  profileDataModel.result?.contactNumber ??
+                                      data.contact_number,
+                              address: profileDataModel.result?.address ??
+                                  data.address,
+                              city: profileDataModel
+                                      .result?.selectedCity!.label ??
+                                  data.city_name,
+                              email:
+                                  profileDataModel.result?.email ?? data.email,
+                            ));
                   },
                   backgroundColor: Colors.amber[400],
                   child: Center(
@@ -175,13 +190,13 @@ class _UserProfileState extends State<UserProfile> {
                   ),
                 ),
                 appBar: AppBar(
-                  leading: IconButton(
-                    icon: Icon(Icons.arrow_back_ios),
-                    color: Colors.black,
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                  ),
+                  // leading: IconButton(
+                  //   icon: Icon(Icons.arrow_back_ios),
+                  //   color: Colors.black,
+                  //   onPressed: () {
+                  //     Navigator.pop(context);
+                  //   },
+                  // ),
                   automaticallyImplyLeading: false,
                   // leading: IconButton(
                   //   icon: const Icon(Icons.arrow_back_ios),
@@ -265,30 +280,30 @@ class _UserProfileState extends State<UserProfile> {
                                           )),
                                         ),
                                         RowInfo(
-                                          width,
-                                          height,
-                                          Icons.person,
-                                          'Name',
-                                          profileDataModel.result?.name ??
-                                              data.name,
-                                        ),
+                                            width,
+                                            height,
+                                            Icons.person,
+                                            'Name',
+                                            profileDataModel.result?.name ??
+                                                data.name,
+                                            context),
                                         RowInfo(
-                                          width,
-                                          height,
-                                          Icons.location_on,
-                                          'Address',
-                                          profileDataModel.result?.address ??
-                                              data.address,
-                                        ),
+                                            width,
+                                            height,
+                                            Icons.location_on,
+                                            'Address',
+                                            profileDataModel.result?.address ??
+                                                data.address,
+                                            context),
                                         RowInfo(
-                                          width,
-                                          height,
-                                          Icons.travel_explore,
-                                          'Country',
-                                          profileDataModel.result
-                                                  ?.selectedCountry?.label ??
-                                              data.address,
-                                        ),
+                                            width,
+                                            height,
+                                            Icons.travel_explore,
+                                            'Country',
+                                            profileDataModel.result
+                                                    ?.selectedCountry?.label ??
+                                                data.address,
+                                            context),
 
                                         // contact me
                                         Padding(
@@ -305,22 +320,22 @@ class _UserProfileState extends State<UserProfile> {
                                         ),
 
                                         RowInfo(
-                                          width,
-                                          height,
-                                          Icons.phone,
-                                          'Phone Number',
-                                          profileDataModel
-                                                  .result?.contactNumber ??
-                                              data.contact_number,
-                                        ),
+                                            width,
+                                            height,
+                                            Icons.phone,
+                                            'Phone Number',
+                                            profileDataModel
+                                                    .result?.contactNumber ??
+                                                data.contact_number,
+                                            context),
                                         RowInfo(
-                                          width,
-                                          height,
-                                          Icons.mail,
-                                          'Mail',
-                                          profileDataModel.result?.email ??
-                                              data.email,
-                                        ),
+                                            width,
+                                            height,
+                                            Icons.mail,
+                                            'Mail',
+                                            profileDataModel.result?.email ??
+                                                data.email,
+                                            context),
                                       ],
                                     )
                                   : CircularProgressIndicator(
@@ -335,24 +350,40 @@ class _UserProfileState extends State<UserProfile> {
                   Positioned(
                     top: height * 0.01,
                     // right: width*0.35,
-                    child: GestureDetector(
-                      onTap: () {
-                        pickImage();
-                      },
-                      child: CircleAvatar(
-                          backgroundColor: Color(0xffFCD917),
-                          radius: 60,
+                    child: Stack(
+                      children: [
+                        GestureDetector(
+                          onTap: () {
+                            pickImage();
+                          },
                           child: CircleAvatar(
-                              radius: 55,
-                              backgroundImage:
-                                  profileDataModel.result?.imgUrl == null
-                                      ? NetworkImage(context
-                                          .watch<ImageUrlProvider>()
-                                          .imageUrl)
-                                      : NetworkImage(
-                                          "https://www.advolocate.info" +
-                                              profileDataModel.result!.imgUrl
-                                                  .toString()))),
+                              backgroundColor: Color(0xffFCD917),
+                              radius: 60,
+                              child: CircleAvatar(
+                                  radius: 55,
+                                  backgroundImage:
+                                      profileDataModel.result?.imgUrl == null
+                                          ? NetworkImage(context
+                                              .watch<ImageUrlProvider>()
+                                              .imageUrl)
+                                          : NetworkImage(
+                                              "https://www.advolocate.info" +
+                                                  profileDataModel
+                                                      .result!.imgUrl
+                                                      .toString()))),
+                        ),
+                        Container(
+                            height: 37,
+                            width: 37,
+                            decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(20)),
+                            child: Center(
+                                child: Icon(
+                              Icons.edit,
+                              color: Theme.of(context).primaryColor,
+                            ))),
+                      ],
                     ),
                   )
                 ]),
@@ -389,6 +420,7 @@ class _UserProfileState extends State<UserProfile> {
       print(jsonDecode(response.body));
       profileDataModel = ProfileDataModel.fromJson(jsonDecode(response.body));
     }
+    setState(() {});
   }
 
   void navigateBottomBar(int index) {

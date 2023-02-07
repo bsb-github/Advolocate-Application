@@ -8,7 +8,9 @@ import 'package:advolocate_app/home.dart';
 import 'package:advolocate_app/loginscreens/manuallogin.dart';
 import 'package:advolocate_app/loginscreens/verification.dart';
 import 'package:advolocate_app/utils/utils.dart';
+import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:random_string_generator/random_string_generator.dart';
 import 'package:snippet_coder_utils/FormHelper.dart';
@@ -50,6 +52,8 @@ class _CreateAdvocateAccountState extends State<CreateAdvocateAccount> {
   }
 
   /////
+  ///
+  ///
 
   List services = [];
   List<MultiSelectDialogItem<int>> multiItem = [];
@@ -114,7 +118,17 @@ class _CreateAdvocateAccountState extends State<CreateAdvocateAccount> {
     // print('services as set');
     // print(sel);
     // debugPrint(selectedValues);
-    getvaluefromkey(selectedValues!);
+    if (selectedValues == null) {
+      Get.snackbar(
+        "Services Required",
+        "Services Cannot be Null",
+        backgroundColor: Colors.red,
+        snackPosition: SnackPosition.BOTTOM,
+        colorText: Colors.white,
+      );
+    } else {
+      getvaluefromkey(selectedValues);
+    }
   }
 
   var otpGenerator = RandomStringGenerator(
@@ -145,7 +159,9 @@ class _CreateAdvocateAccountState extends State<CreateAdvocateAccount> {
 
   List<dynamic> regions = [];
   List<dynamic> countries = [];
-  List<dynamic> cities = [];
+  List<dynamic> cities = [
+    {"label": "City"}
+  ];
   List<dynamic> probono = [];
 
   List<dynamic> ct = [];
@@ -179,29 +195,29 @@ class _CreateAdvocateAccountState extends State<CreateAdvocateAccount> {
                   'images/splashlogo.png',
                   height: 250,
                 ),
+                const Padding(
+                  padding: EdgeInsets.only(left: 18.0),
+                  child: Align(
+                      alignment: Alignment.topLeft,
+                      child: Text(
+                        'Create Account',
+                        style: TextStyle(
+                            fontSize: 35,
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold),
+                      )),
+                ),
                 Form(
                   key: _formKey,
                   child: Expanded(
                     child: SingleChildScrollView(
                       child: Column(
                         children: [
-                          SizedBox(
+                          const SizedBox(
                             height: 10,
                           ),
-                          Padding(
-                            padding: const EdgeInsets.only(left: 8.0),
-                            child: Align(
-                                alignment: Alignment.topLeft,
-                                child: Text(
-                                  'Create Account',
-                                  style: TextStyle(
-                                      fontSize: 35,
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.bold),
-                                )),
-                          ),
 
-                          SizedBox(
+                          const SizedBox(
                             height: 20,
                           ),
                           Container(
@@ -235,7 +251,7 @@ class _CreateAdvocateAccountState extends State<CreateAdvocateAccount> {
                             ),
                           ),
                           SizedBox(
-                            height: height * 0.04,
+                            height: height * 0.03,
                           ),
                           Container(
                             margin: EdgeInsets.only(
@@ -268,7 +284,7 @@ class _CreateAdvocateAccountState extends State<CreateAdvocateAccount> {
                             ),
                           ),
                           SizedBox(
-                            height: height * 0.04,
+                            height: height * 0.03,
                           ),
                           Container(
                             margin: EdgeInsets.only(
@@ -276,6 +292,7 @@ class _CreateAdvocateAccountState extends State<CreateAdvocateAccount> {
                             child: TextFormField(
                               controller: _passwordController,
                               maxLines: 1,
+                              obscureText: true,
                               style: const TextStyle(
                                   //color: Colors.black
                                   ),
@@ -301,7 +318,7 @@ class _CreateAdvocateAccountState extends State<CreateAdvocateAccount> {
                             ),
                           ),
                           SizedBox(
-                            height: height * 0.04,
+                            height: height * 0.03,
                           ),
                           Container(
                             margin: EdgeInsets.only(
@@ -335,7 +352,7 @@ class _CreateAdvocateAccountState extends State<CreateAdvocateAccount> {
                             ),
                           ),
                           SizedBox(
-                            height: height * 0.04,
+                            height: height * 0.03,
                           ),
                           Container(
                             margin: EdgeInsets.only(
@@ -375,7 +392,7 @@ class _CreateAdvocateAccountState extends State<CreateAdvocateAccount> {
                             ),
                           ),
                           SizedBox(
-                            height: height * 0.04,
+                            height: height * 0.03,
                           ),
                           Container(
                             margin: EdgeInsets.only(
@@ -413,7 +430,7 @@ class _CreateAdvocateAccountState extends State<CreateAdvocateAccount> {
                             ),
                           ),
                           SizedBox(
-                            height: height * 0.04,
+                            height: height * 0.03,
                           ),
                           Container(
                             margin: EdgeInsets.only(
@@ -445,7 +462,7 @@ class _CreateAdvocateAccountState extends State<CreateAdvocateAccount> {
                             ),
                           ),
                           SizedBox(
-                            height: height * 0.04,
+                            height: height * 0.03,
                           ),
                           Container(
                             margin: EdgeInsets.only(
@@ -483,7 +500,7 @@ class _CreateAdvocateAccountState extends State<CreateAdvocateAccount> {
                             ),
                           ),
                           SizedBox(
-                            height: height * 0.04,
+                            height: height * 0.03,
                           ),
                           FormHelper.dropDownWidget(
                             context,
@@ -510,7 +527,7 @@ class _CreateAdvocateAccountState extends State<CreateAdvocateAccount> {
                             validationColor: Colors.red,
                           ),
                           SizedBox(
-                            height: height * 0.04,
+                            height: height * 0.03,
                           ),
 
                           FormHelper.dropDownWidget(
@@ -540,35 +557,52 @@ class _CreateAdvocateAccountState extends State<CreateAdvocateAccount> {
                             validationColor: Colors.red,
                           ),
                           SizedBox(
-                            height: height * 0.04,
+                            height: height * 0.03,
                           ),
+                          //
                           // city
-                          FormHelper.dropDownWidget(
-                            context,
-                            '    ${City}',
-                            citiesId,
-                            cities,
-                            (onChangedval) {
-                              citiesId = onChangedval;
-                            },
-                            (onValidate) {
-                              if (onValidate == null) {
-                                return '    Required';
-                              }
-                              return null;
-                            },
-                            optionValue: 'value',
-                            optionLabel: 'label',
-                            textColor: Colors.black,
-                            borderColor: const Color(0xffFCD917),
-                            borderWidth: 1,
-                            hintFontSize: width * 0.045,
-                            hintColor: Colors.black,
-                            borderFocusColor: const Color(0xffFCD917),
-                            validationColor: Colors.red,
-                          ),
+                          Padding(
+                              padding:
+                                  const EdgeInsets.only(left: 24, right: 12),
+                              child: DropdownSearch<String>(
+                                onChanged: (value) {
+                                  var obj = cities.where(
+                                      (element) => element["label"] == value);
+                                  setState(() {
+                                    citiesId = obj.first["value"].toString();
+                                  });
+
+                                  print(citiesId);
+                                },
+                                items: List.from(cities.map((e) => e["label"])),
+                                dropdownDecoratorProps: DropDownDecoratorProps(
+                                    baseStyle: TextStyle(
+                                      color: Colors.black,
+                                    ),
+                                    dropdownSearchDecoration: InputDecoration(
+                                      enabledBorder: OutlineInputBorder(
+                                          borderSide: BorderSide(
+                                              color: Theme.of(context)
+                                                  .primaryColor),
+                                          borderRadius:
+                                              BorderRadius.circular(200)),
+                                      border: OutlineInputBorder(
+                                          borderSide: BorderSide(
+                                              color: Theme.of(context)
+                                                  .primaryColor),
+                                          borderRadius:
+                                              BorderRadius.circular(200)),
+                                    )),
+                                selectedItem: cities.first["label"],
+                                popupProps: const PopupProps.dialog(
+                                    fit: FlexFit.loose,
+                                    showSearchBox: true,
+                                    searchFieldProps: TextFieldProps(
+                                        decoration: InputDecoration(
+                                            hintText: "Search"))),
+                              )),
                           SizedBox(
-                            height: height * 0.04,
+                            height: height * 0.03,
                           ),
                           FormHelper.dropDownWidget(
                             context,
@@ -595,7 +629,7 @@ class _CreateAdvocateAccountState extends State<CreateAdvocateAccount> {
                             validationColor: Colors.red,
                           ),
                           SizedBox(
-                            height: height * 0.04,
+                            height: height * 0.03,
                           ),
                           InkWell(
                               child: Container(
@@ -634,7 +668,7 @@ class _CreateAdvocateAccountState extends State<CreateAdvocateAccount> {
                               ),
                               onTap: () => _showMultiSelect(context)),
                           SizedBox(
-                            height: height * 0.04,
+                            height: height * 0.03,
                           ),
 
                           GestureDetector(
@@ -643,13 +677,13 @@ class _CreateAdvocateAccountState extends State<CreateAdvocateAccount> {
                               getImage();
                             },
                             child: Container(
-                              height: height * 0.065,
-                              width: width * 0.85,
+                              height: height * 0.075,
+                              width: width,
                               margin: EdgeInsets.only(
                                   left: width * 0.05, right: width * 0.05),
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.all(
-                                    Radius.circular(width * 0.2)),
+                                    Radius.circular(width * 0.1)),
                                 border: Border.all(
                                   color: Color(0xffFCD917),
                                   width: 2,
@@ -694,7 +728,7 @@ class _CreateAdvocateAccountState extends State<CreateAdvocateAccount> {
                             ),
                           ),
                           SizedBox(
-                            height: 50,
+                            height: 40,
                           ),
                           Container(
                               height: 60,
@@ -716,7 +750,12 @@ class _CreateAdvocateAccountState extends State<CreateAdvocateAccount> {
 
                                   if (_formKey.currentState!.validate()) {
                                     if (image == null) {
-                                      Utils().toastMessage('Select License');
+                                      Get.snackbar(
+                                        "Input Not Allowed",
+                                        "Please select licenses",
+                                        backgroundColor: Colors.red,
+                                        snackStyle: SnackStyle.FLOATING,
+                                      );
                                     } else {
                                       var data = AdvocatesList.data.where(
                                           (element) =>
@@ -786,12 +825,21 @@ class _CreateAdvocateAccountState extends State<CreateAdvocateAccount> {
                                                         image: image!,
                                                       )));
                                         } else {
-                                          Utils().toastMessage(
-                                              "Unable to sent Message Check Your Email");
+                                          Get.snackbar(
+                                            "Account Registeration",
+                                            "Unable to sent Message Check Your Email",
+                                            backgroundColor: Colors.red,
+                                            snackStyle: SnackStyle.FLOATING,
+                                          );
                                         }
                                       } else {
-                                        Utils().toastMessage(
-                                            "Email Already Exist");
+                                        Get.snackbar(
+                                          "Account Registeration",
+                                          "Email Already Exist",
+                                          backgroundColor: Colors.red,
+                                          snackStyle: SnackStyle.FLOATING,
+                                        );
+                                        Navigator.pop(context);
                                       }
                                     }
                                   }
@@ -867,19 +915,45 @@ class _CreateAdvocateAccountState extends State<CreateAdvocateAccount> {
       Map<String, dynamic> data = json.decode(ress);
 
       if (data['code'] == 0) {
-        Utils().toastMessage(data['description'].toString());
-        Navigator.push(
+        // Utils().toastMessage(data['description'].toString());
+        Get.snackbar(
+          "Account Registeration",
+          data["description"],
+          colorText: Colors.white,
+          snackPosition: SnackPosition.BOTTOM,
+          margin: EdgeInsets.all(8),
+          backgroundColor: Colors.green,
+          snackStyle: SnackStyle.FLOATING,
+        );
+        Navigator.pushReplacement(
             context,
             MaterialPageRoute(
               builder: (context) => const ManualLoginScreen(),
             ));
       } else {
-        Utils().toastMessage(data['description'].toString());
+        Get.snackbar(
+          "Account Registeration",
+          data["description"],
+          colorText: Colors.white,
+          snackPosition: SnackPosition.BOTTOM,
+          margin: EdgeInsets.all(8),
+          backgroundColor: Colors.red,
+          snackStyle: SnackStyle.FLOATING,
+        );
+        //Utils().toastMessage(data['description'].toString());
       }
       //
       // print(await response.stream.bytesToString());
     } else {
-      print(response.reasonPhrase);
+      Get.snackbar(
+        "Account Registeration",
+        "Check Your Internet Connection",
+        colorText: Colors.white,
+        snackPosition: SnackPosition.BOTTOM,
+        margin: EdgeInsets.all(8),
+        backgroundColor: Colors.red,
+        snackStyle: SnackStyle.FLOATING,
+      );
     }
   }
 

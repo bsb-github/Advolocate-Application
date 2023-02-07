@@ -150,7 +150,11 @@ class ProfileDataList {
         contact_number: 'contact_number',
         link_type: 1,
         social_id: 'social_id',
-        userType: 1)
+        userType: 1,
+        profession: '',
+        covered_area: '',
+        img_url: '',
+        services: '')
   ];
 }
 
@@ -161,32 +165,43 @@ class ProfileData {
   final String email;
   final int link_type;
   final String city_name;
+  final String profession;
   final String social_id;
   final int userType;
+  final String covered_area;
+  final String services;
+  final String img_url;
 
-  ProfileData(
-      {required this.name,
-      required this.address,
-      required this.city_name,
-      required this.email,
-      required this.contact_number,
-      required this.link_type,
-      required this.social_id,
-      required this.userType});
+  ProfileData({
+    required this.name,
+    required this.address,
+    required this.city_name,
+    required this.email,
+    required this.contact_number,
+    required this.link_type,
+    required this.profession,
+    required this.social_id,
+    required this.userType,
+    required this.covered_area,
+    required this.services,
+    required this.img_url,
+  });
 
-  static ProfileData fromSnapshot(DocumentSnapshot snapshot) {
-    return ProfileData(
-        name: snapshot['name'],
-        address: snapshot['address'],
-        city_name: snapshot['city_name'],
-        email: snapshot['email'],
-        contact_number: snapshot['contact_number'],
-        link_type: snapshot['link_type'],
-        social_id: snapshot['social_id'],
-        userType: snapshot['user_type']);
-  }
+  // static ProfileData fromSnapshot(DocumentSnapshot snapshot) {
+  //   return ProfileData(
+  //       name: snapshot['name'],
+  //       address: snapshot['address'],
+  //       city_name: snapshot['city_name'],
+  //       email: snapshot['email'],
+  //       contact_number: snapshot['contact_number'],
+  //       link_type: snapshot['link_type'],
+  //       social_id: snapshot['social_id'],
+  //       userType: snapshot['user_type'],
+  //       profession: '');
+  // }
 
   static ProfileData fromJson(Map<String, dynamic> Json) {
+    // var Json = data["result"];
     return ProfileData(
         name: Json['name'],
         address: Json['address'],
@@ -195,6 +210,10 @@ class ProfileData {
         contact_number: Json['contact_number'],
         link_type: Json["link_type"] ?? 0,
         social_id: Json["social_id"] ?? "",
-        userType: 1);
+        userType: 1,
+        profession: Json["profession"] ?? "123",
+        covered_area: Json["covered_area"] ?? "",
+        img_url: Json["img_url"] ?? "",
+        services: Json["services"].toString());
   }
 }

@@ -1,4 +1,5 @@
 import 'package:advolocate_app/loginscreens/CreateSocialAdvocate.dart';
+import 'package:advolocate_app/loginscreens/CreateSocialUser.dart';
 import 'package:flutter/material.dart';
 
 class SelectionBottomScreen extends StatefulWidget {
@@ -107,6 +108,15 @@ class _SelectionBottomScreenState extends State<SelectionBottomScreen> {
                     // color: Colors.green,
                     child: ElevatedButton(
                       onPressed: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => CreateSocialUser(
+                                  email: widget.email,
+                                  name: widget.name,
+                                  social_id: widget.social_id,
+                                  type: widget.type),
+                            ));
                         // push to sign user
                       },
                       style: ElevatedButton.styleFrom(

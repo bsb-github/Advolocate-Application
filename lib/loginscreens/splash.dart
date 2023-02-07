@@ -6,7 +6,9 @@ import 'package:advolocate_app/Model/adovacate_data_model.dart';
 import 'package:advolocate_app/Providers/LawyerDataProvider.dart';
 import 'package:advolocate_app/home.dart';
 import 'package:advolocate_app/main.dart';
+import 'package:advolocate_app/screens/AdvocateHomePage.dart';
 import 'package:advolocate_app/screens/HomePage.dart';
+import 'package:advolocate_app/screens/ProfilePending.dart';
 import 'package:advolocate_app/screens/homepage.dart';
 import 'package:advolocate_app/screens/lawyer_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -36,7 +38,7 @@ class _splashscreenState extends State<splashscreen> {
   @override
   initState() {
     super.initState();
-    getAdvocatesData();
+
     getData();
     // splashscreen.isLogin(context);
     // _navigatetopageview();
@@ -48,22 +50,37 @@ class _splashscreenState extends State<splashscreen> {
   // }
 
   getData() async {
+    await getAdvocatesData();
     final prefs = await SharedPreferences.getInstance();
 
     final String? email = prefs.getString('email');
     final String? password = prefs.getString('password');
     final String? token = prefs.getString('token');
     final int? userId = prefs.getInt('userId');
-    final String? userType = "manual";
+    final String? userType = prefs.getString("userType");
 
     if (email != null && password != null) {
-      if (userType == "manual" && token != "Bismillah Sharif Bhutta") {
+      if (userType == null && token != "Bismillah Sharif Bhutta" ||
+          userType == "manual") {
         getUserData(1, token!, userId);
       } else {
-        getAdvoUserData(password.toString());
+        if (userType == "0") {
+          Navigator.pushReplacement(context,
+              MaterialPageRoute(builder: (context) => ProfilePending()));
+        } else {
+          Provider.of<LawyerDataProvider>(context, listen: false).setAdvData(
+              AdvocatesList.data
+                  .where((element) => element.email == email)
+                  .first);
+          Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (context) => AdvocateHomePage(),
+              ));
+        }
       }
     } else {
-      Navigator.push(
+      Navigator.pushReplacement(
           context, MaterialPageRoute(builder: (context) => const MyApp()));
     }
   }
@@ -149,11 +166,10 @@ class _splashscreenState extends State<splashscreen> {
           context, MaterialPageRoute(builder: (context) => HomePage()));
     } else {
       // AdvocateResult result = AdvocateResult.fromJson(Provider.of<LawyerDataProvider>(context, listen: false).data.result);
-
     }
   }
 
-  void getAdvocatesData() async {
+  Future<void> getAdvocatesData() async {
     var response = await http
         .post(Uri.parse("http://www.advolocate.info/api/getAdvocatesData"));
     print(response.body);
@@ -208,88 +224,6 @@ class _splashscreenState extends State<splashscreen> {
       Navigator.push(
           context, MaterialPageRoute(builder: (context) => const MyApp()));
     }
-  }
-
-  void loginGoogleUser(BuildContext context,
-      {required String social_id}) async {
-    var headers = {
-      'Content-Type': 'application/json',
-      'Accept': 'application/json',
-    };
-
-    var body = json.encode({"social_id": social_id, "link_type": 1});
-    var response = await http.post(
-        Uri.parse('http://www.advolocate.info/api/login_social_customer'),
-        headers: headers,
-        body: body);
-
-    final prefs = await SharedPreferences.getInstance();
-    var data = jsonDecode(response.body);
-    print(data);
-    if (response.statusCode == 200) {
-      print(data['description']);
-      if (data['description'].toString() ==
-              'please check give correct email and password' ||
-          data['code'] == null) {
-        // Utils().toastMessage('please check give correct email and password');
-        //await signupUser(reslut.email, reslut.id);
-
-      } else if (data['description'].toString() == 'login Successful') {
-        Provider.of<ConfigProvider>(context, listen: false)
-            .setToken(data['result']['token']);
-        Provider.of<ConfigProvider>(context, listen: false)
-            .setUserID(data['result']['user_id']);
-
-        Navigator.pushReplacement(
-            context, MaterialPageRoute(builder: (context) => HomePage()));
-      }
-    }
-  }
-
-  void loginFBUser(BuildContext context, {required String social_id}) async {
-    var headers = {
-      'Content-Type': 'application/json',
-      'Accept': 'application/json',
-    };
-
-    var body = json.encode({"social_id": social_id, "link_type": 2});
-    var response = await http.post(
-        Uri.parse('http://www.advolocate.info/api/login_social_customer'),
-        headers: headers,
-        body: body);
-
-    var data = jsonDecode(response.body);
-    print(data);
-    if (response.statusCode == 200) {
-      print(data['description']);
-      if (data['description'].toString() ==
-              'please check give correct email and password' ||
-          data['code'] == null) {
-        // Utils().toastMessage('please check give correct email and password');
-        //await signupUser(reslut.email, reslut.id);
-
-      } else if (data['description'].toString() == 'login Successful') {
-        // ignore: use_build_context_synchronously
-        Provider.of<ConfigProvider>(context, listen: false)
-            .setToken(data['result']['token']);
-        // ignore: use_build_context_synchronously
-        Provider.of<ConfigProvider>(context, listen: false)
-            .setUserID(data['result']['user_id']);
-        Navigator.pushReplacement(
-            context, MaterialPageRoute(builder: (context) => HomePage()));
-      }
-    }
-  }
-
-  void getAdvoUserData(String id) async {
-    var data =
-        await FirebaseFirestore.instance.collection("user").doc(id).get();
-    ProfileDataList.users[0] = ProfileData.fromSnapshot(data);
-
-    // ProfileDataModel.fromJson(jsonDecode(data.toString()));
-    print(ProfileDataList.users[0].email);
-    Navigator.pushReplacement(
-        context, MaterialPageRoute(builder: (context) => HomePage()));
   }
 }
 
