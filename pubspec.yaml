@@ -52,7 +52,6 @@ dependencies:
   cloud_firestore: ^4.3.1
   firebase_auth: ^4.2.5
   flutter_svg: ^1.1.6
-  open_whatsapp: ^0.0.1
   multiple_search_selection: ^2.3.5
   flutter_phone_direct_caller: ^2.1.1
   url_launcher: ^6.1.8
