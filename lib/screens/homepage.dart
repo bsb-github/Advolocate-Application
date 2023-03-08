@@ -1,10 +1,12 @@
 import 'package:advolocate_app/Model/profile_data_model.dart';
 import 'package:advolocate_app/main.dart';
+import 'package:advolocate_app/screens/HomePage.dart';
 import 'package:advolocate_app/screens/cso_laws.dart';
 import 'package:advolocate_app/screens/privacy_policy.dart';
 import 'package:advolocate_app/screens/search_results.dart';
 import 'package:advolocate_app/screens/user_profile.dart';
 import 'package:dropdown_search/dropdown_search.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -69,8 +71,16 @@ class _HomeScreenState extends State<HomeScreen> {
   // List<dynamic> services = [];
 
   /////
-
+  ///
+  ///
+  ///
   List services = [];
+  String name = "City";
+  bool rebuild = true;
+  ValueNotifier valueNotifier = ValueNotifier(true);
+  void incrementNotifier() {
+    valueNotifier.value = !valueNotifier.value;
+  }
 
   List<MultiSelectDialogItem<int>> multiItem = [];
   var Item = [];
@@ -274,7 +284,6 @@ class _HomeScreenState extends State<HomeScreen> {
                           countries,
                           (onChangedval) {
                             countriesId = onChangedval;
-
                             getCities(data!, lenght);
                           },
                           (onValidate) {
@@ -311,33 +320,36 @@ class _HomeScreenState extends State<HomeScreen> {
                         //   },
 
                         // ),
-                        Padding(
-                          padding: const EdgeInsets.only(left: 24, right: 12),
-                          child: DropdownSearch<String>(
-                            onChanged: (value) {
-                              var obj = cities.where(
-                                  (element) => element["label"] == value);
-                              setState(() {
-                                citiesId = obj.first["value"].toString();
-                              });
-
-                              print(citiesId);
-                            },
-                            items: List.from(cities.map((e) => e["label"])),
-                            dropdownDecoratorProps: DropDownDecoratorProps(
-                                baseStyle: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: width * 0.035),
-                                dropdownSearchDecoration:
-                                    InputDecoration(border: InputBorder.none)),
-                            selectedItem: cities.first["label"],
-                            popupProps: const PopupProps.dialog(
-                                fit: FlexFit.loose,
-                                showSearchBox: true,
-                                searchFieldProps: TextFieldProps(
-                                    decoration:
-                                        InputDecoration(hintText: "Search"))),
+                        ValueListenableBuilder(
+                          builder: (context, value, child) => Padding(
+                            padding: const EdgeInsets.only(left: 24, right: 12),
+                            child: DropdownSearch<String>(
+                              onChanged: (value) {
+                                var obj = cities.where(
+                                    (element) => element["label"] == value);
+                                setState(() {
+                                  citiesId = obj.first["value"].toString();
+                                });
+                              },
+                              items: List.from(cities.map((e) => e["label"])),
+                              dropdownDecoratorProps: DropDownDecoratorProps(
+                                  baseStyle: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: width * 0.035),
+                                  dropdownSearchDecoration: InputDecoration(
+                                      border: InputBorder.none)),
+                              selectedItem: cities.length == 1
+                                  ? name
+                                  : cities.first["label"],
+                              popupProps: const PopupProps.dialog(
+                                  fit: FlexFit.loose,
+                                  showSearchBox: true,
+                                  searchFieldProps: TextFieldProps(
+                                      decoration:
+                                          InputDecoration(hintText: "Search"))),
+                            ),
                           ),
+                          valueListenable: valueNotifier,
                         ),
 
                         // FormHelper.dropDownWidget(
@@ -532,26 +544,12 @@ class _HomeScreenState extends State<HomeScreen> {
                               const Color(0xffFCD917),
                               width,
                               height,
-                              () {
-                                //print('workgin reset');
-                                setState(() {
-                                  // countriesId = '';
-                                  // countries=[];
-                                  countries.clear();
-                                  cities.clear();
-                                  cities = [
-                                    {"label": "City"}
-                                  ];
-                                  services.clear();
-                                  probono.clear();
-                                  // probonoId = '2';
-                                  countries.clear();
-                                  countriesId = '';
-                                  citiesId = '-1';
-                                  probonoId = '-1';
-                                  servicesId = '-1';
-                                });
-                                getData();
+                              () async {
+                                Navigator.pushReplacement(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => HomePage(),
+                                    ));
                               },
                             )
                           ],
@@ -642,7 +640,7 @@ class _HomeScreenState extends State<HomeScreen> {
     print(body);
 
     var response = await http.post(
-        Uri.parse('http://www.advolocate.info/api/searchAdvocate?page=1'),
+        Uri.parse('https://www.advolocate.info/api/searchAdvocate?page=1'),
         headers: headers,
         body: body);
     print(response.body);
@@ -700,7 +698,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Future<void> getData() async {
-    var url = Uri.parse('http://www.advolocate.info/api/meta-info');
+    var url = Uri.parse('https://www.advolocate.info/api/meta-info');
 
     var response = await http.get(url);
 

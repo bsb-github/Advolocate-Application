@@ -60,6 +60,8 @@ dependencies:
   dropdown_search: ^5.0.5
   flutter_inappwebview: ^5.7.2+3
   webview_flutter: ^4.0.2
+  dio: ^5.0.1
+  flutter_easyloading: ^3.0.5
   
 dev_dependencies:
   flutter_test:

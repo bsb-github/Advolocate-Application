@@ -4,7 +4,7 @@ import 'package:advolocate_app/Model/profile_data_model.dart';
 import 'package:flutter/widgets.dart';
 
 class LawyerDataProvider extends ChangeNotifier {
-  ProfileData _data = new ProfileData(
+  ProfileData _data =  ProfileData(
       name: "",
       address: "",
       city_name: "city_name",

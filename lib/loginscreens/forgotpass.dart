@@ -315,12 +315,12 @@ class _PasswordForgotScreenState extends State<PasswordForgotScreen> {
                   ),
                   Container(
                       child: Text(
-                        '      Enter the Email Address \n Associated With Your Account',
-                        style: TextStyle(
-                            fontSize: width * 0.04,
-                            color: Colors.black,
-                            fontWeight: FontWeight.bold),
-                      )),
+                    '      Enter the Email Address \n Associated With Your Account',
+                    style: TextStyle(
+                        fontSize: width * 0.04,
+                        color: Colors.black,
+                        fontWeight: FontWeight.bold),
+                  )),
                   SizedBox(
                     height: height * 0.04,
                   ),
@@ -353,8 +353,8 @@ class _PasswordForgotScreenState extends State<PasswordForgotScreen> {
                       controller: emailComtroller,
                       maxLines: 1,
                       style: const TextStyle(
-                        //color: Colors.black
-                      ),
+                          //color: Colors.black
+                          ),
                       decoration: InputDecoration(
                         //fillColor: Colors.white,
                         hintText: 'Email',
@@ -390,7 +390,7 @@ class _PasswordForgotScreenState extends State<PasswordForgotScreen> {
                       width: width * 0.85,
                       decoration: BoxDecoration(
                         borderRadius:
-                        BorderRadius.all(Radius.circular(width * 0.2)),
+                            BorderRadius.all(Radius.circular(width * 0.2)),
                         border: Border.all(
                           color: Colors.white,
                           width: 3,
@@ -405,9 +405,9 @@ class _PasswordForgotScreenState extends State<PasswordForgotScreen> {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => const ManualLoginScreen(),
+                                  builder: (context) =>
+                                      const ManualLoginScreen(),
                                 ));
-
                           }
                         },
                         style: ElevatedButton.styleFrom(
@@ -446,7 +446,8 @@ class _PasswordForgotScreenState extends State<PasswordForgotScreen> {
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) => const SelectionScreen(),
+                                    builder: (context) =>
+                                        const SelectionScreen(),
                                   ));
                             },
                             child: Text(
@@ -477,7 +478,7 @@ class _PasswordForgotScreenState extends State<PasswordForgotScreen> {
       "email": emailComtroller.text.toString(),
     });
     var response = await http.post(
-        Uri.parse('http://www.advolocate.info/api/forgotPassword'),
+        Uri.parse('https://www.advolocate.info/api/forgotPassword'),
         headers: headers,
         body: body);
 

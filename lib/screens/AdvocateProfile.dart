@@ -93,7 +93,7 @@ class _AdvocateProfileState extends State<AdvocateProfile> {
       "img_url": "data:image/jpeg;base64," + imgeUrl,
     });
     var response = await http.post(
-        Uri.parse('http://www.advolocate.info/api/updateCustomerInfo'),
+        Uri.parse('https://www.advolocate.info/api/updateCustomerInfo'),
         headers: headers,
         body: body);
     print(response.statusCode);
@@ -340,7 +340,7 @@ class _AdvocateProfileState extends State<AdvocateProfile> {
                                                               CrossAxisAlignment
                                                                   .start,
                                                           children: [
-                                                            Text(
+                                                            const Text(
                                                               "Services",
                                                               maxLines: 5,
                                                               softWrap: false,
@@ -350,8 +350,7 @@ class _AdvocateProfileState extends State<AdvocateProfile> {
                                                               textAlign:
                                                                   TextAlign
                                                                       .center,
-                                                              style:
-                                                                  const TextStyle(
+                                                              style: TextStyle(
                                                                 fontWeight:
                                                                     FontWeight
                                                                         .bold,
@@ -545,7 +544,7 @@ class _AdvocateProfileState extends State<AdvocateProfile> {
 
     final String? token = prefs.getString('token');
     final int? userId = prefs.getInt('userId');
-    var url = Uri.parse('http://www.advolocate.info/api/getCustomerInfo');
+    var url = Uri.parse('https://www.advolocate.info/api/getCustomerInfo');
 
     print('get data token');
     print(token);

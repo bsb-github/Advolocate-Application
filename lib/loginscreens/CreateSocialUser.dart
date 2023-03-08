@@ -330,7 +330,7 @@ class _CreateSocialUserState extends State<CreateSocialUser> {
       "city_id": 200,
     });
     var response = await http.post(
-        Uri.parse('http://www.advolocate.info/api/register_social_customer'),
+        Uri.parse('https://www.advolocate.info/api/register_social_customer'),
         headers: headers,
         body: body);
 

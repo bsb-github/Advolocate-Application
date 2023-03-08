@@ -38,7 +38,7 @@ class _ResultPageState extends State<ResultPage> {
   SearchResultModel searchResultModel = SearchResultModel();
   bool loading = true;
 
-  String _baseUrl = 'http://www.advolocate.info/api/searchAdvocate';
+  String _baseUrl = 'https://www.advolocate.info/api/searchAdvocate';
 
   int _page = 1;
 

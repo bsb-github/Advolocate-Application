@@ -5,7 +5,7 @@ Future LoginUser(
   String email,
   String password,
 ) async {
-  String url = 'http://www.advolocate.info/api/login';
+  String url = 'https://www.advolocate.info/api/login';
   final response = await http.post(Uri.parse(url), body: {
     'email': email,
     'password': password,

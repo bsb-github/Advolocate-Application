@@ -88,7 +88,7 @@ class _UserProfileState extends State<UserProfile> {
       "img_url": "data:image/jpeg;base64," + imgeUrl,
     });
     var response = await http.post(
-        Uri.parse('http://www.advolocate.info/api/updateCustomerInfo'),
+        Uri.parse('https://www.advolocate.info/api/updateCustomerInfo'),
         headers: headers,
         body: body);
     print(response.statusCode);
@@ -404,7 +404,7 @@ class _UserProfileState extends State<UserProfile> {
 
     final String? token = prefs.getString('token');
     final int? userId = prefs.getInt('userId');
-    var url = Uri.parse('http://www.advolocate.info/api/getCustomerInfo');
+    var url = Uri.parse('https://www.advolocate.info/api/getCustomerInfo');
 
     print('get data token');
     print(token);

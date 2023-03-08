@@ -101,7 +101,7 @@ class _UpdateAdvocateBottomSheetState extends State<UpdateAdvocateBottomSheet> {
   };
   void getAdvocatesData() async {
     var response = await http
-        .post(Uri.parse("http://www.advolocate.info/api/getAdvocatesData"));
+        .post(Uri.parse("https://www.advolocate.info/api/getAdvocatesData"));
     print(response.body);
     var data = jsonDecode(response.body);
     var advos = List.from(data["result"]);
@@ -801,7 +801,7 @@ class _UpdateAdvocateBottomSheetState extends State<UpdateAdvocateBottomSheet> {
                                       };
                                       var resp = await http.post(
                                           Uri.parse(
-                                              "http://www.advolocate.info/api/getCustomerInfo"),
+                                              "https://www.advolocate.info/api/getCustomerInfo"),
                                           headers: headers,
                                           body:
                                               jsonEncode({"user_id": userId}));
@@ -879,7 +879,7 @@ class _UpdateAdvocateBottomSheetState extends State<UpdateAdvocateBottomSheet> {
     }
     print(list);
     var response = await http.post(
-        Uri.parse('http://www.advolocate.info/api/updateCustomerInfo'),
+        Uri.parse('https://www.advolocate.info/api/updateCustomerInfo'),
         headers: headers,
         body: jsonEncode({
           "user_id": userId,
@@ -934,7 +934,7 @@ class _UpdateAdvocateBottomSheetState extends State<UpdateAdvocateBottomSheet> {
   }
 
   Future<void> getData() async {
-    var url = Uri.parse('http://www.advolocate.info/api/meta-info');
+    var url = Uri.parse('https://www.advolocate.info/api/meta-info');
 
     var response = await http.get(url);
 

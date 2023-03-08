@@ -5,7 +5,7 @@ Future signupUser(
   String email,
   String password,
 ) async {
-  String url = 'http://www.advolocate.info/api/register_customer';
+  String url = 'https://www.advolocate.info/api/register_customer';
   final response = await http.post(Uri.parse(url), body: {
     'email': email,
     'password': password,

@@ -312,7 +312,7 @@ class _ManualLoginScreenState extends State<ManualLoginScreen> {
 
     var body = json.encode({"email": email, "password": password});
     var response = await http.post(
-        Uri.parse('http://www.advolocate.info/api/login'),
+        Uri.parse('https://www.advolocate.info/api/login'),
         headers: headers,
         body: body);
 
@@ -370,7 +370,7 @@ class _ManualLoginScreenState extends State<ManualLoginScreen> {
   Future<void> getAdvocatesData() async {
     AdvocatesList.data.clear();
     var response = await http
-        .post(Uri.parse("http://www.advolocate.info/api/getAdvocatesData"));
+        .post(Uri.parse("https://www.advolocate.info/api/getAdvocatesData"));
     print(response.body);
     var data = jsonDecode(response.body);
     var advos = List.from(data["result"]);

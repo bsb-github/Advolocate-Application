@@ -275,7 +275,7 @@ class _AdvocateEmailVerifyState extends State<AdvocateEmailVerify> {
   Future<void> registerUser() async {
     var headers = {'Accept': 'application/json'};
     var request = http.MultipartRequest(
-        'POST', Uri.parse('http://www.advolocate.info/api/register_advocate'));
+        'POST', Uri.parse('https://www.advolocate.info/api/register_advocate'));
     request.fields.addAll({
       'name': widget.name,
       'email': widget.email,

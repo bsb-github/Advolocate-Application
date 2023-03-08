@@ -115,7 +115,7 @@ class _UpdateBottomSheetState extends State<UpdateBottomSheet> {
                       //color: Colors.black
 
                       ),
-                  enabled: true,
+                  enabled: false,
                   //  initialValue: widget.email,
                   decoration: InputDecoration(
                     //fillColor: Colors.white,
@@ -195,7 +195,7 @@ class _UpdateBottomSheetState extends State<UpdateBottomSheet> {
                     hintText: 'City',
                     fillColor: Colors.white,
                     filled: true,
-                    prefixIcon: const Icon(Icons.email, color: Colors.black),
+                    prefixIcon: const Icon(Icons.place, color: Colors.black),
 
                     hintStyle: const TextStyle(color: Colors.black87),
                     contentPadding: const EdgeInsets.only(left: 30),
@@ -231,7 +231,7 @@ class _UpdateBottomSheetState extends State<UpdateBottomSheet> {
                     hintText: 'Phone Number',
                     fillColor: Colors.white,
                     filled: true,
-                    prefixIcon: const Icon(Icons.email, color: Colors.black),
+                    prefixIcon: const Icon(Icons.phone, color: Colors.black),
 
                     hintStyle: const TextStyle(color: Colors.black87),
                     contentPadding: const EdgeInsets.only(left: 30),
@@ -288,7 +288,7 @@ class _UpdateBottomSheetState extends State<UpdateBottomSheet> {
                       });
                       var response = await http.post(
                           Uri.parse(
-                              'http://www.advolocate.info/api/updateCustomerInfo'),
+                              'https://www.advolocate.info/api/updateCustomerInfo'),
                           headers: headers,
                           body: body);
                       var data = jsonDecode(response.body);
@@ -328,13 +328,13 @@ class _UpdateBottomSheetState extends State<UpdateBottomSheet> {
   }
 
   Future<void> getUserData(int userType, String token, id) async {
-    var url = Uri.parse('http://www.advolocate.info/api/getCustomerInfo');
+    var url = Uri.parse('https://www.advolocate.info/api/getCustomerInfo');
 
     print(token);
     var headers = {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
-      'Authorization': 'Bearer ${token}',
+      'Authorization': 'Bearer $token',
     };
     var response = await http.post(url,
         body: jsonEncode({"user_id": id}), headers: headers);

@@ -1,11 +1,5 @@
-import 'package:advolocate_app/Model/profile_data_model.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_phone_direct_caller/flutter_phone_direct_caller.dart';
-import 'package:http/http.dart' as http;
-import 'package:open_whatsapp/open_whatsapp.dart';
 import 'package:url_launcher/url_launcher.dart';
-
-import '../main.dart';
 
 class LawyerPage extends StatefulWidget {
   final String name;
@@ -204,7 +198,7 @@ class _LawyerPageState extends State<LawyerPage> {
                           decoration: BoxDecoration(
                               color: Colors.yellow,
                               borderRadius: BorderRadius.circular(8)),
-                          child: Center(
+                          child:const Center(
                             child: Text(
                               "Contact",
                               style: TextStyle(

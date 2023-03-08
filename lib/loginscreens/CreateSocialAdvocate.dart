@@ -205,7 +205,7 @@ class _CreateSocialAdvocateState extends State<CreateSocialAdvocate> {
       "link_type": type
     });
     var response = await http.post(
-        Uri.parse('http://www.advolocate.info/api/register_social_advocate'),
+        Uri.parse('https://www.advolocate.info/api/register_social_advocate'),
         headers: headers,
         body: body);
     var data = jsonDecode(response.body.toString());
@@ -861,7 +861,7 @@ class _CreateSocialAdvocateState extends State<CreateSocialAdvocate> {
       'Accept': 'application/json',
     };
     var response = await http.post(
-        Uri.parse('http://www.advolocate.info/api/register_social_advocate'),
+        Uri.parse('https://www.advolocate.info/api/register_social_advocate'),
         headers: headers,
         body: jsonEncode({
           'name': _fullNameController.text.toString(),
@@ -925,7 +925,7 @@ class _CreateSocialAdvocateState extends State<CreateSocialAdvocate> {
   }
 
   Future<void> getData() async {
-    var url = Uri.parse('http://www.advolocate.info/api/meta-info');
+    var url = Uri.parse('https://www.advolocate.info/api/meta-info');
 
     var response = await http.get(url);
 

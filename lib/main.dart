@@ -16,11 +16,11 @@ import 'package:advolocate_app/screens/ProfilePending.dart';
 import 'package:advolocate_app/screens/cso_laws.dart';
 import 'package:advolocate_app/screens/homepage.dart';
 import 'package:advolocate_app/screens/privacy_policy.dart';
-import 'package:advolocate_app/screens/search_results.dart';
 import 'package:advolocate_app/screens/user_profile.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -48,7 +48,9 @@ void main() async {
       ChangeNotifierProvider(create: (_) => ConfigProvider()),
       ChangeNotifierProvider(create: (_) => ImageUrlProvider()),
       ChangeNotifierProvider(create: (_) => OtpProvider()),
-      ChangeNotifierProvider(create: (_) => LawyerDataProvider()),
+      ChangeNotifierProvider(
+        create: (_) => LawyerDataProvider(),
+      )
     ],
     child: GetMaterialApp(
       theme: ThemeData(
@@ -58,11 +60,12 @@ void main() async {
         '/home': (context) => const HomeScreen(),
         '/profile': (context) => const UserProfile(),
         '/privacy_policy': (context) => const PrivacyPolicy(),
-        '/cso_laws': (context) => const CsoLaws(),
+        '/cso_lawws': (context) => const CsoLaws(),
         //
       },
       // home: const SignUpScreen(),
       home: splashscreen(),
+      builder: EasyLoading.init(),
       //  home: CreateUserAccount(),
       debugShowCheckedModeBanner: false,
     ),
@@ -80,81 +83,6 @@ class _MyAppState extends State<MyApp> {
   Map<String, dynamic>? _userData;
   AccessToken? _accessToken;
   bool loading = false;
-
-  // _fblogin() async {
-  //   setState(() {
-  //     loading = true;
-  //   });
-  //   final LoginResult result = await FacebookAuth.instance.login();
-  //   final LoginResult loginResult =
-  //       await FacebookAuth.instance.login(permissions: [
-  //     'email',
-  //     'public_profile',
-  //   ]);
-
-  //   // Create a credential from the access token
-  //   // final OAuthCredential facebookAuthCredential = FacebookAuthProvider.credential(loginResult.accessToken!.token);
-
-  //   print('printing result');
-  //   print(result.status);
-  //   setState(() {
-  //     loading = false;
-  //   });
-  //   if (result.status == LoginStatus.success) {
-  //     _accessToken = result.accessToken;
-  //     final OAuthCredential facebookAuthCredential =
-  //         FacebookAuthProvider.credential(result.accessToken!.token);
-  //     FirebaseAuth.instance.signInWithCredential(facebookAuthCredential);
-  //     final userData = await FacebookAuth.instance.getUserData();
-  //     _userData = userData;
-  //     Navigator.push(
-  //         context,
-  //         MaterialPageRoute(
-  //           builder: (context) => const home(),
-  //         ));
-  //   } else {
-  //     print(result.status);
-  //     print(result.message);
-  //   }
-  // }
-
-  // _login() async {
-  //   setState(() {
-  //     loading = true;
-  //   });
-  //   final LoginResult result = await FacebookAuth.instance.login();
-  //   final LoginResult loginResult =
-  //       await FacebookAuth.instance.login(permissions: [
-  //     'email',
-  //     'public_profile',
-  //   ]);
-
-  //   // Create a credential from the access token
-  //   // final OAuthCredential facebookAuthCredential = FacebookAuthProvider.credential(loginResult.accessToken!.token);
-
-  //   print('printing result');
-  //   print(result.status);
-  //   setState(() {
-  //     loading = false;
-  //   });
-  //   if (result.status == LoginStatus.success) {
-  //     _accessToken = result.accessToken;
-  //     final OAuthCredential facebookAuthCredential =
-  //         FacebookAuthProvider.credential(result.accessToken!.token);
-  //     FirebaseAuth.instance.signInWithCredential(facebookAuthCredential);
-  //     final userData = await FacebookAuth.instance.getUserData();
-  //     print(userData);
-  //     _userData = userData;
-  //     Navigator.push(
-  //         context,
-  //         MaterialPageRoute(
-  //           builder: (context) => const home(),
-  //         ));
-  //   } else {
-  //     print(result.status);
-  //     print(result.message);
-  //   }
-  // }
   _checkIfidLoggedIn() async {
     final accessToken = await FacebookAuth.instance.accessToken;
     setState(() {
@@ -223,159 +151,6 @@ class _MyAppState extends State<MyApp> {
     //   print(020);
   }
 
-  // Future<void> createUser() async {
-  //   var headers = {
-  //     'Content-Type': 'application/json',
-  //     'Accept': 'application/json',
-  //   };
-
-  //   var data = FacebookData.data[0];
-  //   print(data.id);
-  //   print(data.email);
-
-  //   var body = json.encode({
-  //     "email": data.email,
-  //     "user_type": 1,
-  //     "password": data.id,
-  //     "name": data.name,
-  //     //   "img_url": data.imageUrl,
-  //     "contact_number": data.id,
-  //     "social_id": data.id,
-  //     'address': "",
-  //     "link_type": 2,
-  //     "city_name": "Advolocate App"
-  //   });
-  //   var response = await http.post(
-  //       Uri.parse('http://www.advolocate.info/api/register_social_customer'),
-  //       headers: headers,
-  //       body: body);
-
-  //   if (response.statusCode == 200) {
-  //     var data = jsonDecode(response.body.toString());
-  //     print(data);
-  //     print(data['description']);
-  //     if (data['code'] == 0 || data['code'] == 5) {
-  //       loginGoogleUser(context,
-  //           type: 2, password: FacebookData.data[0].id.toString());
-  //     } else {
-  //       //   await createuser(
-  //       //       FacebookData.data[0].email.toString(),
-  //       //       2,
-  //       //       FacebookData.data[0].id.toString(),
-  //       //       FacebookData.data[0].name.toString(),
-  //       //       "Advolocate App",
-  //       //       2);
-  //       // }
-  //     }
-  //   } else {
-  //     print(response.reasonPhrase);
-  //   }
-  // }
-
-  // void LoginFacebookUser(BuildContext context,
-  //     {required String email, required String password}) async {
-  //   print(4);
-  //   var headers = {
-  //     'Content-Type': 'application/json',
-  //   };
-
-  //   var body = json.encode({"social_id": password, "link_type": 2});
-  //   var response = await http.post(
-  //       Uri.parse('http://www.advolocate.info/api/login_social_customer'),
-  //       headers: headers,
-  //       body: body);
-  //   print(5);
-  //   print(response.body);
-  //   final prefs = await SharedPreferences.getInstance();
-  //   if (response.statusCode == 200) {
-  //     print(6);
-  //     var data = jsonDecode(response.body.toString());
-
-  //     print(data['description']);
-  //     if (data['description'].toString() ==
-  //         'please check give correct email and password') {
-  //       //  await signupUser(email, password);
-
-  //       print(8);
-  //     } else if (data['description'].toString() == 'login Successful') {
-  //       print(9);
-  //       Provider.of<ConfigProvider>(context, listen: false)
-  //           .setToken(data['result']['token']);
-  //       Provider.of<ConfigProvider>(context, listen: false)
-  //           .setUserID(data['result']['user_id']);
-
-  //       setState(() {
-  //         prefs.setString('email', email);
-  //         prefs.setString('password', password);
-  //         prefs.setString("loginType", "fb");
-  //         prefs.setString('token', data['result']['token'].toString());
-  //         prefs.setInt('userId', data['result']['user_id']);
-  //       });
-  //       _logout();
-  //       Navigator.pushNamed(context, '/home');
-  //     } else {
-  //       print(7);
-  //       print("In crfeating");
-  //       createuser(
-  //           FacebookData.data[0].email.toString(),
-  //           2,
-  //           FacebookData.data[0].id.toString(),
-  //           FacebookData.data[0].name.toString(),
-  //           "Advolocate App",
-  //           2);
-  //     }
-  //   }
-  // }
-
-  // Future<void> createuser(String email, int userType, String id, String name,
-  //     String address, int type) async {
-  //   //_logout();
-  //   var headers = {
-  //     'Content-Type': 'application/json',
-  //     'Accept': 'application/json',
-  //   };
-  //   var body = json.encode({
-  //     "email": email,
-  //     "user_type": type,
-  //     "password": id,
-  //     "name": name,
-  //     "contact_number": "01",
-  //     //   "img_url": data.imageUrl,
-  //     "social_id": id,
-  //     'address': address,
-  //     "link_type": type,
-  //     "city_name": address,
-  //   });
-  //   var response = await http.post(
-  //       Uri.parse('http://www.advolocate.info/api/register_social_customer'),
-  //       headers: headers,
-  //       body: body);
-  //   var data = jsonDecode(response.body.toString());
-  //   print(data);
-  //   if (response.statusCode == 200) {
-  //     print(data);
-  //     print(data['description']);
-  //     if (data['code'] == 0 || data['code'] == 5) {
-  //       print(0);
-  //       if (type == 1) {
-  //         loginGoogleUser(
-  //           context,
-  //           type: 1,
-  //           password: id,
-  //         );
-  //       } else {
-  //         loginGoogleUser(context, type: type, password: id);
-  //       }
-  //     } else {
-  //       Utils().toastMessage(data['description'].toString());
-  //     }
-  //   } else {
-  //     print(-1);
-  //     print(data['description']);
-  //     print(response.body);
-  //   }
-  // }
-
   Future<void> createFBUser(String email, int userType, String id, String name,
       String address, int type) async {
     //_logout();
@@ -389,14 +164,13 @@ class _MyAppState extends State<MyApp> {
       "password": id,
       "name": name,
       "contact_number": "01",
-      //   "img_url": data.imageUrl,
       "social_id": id,
       'address': address,
       "link_type": type,
       "city_name": address,
     });
     var response = await http.post(
-        Uri.parse('http://www.advolocate.info/api/register_social_customer'),
+        Uri.parse('https://www.advolocate.info/api/register_social_customer'),
         headers: headers,
         body: body);
     var data = jsonDecode(response.body.toString());
@@ -429,7 +203,7 @@ class _MyAppState extends State<MyApp> {
     };
     var body = json.encode({"social_id": password, "link_type": type});
     var response = await http.post(
-        Uri.parse('http://www.advolocate.info/api/login_social_customer'),
+        Uri.parse('https://www.advolocate.info/api/login_social_customer'),
         headers: headers,
         body: body);
 
@@ -496,7 +270,7 @@ class _MyAppState extends State<MyApp> {
   }
 
   Future<void> getUserData(int userType, String token, id) async {
-    var url = Uri.parse('http://www.advolocate.info/api/getCustomerInfo');
+    var url = Uri.parse('https://www.advolocate.info/api/getCustomerInfo');
 
     print('get data token');
     print(token);
@@ -538,7 +312,7 @@ class _MyAppState extends State<MyApp> {
 
   void getAdvocatesData() async {
     var response = await http
-        .post(Uri.parse("http://www.advolocate.info/api/getAdvocatesData"));
+        .post(Uri.parse("https://www.advolocate.info/api/getAdvocatesData"));
     print(response.body);
     var data = jsonDecode(response.body);
     var advos = List.from(data["result"]);
@@ -613,7 +387,7 @@ class _MyAppState extends State<MyApp> {
 
     var body = json.encode({"social_id": password, "link_type": 1});
     var response = await http.post(
-        Uri.parse('http://www.advolocate.info/api/login_social_customer'),
+        Uri.parse('https://www.advolocate.info/api/login_social_customer'),
         headers: headers,
         body: body);
 

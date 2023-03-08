@@ -268,7 +268,7 @@ class _PasswordVerifyState extends State<PasswordVerify> {
       "address": widget.address
     });
     var response = await http.post(
-        Uri.parse('http://www.advolocate.info/api/register_customer'),
+        Uri.parse('https://www.advolocate.info/api/register_customer'),
         headers: headers,
         body: body);
 

@@ -12,6 +12,7 @@ import 'package:advolocate_app/screens/ProfilePending.dart';
 import 'package:advolocate_app/screens/homepage.dart';
 import 'package:advolocate_app/screens/lawyer_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dio/dio.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -35,6 +36,8 @@ class splashscreen extends StatefulWidget {
 
 class _splashscreenState extends State<splashscreen> {
   // SplashServicees sp//lashscreen =SplashServicees();
+  final dio = Dio();
+
   @override
   initState() {
     super.initState();
@@ -144,7 +147,7 @@ class _splashscreenState extends State<splashscreen> {
   ProfileDataModel profileDataModel = ProfileDataModel();
   AdvocateData advocateData = AdvocateData();
   Future<void> getUserData(int userType, String token, id) async {
-    var url = Uri.parse('http://www.advolocate.info/api/getCustomerInfo');
+    var url = Uri.parse('https://www.advolocate.info/api/getCustomerInfo');
 
     print('get data token');
     var getCustomerInfoToken =
@@ -171,7 +174,7 @@ class _splashscreenState extends State<splashscreen> {
 
   Future<void> getAdvocatesData() async {
     var response = await http
-        .post(Uri.parse("http://www.advolocate.info/api/getAdvocatesData"));
+        .post(Uri.parse("https://www.advolocate.info/api/getAdvocatesData"));
     print(response.body);
     var data = jsonDecode(response.body);
     var advos = List.from(data["result"]);
@@ -192,7 +195,7 @@ class _splashscreenState extends State<splashscreen> {
 
     var body = json.encode({"email": email, "password": password});
     var response = await http.post(
-        Uri.parse('http://www.advolocate.info/api/login'),
+        Uri.parse('https://www.advolocate.info/api/login'),
         headers: headers,
         body: body);
 

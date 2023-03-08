@@ -51,10 +51,6 @@ class _CreateAdvocateAccountState extends State<CreateAdvocateAccount> {
     }
   }
 
-  /////
-  ///
-  ///
-
   List services = [];
   List<MultiSelectDialogItem<int>> multiItem = [];
   final valuestopopulate = {
@@ -991,7 +987,7 @@ class _CreateAdvocateAccountState extends State<CreateAdvocateAccount> {
     });
   }
 
-  void getCities(Map<String, dynamic> data, int lenght) {
+  void getCities(Map<String, dynamic> data, int length) {
     print('printing cities');
     print(countriesId);
     print(citiesId);
