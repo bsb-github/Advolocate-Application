@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'dart:io';
-
 import 'package:advolocate_app/Model/profile_data_model.dart';
 import 'package:advolocate_app/Providers/ConfigProviders.dart';
 import 'package:advolocate_app/Providers/ImageUrlProvider.dart';
@@ -8,6 +7,7 @@ import 'package:advolocate_app/utils/UpdateProfileData.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/services.dart';
+import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:random_string_generator/random_string_generator.dart';
@@ -68,16 +68,18 @@ class _UserProfileState extends State<UserProfile> {
   }
 
   Future<void> UploadImage(String imageURl) async {
-    print("data:image/jpeg;base64," + imgeUrl);
-    var getCustomerInfoToken = context.read<ConfigProvider>().token;
-    print(getCustomerInfoToken);
+    final prefs = await SharedPreferences.getInstance();
+    final String? token = prefs.getString('token');
+    print(token);
     var headers = {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
-      'Authorization': 'Bearer ${getCustomerInfoToken}',
+      'Authorization': 'Bearer $token',
     };
     print(
-        'Bearer ${Provider.of<ConfigProvider>(context, listen: false).token}');
+        'Bearer $token');
+    final bytes = File(image!.path).readAsBytesSync();
+    print(base64Encode(bytes));
     var body = jsonEncode({
       "user_id": profileDataModel.result!.userId as int,
       "name": profileDataModel.result!.name as String,
@@ -85,7 +87,7 @@ class _UserProfileState extends State<UserProfile> {
       "email": profileDataModel.result!.email as String,
       "address": profileDataModel.result!.address as String,
       "selectedCountry": 1,
-      "img_url": "data:image/jpeg;base64," + imgeUrl,
+      "img_url": "data:image/png;base64,${base64Encode(bytes)}",
     });
     var response = await http.post(
         Uri.parse('https://www.advolocate.info/api/updateCustomerInfo'),
@@ -94,7 +96,7 @@ class _UserProfileState extends State<UserProfile> {
     print(response.statusCode);
     if (response.statusCode == 200) {
       ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text('helllllllllllllllllllllllll')));
+          .showSnackBar(SnackBar(content: Text("Done")));
     }
     // if (response.statusCode == 200) {
     //   var data = jsonDecode(response.body.toString());
@@ -126,6 +128,9 @@ class _UserProfileState extends State<UserProfile> {
     } on PlatformException catch (e) {
       print(e);
     }
+    setState(() {
+
+    });
   }
 
   @override
@@ -133,21 +138,14 @@ class _UserProfileState extends State<UserProfile> {
     // TODO: implement initState
     super.initState();
     print('token');
-    getData(context);
-    setState(() {});
 
-    if (profileDataModel.result == null) {
-      if (data.userType <= 5) {
-        loadingFun();
-      } else {}
-    } else {
-      loadingFun();
-    }
+    getData(context);
+
   }
 
   loadingFun() {
     setState(() {
-      loading = false;
+      loading = !loading;
     });
   }
 
@@ -157,249 +155,256 @@ class _UserProfileState extends State<UserProfile> {
     var height = size.height;
     var width = size.width;
 
-    return SafeArea(
-      child: loading == false
-          ? WillPopScope(
-              onWillPop: () async => false,
-              child: Scaffold(
-                floatingActionButton: FloatingActionButton(
-                  onPressed: () {
-                    showModalBottomSheet(
-                        context: context,
-                        builder: (context) => UpdateBottomSheet(
-                              name: profileDataModel.result?.name.toString() ??
-                                  data.name,
-                              contact_number:
-                                  profileDataModel.result?.contactNumber ??
-                                      data.contact_number,
-                              address: profileDataModel.result?.address ??
-                                  data.address,
-                              city: profileDataModel
-                                      .result?.selectedCity!.label ??
-                                  data.city_name,
-                              email:
-                                  profileDataModel.result?.email ?? data.email,
-                            ));
-                  },
-                  backgroundColor: Colors.amber[400],
-                  child: Center(
-                    child: Icon(
-                      Icons.edit,
-                      color: Colors.white,
+    return Semantics(
+      label: "User Profile",
+      child: SafeArea(
+        child: !loading
+            ? WillPopScope(
+                onWillPop: () async => false,
+                child: Scaffold(
+                  floatingActionButton: FloatingActionButton(
+                    onPressed: () {
+                      showModalBottomSheet(
+                          context: context,
+                          builder: (context) => UpdateBottomSheet(
+                                name:
+                                    profileDataModel.result?.name.toString() ??
+                                        data.name,
+                                contact_number:
+                                    profileDataModel.result?.contactNumber ??
+                                        data.contact_number,
+                                address: profileDataModel.result?.address ??
+                                    data.address,
+                                city: profileDataModel
+                                        .result?.selectedCity!.label ??
+                                    data.city_name,
+                                email: profileDataModel.result?.email ??
+                                    data.email,
+                              ));
+                    },
+                    backgroundColor: Colors.amber[400],
+                    child: Center(
+                      child: Icon(
+                        Icons.edit,
+                        color: Colors.white,
+                      ),
                     ),
                   ),
-                ),
-                appBar: AppBar(
-                  // leading: IconButton(
-                  //   icon: Icon(Icons.arrow_back_ios),
-                  //   color: Colors.black,
-                  //   onPressed: () {
-                  //     Navigator.pop(context);
-                  //   },
-                  // ),
-                  automaticallyImplyLeading: false,
-                  // leading: IconButton(
-                  //   icon: const Icon(Icons.arrow_back_ios),
-                  //   onPressed: () {
-                  //     // Navigator.popAndPushNamed(context, '/home');
-                  //     Navigator.pop(context);
-                  //   },
-                  // ),
-                  // iconTheme: const IconThemeData(color: Colors.black),
-                  centerTitle: true,
-                  title: const Text(
-                    'Profile',
-                    style: TextStyle(color: Colors.black),
-                  ),
-                  backgroundColor: Theme.of(context).primaryColor,
-                  elevation: 0,
-                ),
-                body: Stack(alignment: Alignment.center, children: [
-                  Positioned(
-                    child: Container(
-                      color: Theme.of(context).primaryColor,
+                  appBar: AppBar(
+                    // leading: IconButton(
+                    //   icon: Icon(Icons.arrow_back_ios),
+                    //   color: Colors.black,
+                    //   onPressed: () {
+                    //     Navigator.pop(context);
+                    //   },
+                    // ),
+                    automaticallyImplyLeading: false,
+                    // leading: IconButton(
+                    //   icon: const Icon(Icons.arrow_back_ios),
+                    //   onPressed: () {
+                    //     // Navigator.popAndPushNamed(context, '/home');
+                    //     Navigator.pop(context);
+                    //   },
+                    // ),
+                    // iconTheme: const IconThemeData(color: Colors.black),
+                    centerTitle: true,
+                    title: const Text(
+                      'Profile',
+                      style: TextStyle(color: Colors.black),
                     ),
+                    backgroundColor: Theme.of(context).primaryColor,
+                    elevation: 0,
                   ),
-                  Positioned(
-                      top: height * 0.10,
-                      bottom: height * 0.001,
+                  body: Stack(alignment: Alignment.center, children: [
+                    Positioned(
                       child: Container(
-                        height: height,
-                        width: width,
-                        decoration: const BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.only(
-                              topLeft: Radius.circular(50.0),
-                              topRight: Radius.circular(50.0),
-                            )),
-                        child: Padding(
-                          padding: EdgeInsets.only(top: height * 0.1),
+                        color: Theme.of(context).primaryColor,
+                      ),
+                    ),
+                    Positioned(
+                        top: height * 0.10,
+                        bottom: height * 0.001,
+                        child: Container(
+                          height: height,
+                          width: width,
+                          decoration: const BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(50.0),
+                                topRight: Radius.circular(50.0),
+                              )),
+                          child: Padding(
+                            padding: EdgeInsets.only(top: height * 0.1),
 
-                          ///Lawyer name and address
+                            ///Lawyer name and address
 
-                          child: Column(
-                            children: [
-                              loading == false
-                                  ? Column(
-                                      children: [
-                                        Column(
-                                          children: [
-                                            Container(
-                                                child: Text(
-                                              profileDataModel.result?.name ??
-                                                  data.name,
-                                              style: const TextStyle(
+                            child: Column(
+                              children: [
+                                loading == false
+                                    ? Column(
+                                        children: [
+                                          Column(
+                                            children: [
+                                              Container(
+                                                  child: Text(
+                                                profileDataModel.result?.name ??
+                                                    data.name,
+                                                style: const TextStyle(
+                                                    fontSize: 20,
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              )),
+                                              const SizedBox(
+                                                height: 10,
+                                              ),
+                                              Container(
+                                                  child: Text(
+                                                profileDataModel
+                                                        .result?.address ??
+                                                    data.address,
+                                                style: const TextStyle(
+                                                    fontSize: 18),
+                                              )),
+                                            ],
+                                          ),
+
+                                          ///general info
+                                          Padding(
+                                            padding: EdgeInsets.only(
+                                                top: height * 0.01,
+                                                right: width * 0.6),
+                                            child: Container(
+                                                child: const Text(
+                                              'General info',
+                                              style: TextStyle(
                                                   fontSize: 20,
                                                   fontWeight: FontWeight.bold),
                                             )),
-                                            const SizedBox(
-                                              height: 10,
-                                            ),
-                                            Container(
-                                                child: Text(
+                                          ),
+                                          RowInfo(
+                                              width,
+                                              height,
+                                              Icons.person,
+                                              'Name',
+                                              profileDataModel.result?.name ??
+                                                  data.name,
+                                              context),
+                                          RowInfo(
+                                              width,
+                                              height,
+                                              Icons.location_on,
+                                              'Address',
                                               profileDataModel
                                                       .result?.address ??
                                                   data.address,
-                                              style:
-                                                  const TextStyle(fontSize: 18),
+                                              context),
+                                          RowInfo(
+                                              width,
+                                              height,
+                                              Icons.travel_explore,
+                                              'Country',
+                                              profileDataModel
+                                                      .result
+                                                      ?.selectedCountry
+                                                      ?.label ??
+                                                  data.address,
+                                              context),
+
+                                          // contact me
+                                          Padding(
+                                            padding: EdgeInsets.only(
+                                                top: height * 0.01,
+                                                right: width * 0.6),
+                                            child: Container(
+                                                child: const Text(
+                                              'Contact me',
+                                              style: TextStyle(
+                                                  fontSize: 20,
+                                                  fontWeight: FontWeight.bold),
                                             )),
-                                          ],
-                                        ),
+                                          ),
 
-                                        ///general info
-                                        Padding(
-                                          padding: EdgeInsets.only(
-                                              top: height * 0.01,
-                                              right: width * 0.6),
-                                          child: Container(
-                                              child: const Text(
-                                            'General info',
-                                            style: TextStyle(
-                                                fontSize: 20,
-                                                fontWeight: FontWeight.bold),
-                                          )),
-                                        ),
-                                        RowInfo(
-                                            width,
-                                            height,
-                                            Icons.person,
-                                            'Name',
-                                            profileDataModel.result?.name ??
-                                                data.name,
-                                            context),
-                                        RowInfo(
-                                            width,
-                                            height,
-                                            Icons.location_on,
-                                            'Address',
-                                            profileDataModel.result?.address ??
-                                                data.address,
-                                            context),
-                                        RowInfo(
-                                            width,
-                                            height,
-                                            Icons.travel_explore,
-                                            'Country',
-                                            profileDataModel.result
-                                                    ?.selectedCountry?.label ??
-                                                data.address,
-                                            context),
-
-                                        // contact me
-                                        Padding(
-                                          padding: EdgeInsets.only(
-                                              top: height * 0.01,
-                                              right: width * 0.6),
-                                          child: Container(
-                                              child: const Text(
-                                            'Contact me',
-                                            style: TextStyle(
-                                                fontSize: 20,
-                                                fontWeight: FontWeight.bold),
-                                          )),
-                                        ),
-
-                                        RowInfo(
-                                            width,
-                                            height,
-                                            Icons.phone,
-                                            'Phone Number',
-                                            profileDataModel
-                                                    .result?.contactNumber ??
-                                                data.contact_number,
-                                            context),
-                                        RowInfo(
-                                            width,
-                                            height,
-                                            Icons.mail,
-                                            'Mail',
-                                            profileDataModel.result?.email ??
-                                                data.email,
-                                            context),
-                                      ],
-                                    )
-                                  : CircularProgressIndicator(
-                                      color: Colors.yellow,
-                                    )
-                            ],
+                                          RowInfo(
+                                              width,
+                                              height,
+                                              Icons.phone,
+                                              'Phone Number',
+                                              profileDataModel
+                                                      .result?.contactNumber ??
+                                                  data.contact_number,
+                                              context),
+                                          RowInfo(
+                                              width,
+                                              height,
+                                              Icons.mail,
+                                              'Mail',
+                                              profileDataModel.result?.email ??
+                                                  data.email,
+                                              context),
+                                        ],
+                                      )
+                                    : CircularProgressIndicator(
+                                        color: Colors.yellow,
+                                      )
+                              ],
+                            ),
                           ),
-                        ),
 
-                        ///Lawyer name and address
-                      )),
-                  Positioned(
-                    top: height * 0.01,
-                    // right: width*0.35,
-                    child: Stack(
-                      children: [
-                        GestureDetector(
-                          onTap: () {
-                            pickImage();
-                          },
-                          child: CircleAvatar(
-                              backgroundColor: Color(0xffFCD917),
-                              radius: 60,
-                              child: CircleAvatar(
-                                  radius: 55,
-                                  backgroundImage:
-                                      profileDataModel.result?.imgUrl == null
-                                          ? NetworkImage(context
-                                              .watch<ImageUrlProvider>()
-                                              .imageUrl)
-                                          : NetworkImage(
-                                              "https://www.advolocate.info" +
-                                                  profileDataModel
-                                                      .result!.imgUrl
-                                                      .toString()))),
-                        ),
-                        Container(
-                            height: 37,
-                            width: 37,
-                            decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(20)),
-                            child: Center(
-                                child: Icon(
-                              Icons.edit,
-                              color: Theme.of(context).primaryColor,
-                            ))),
-                      ],
-                    ),
-                  )
-                ]),
-              ),
-            )
-          : Scaffold(
-              body: Center(
-                child: CircularProgressIndicator(
-                  color: Colors.yellow,
+                          ///Lawyer name and address
+                        )),
+                    Positioned(
+                      top: height * 0.01,
+                      // right: width*0.35,
+                      child: Stack(
+                        children: [
+                          GestureDetector(
+                            onTap: () {
+                              pickImage();
+                            },
+                            child: CircleAvatar(
+                                backgroundColor: Color(0xffFCD917),
+                                radius: 60,
+                                child: CircleAvatar(
+                                    radius: 55,
+                                    backgroundImage: !(image.isNull)
+                                        ? FileImage(image!) as ImageProvider
+                                        : NetworkImage(
+                                            "https://www.advolocate.info/" +
+                                                profileDataModel.result!.imgUrl
+                                                    .toString()))),
+                          ),
+                          Container(
+                              height: 37,
+                              width: 37,
+                              decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(20)),
+                              child: Center(
+                                  child: Icon(
+                                Icons.edit,
+                                color: Theme.of(context).primaryColor,
+                              ))),
+                        ],
+                      ),
+                    )
+                  ]),
+                ),
+              )
+            : Scaffold(
+                body: Center(
+                  child: CircularProgressIndicator(
+                    color: Colors.yellow,
+                  ),
                 ),
               ),
-            ),
+      ),
     );
   }
 
   Future<void> getData(BuildContext context) async {
+    setState(() {
+      loading = true;
+    });
     final prefs = await SharedPreferences.getInstance();
 
     final String? token = prefs.getString('token');
@@ -420,7 +425,9 @@ class _UserProfileState extends State<UserProfile> {
       print(jsonDecode(response.body));
       profileDataModel = ProfileDataModel.fromJson(jsonDecode(response.body));
     }
-    setState(() {});
+    setState(() {
+      loading = false;
+    });
   }
 
   void navigateBottomBar(int index) {

@@ -67,355 +67,360 @@ class _CreateUserAccountState extends State<CreateUserAccount> {
   Widget build(BuildContext context) {
     var height = MediaQuery.of(context).size.height;
     var width = MediaQuery.of(context).size.width;
-    return SafeArea(
-      child: Scaffold(
-        body: Column(children: [
-          Image.asset(
-            'images/logosplash.png',
-            height: 250,
-          ),
-          Form(
-            key: _formKey,
-            child: Expanded(
-              child: SingleChildScrollView(
-                child: Column(
-                  children: [
-                    SizedBox(
-                      height: 30,
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 18.0),
-                      child: Align(
-                        alignment: Alignment.topLeft,
-                        child: Text(
-                          'Create Account',
-                          style: TextStyle(
-                              fontSize: 35,
-                              color: Colors.black,
-                              fontWeight: FontWeight.bold),
-                        ),
+    return ExcludeSemantics(
+      child: SafeArea(
+        child: Scaffold(
+          body: Column(children: [
+            Image.asset(
+              'images/logosplash.png',
+              height: 250,
+            ),
+            Form(
+              key: _formKey,
+              child: Expanded(
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      SizedBox(
+                        height: 30,
                       ),
-                    ),
-                    SizedBox(
-                      height: 12,
-                    ),
-                    Container(
-                      margin: EdgeInsets.only(
-                          left: width * 0.05, right: width * 0.05),
-                      child: TextFormField(
-                        controller: nameController,
-                        //controller: emailComtroller,
-                        maxLines: 1,
-                        style: const TextStyle(
-                            //color: Colors.black
-                            ),
-                        decoration: InputDecoration(
-                          //fillColor: Colors.white,
-                          hintText: 'Full Name',
-                          fillColor: Colors.white,
-                          filled: true,
-                          prefixIcon:
-                              const Icon(Icons.person, color: Colors.black),
-                          hintStyle: const TextStyle(color: Colors.black87),
-                          contentPadding: const EdgeInsets.only(left: 30),
-                          border: myinputborder(),
-                          enabledBorder: myinputborder(),
-                          // OutlineInputBorder(
-                          //   borderSide: BorderSide(color: Colors.white,width: 3),
-                          //     borderRadius: BorderRadius.circular(30),),
-                        ),
-                        validator: (value) {
-                          if (value!.isEmpty) {
-                            return 'Required';
-                          }
-                          return null;
-                        },
-                      ),
-                    ),
-                    SizedBox(
-                      height: height * 0.03,
-                    ),
-                    Container(
-                      margin: EdgeInsets.only(
-                          left: width * 0.05, right: width * 0.05),
-                      child: TextFormField(
-                        controller: emailController,
-                        //maxLines: 1,
-                        style: const TextStyle(
-                            //color: Colors.black
-
-                            ),
-                        enabled: true,
-                        //  initialValue: widget.email,
-                        decoration: InputDecoration(
-                          //fillColor: Colors.white,
-                          hintText: 'Email Address',
-                          fillColor: Colors.white,
-                          filled: true,
-                          prefixIcon:
-                              const Icon(Icons.email, color: Colors.black),
-
-                          hintStyle: const TextStyle(color: Colors.black87),
-                          contentPadding: const EdgeInsets.only(left: 30),
-                          border: myinputborder(),
-                          enabledBorder: myinputborder(),
-                        ),
-
-                        validator: (value) {
-                          if (value!.isEmpty) {
-                            return 'Required';
-                          }
-                          return null;
-                        },
-                      ),
-                    ),
-                    SizedBox(
-                      height: height * 0.03,
-                    ),
-                    Container(
-                      margin: EdgeInsets.only(
-                          left: width * 0.05, right: width * 0.05),
-                      // decoration: BoxDecoration(
-                      //   boxShadow: [
-                      //     BoxShadow(
-                      //       color: Colors.grey.withOpacity(0.4),
-                      //       spreadRadius: 2,
-                      //       blurRadius: 8,
-                      //     ),
-                      //   ],
-                      // ),
-                      child: TextFormField(
-                        controller: passwordController,
-                        //maxLines: 1,
-                        obscureText: true,
-                        style: const TextStyle(
-                            //color: Colors.black
-                            ),
-                        // initialValue: widget.,
-                        decoration: InputDecoration(
-                          //fillColor: Colors.white,
-                          hintText: 'Password',
-                          fillColor: Colors.white,
-                          filled: true,
-
-                          prefixIcon:
-                              const Icon(Icons.password, color: Colors.black),
-                          hintStyle: const TextStyle(color: Colors.black87),
-                          contentPadding: const EdgeInsets.only(left: 30),
-                          border: myinputborder(),
-                          enabledBorder: myinputborder(),
-                          // OutlineInputBorder(
-                          //   borderSide: BorderSide(color: Colors.white,width: 3),
-                          //     borderRadius: BorderRadius.circular(30),),
-                        ),
-
-                        validator: (value) {
-                          if (value!.isEmpty) {
-                            return 'Required';
-                          }
-                          return null;
-                        },
-                      ),
-                    ),
-                    SizedBox(
-                      height: height * 0.03,
-                    ),
-                    Container(
-                      margin: EdgeInsets.only(
-                          left: width * 0.05, right: width * 0.05),
-                      child: TextFormField(
-                        keyboardType: TextInputType.number,
-                        //   controller: emailComtroller,
-                        controller: phoneController,
-                        //maxLines: 1,
-                        style: const TextStyle(
-                            //color: Colors.black
-                            ),
-                        decoration: InputDecoration(
-                          //fillColor: Colors.white,
-                          hintText: 'Phone Number',
-                          fillColor: Colors.white,
-                          filled: true,
-                          prefixIcon:
-                              const Icon(Icons.phone, color: Colors.black),
-                          hintStyle: const TextStyle(color: Colors.black87),
-                          contentPadding: const EdgeInsets.only(left: 30),
-                          border: myinputborder(),
-                          enabledBorder: myinputborder(),
-                          // OutlineInputBorder(
-                          //   borderSide: BorderSide(color: Colors.white,width: 3),
-                          //     borderRadius: BorderRadius.circular(30),),
-                        ),
-
-                        validator: (value) {
-                          if (value!.isEmpty) {
-                            return 'Required';
-                          }
-                          return null;
-                        },
-                      ),
-                    ),
-                    SizedBox(
-                      height: height * 0.03,
-                    ),
-                    Container(
-                      margin: EdgeInsets.only(
-                          left: width * 0.05, right: width * 0.05),
-                      // decoration: BoxDecoration(
-                      //   boxShadow: [
-                      //     BoxShadow(
-                      //       color: Colors.grey.withOpacity(0.4),
-                      //       spreadRadius: 2,
-                      //       blurRadius: 8,
-                      //     ),
-                      //   ],
-                      // ),
-                      child: TextFormField(
-                        controller: addressController,
-                        //maxLines: 1,
-                        style: const TextStyle(
-                            //color: Colors.black
-                            ),
-                        decoration: InputDecoration(
-                          //fillColor: Colors.white,
-                          hintText: 'Address',
-                          fillColor: Colors.white,
-                          filled: true,
-                          prefixIcon: const Icon(Icons.location_on_outlined,
-                              color: Colors.black),
-                          hintStyle: const TextStyle(color: Colors.black87),
-                          contentPadding: const EdgeInsets.only(left: 30),
-                          border: myinputborder(),
-                          enabledBorder: myinputborder(),
-                          // OutlineInputBorder(
-                          //   borderSide: BorderSide(color: Colors.white,width: 3),
-                          //     borderRadius: BorderRadius.circular(30),),
-                        ),
-
-                        validator: (value) {
-                          if (value!.isEmpty) {
-                            return 'Required';
-                          }
-                          return null;
-                        },
-                        // onChanged: (val) {
-                        //
-                        // },
-                      ),
-                    ),
-                    SizedBox(
-                      height: height * 0.03,
-                    ),
-                    Container(
-                        height: height * 0.075,
-                        width: width * 0.70,
-                        decoration: BoxDecoration(
-                          borderRadius:
-                              BorderRadius.all(Radius.circular(width * 0.2)),
-                          border: Border.all(
-                            color: Colors.white,
-                            width: 3,
-                            style: BorderStyle.solid,
+                      Padding(
+                        padding: const EdgeInsets.only(left: 18.0),
+                        child: Align(
+                          alignment: Alignment.topLeft,
+                          child: Text(
+                            'Create Account',
+                            style: TextStyle(
+                                fontSize: 35,
+                                color: Colors.black,
+                                fontWeight: FontWeight.bold),
                           ),
                         ),
-                        // color: Colors.green,
-                        child: ElevatedButton(
-                          onPressed: () async {
-                            if (_formKey.currentState!.validate()) {
-                              var data = AdvocatesList.data.where((element) =>
-                                  element.email == emailController.text);
+                      ),
+                      SizedBox(
+                        height: 12,
+                      ),
+                      Container(
+                        margin: EdgeInsets.only(
+                            left: width * 0.05, right: width * 0.05),
+                        child: TextFormField(
+                          controller: nameController,
+                          //controller: emailComtroller,
+                          maxLines: 1,
+                          style: const TextStyle(
+                              //color: Colors.black
+                              ),
+                          decoration: InputDecoration(
+                            //fillColor: Colors.white,
+                            hintText: 'Full Name',
+                            fillColor: Colors.white,
+                            filled: true,
+                            prefixIcon:
+                                const Icon(Icons.person, color: Colors.black),
+                            hintStyle: const TextStyle(color: Colors.black87),
+                            contentPadding: const EdgeInsets.only(left: 30),
+                            border: myinputborder(),
+                            enabledBorder: myinputborder(),
+                            // OutlineInputBorder(
+                            //   borderSide: BorderSide(color: Colors.white,width: 3),
+                            //     borderRadius: BorderRadius.circular(30),),
+                          ),
+                          validator: (value) {
+                            if (value!.isEmpty) {
+                              return 'Required';
+                            }
+                            return null;
+                          },
+                        ),
+                      ),
+                      SizedBox(
+                        height: height * 0.03,
+                      ),
+                      Container(
+                        margin: EdgeInsets.only(
+                            left: width * 0.05, right: width * 0.05),
+                        child: TextFormField(
+                          controller: emailController,
+                          //maxLines: 1,
+                          style: const TextStyle(
+                              //color: Colors.black
 
-                              var header = {
-                                "Content-Type": "application/json",
-                              };
+                              ),
+                          enabled: true,
+                          //  initialValue: widget.email,
+                          decoration: InputDecoration(
+                            //fillColor: Colors.white,
+                            hintText: 'Email Address',
+                            fillColor: Colors.white,
+                            filled: true,
+                            prefixIcon:
+                                const Icon(Icons.email, color: Colors.black),
 
-                              var emailJS = Uri.parse(
-                                  "https://api.emailjs.com/api/v1.0/email/send");
+                            hintStyle: const TextStyle(color: Colors.black87),
+                            contentPadding: const EdgeInsets.only(left: 30),
+                            border: myinputborder(),
+                            enabledBorder: myinputborder(),
+                          ),
 
-                              String code = otpGenerator.generate();
-                              Provider.of<OtpProvider>(context, listen: false)
-                                  .setOTP(code);
-                              if (data.isEmpty) {
-                                var response = await http.post(emailJS,
-                                    headers: header,
-                                    body: json.encode({
-                                      "service_id": "service_y0qy9wf",
-                                      "template_id": "template_lk61b4l",
-                                      "user_id": "DUuUd1QWscbZpx6yJ",
-                                      "template_params": {
-                                        "to_name": nameController.text,
-                                        "otp_code": code,
-                                        "subject":
-                                            "OTP For the Application Advolocate",
-                                        "user_email": emailController.text,
-                                      }
-                                    }));
-                                print(response.reasonPhrase);
-                                // var data = jsonDecode(response.body);
-                                // print(data);
-                                print(response.body);
-                                if (response.statusCode == 200) {
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) => PasswordVerify(
-                                                type: '1',
-                                                address: addressController.text,
-                                                password:
-                                                    passwordController.text,
-                                                phone: phoneController.text,
-                                                otp: code,
-                                                email: emailController.text,
-                                                name: nameController.text,
-                                              )));
+                          validator: (value) {
+                            if (value!.isEmpty) {
+                              return 'Required';
+                            }
+                            return null;
+                          },
+                        ),
+                      ),
+                      SizedBox(
+                        height: height * 0.03,
+                      ),
+                      Container(
+                        margin: EdgeInsets.only(
+                            left: width * 0.05, right: width * 0.05),
+                        // decoration: BoxDecoration(
+                        //   boxShadow: [
+                        //     BoxShadow(
+                        //       color: Colors.grey.withOpacity(0.4),
+                        //       spreadRadius: 2,
+                        //       blurRadius: 8,
+                        //     ),
+                        //   ],
+                        // ),
+                        child: TextFormField(
+                          controller: passwordController,
+                          //maxLines: 1,
+                          obscureText: true,
+                          style: const TextStyle(
+                              //color: Colors.black
+                              ),
+                          // initialValue: widget.,
+                          decoration: InputDecoration(
+                            //fillColor: Colors.white,
+                            hintText: 'Password',
+                            fillColor: Colors.white,
+                            filled: true,
+
+                            prefixIcon:
+                                const Icon(Icons.password, color: Colors.black),
+                            hintStyle: const TextStyle(color: Colors.black87),
+                            contentPadding: const EdgeInsets.only(left: 30),
+                            border: myinputborder(),
+                            enabledBorder: myinputborder(),
+                            // OutlineInputBorder(
+                            //   borderSide: BorderSide(color: Colors.white,width: 3),
+                            //     borderRadius: BorderRadius.circular(30),),
+                          ),
+
+                          validator: (value) {
+                            if (value!.isEmpty) {
+                              return 'Required';
+                            }
+                            return null;
+                          },
+                        ),
+                      ),
+                      SizedBox(
+                        height: height * 0.03,
+                      ),
+                      Container(
+                        margin: EdgeInsets.only(
+                            left: width * 0.05, right: width * 0.05),
+                        child: TextFormField(
+                          keyboardType: TextInputType.number,
+                          //   controller: emailComtroller,
+                          controller: phoneController,
+                          //maxLines: 1,
+                          style: const TextStyle(
+                              //color: Colors.black
+                              ),
+                          decoration: InputDecoration(
+                            //fillColor: Colors.white,
+                            hintText: 'Phone Number',
+                            fillColor: Colors.white,
+                            filled: true,
+                            prefixIcon:
+                                const Icon(Icons.phone, color: Colors.black),
+                            hintStyle: const TextStyle(color: Colors.black87),
+                            contentPadding: const EdgeInsets.only(left: 30),
+                            border: myinputborder(),
+                            enabledBorder: myinputborder(),
+                            // OutlineInputBorder(
+                            //   borderSide: BorderSide(color: Colors.white,width: 3),
+                            //     borderRadius: BorderRadius.circular(30),),
+                          ),
+
+                          validator: (value) {
+                            if (value!.isEmpty) {
+                              return 'Required';
+                            }
+                            return null;
+                          },
+                        ),
+                      ),
+                      SizedBox(
+                        height: height * 0.03,
+                      ),
+                      Container(
+                        margin: EdgeInsets.only(
+                            left: width * 0.05, right: width * 0.05),
+                        // decoration: BoxDecoration(
+                        //   boxShadow: [
+                        //     BoxShadow(
+                        //       color: Colors.grey.withOpacity(0.4),
+                        //       spreadRadius: 2,
+                        //       blurRadius: 8,
+                        //     ),
+                        //   ],
+                        // ),
+                        child: TextFormField(
+                          controller: addressController,
+                          //maxLines: 1,
+                          style: const TextStyle(
+                              //color: Colors.black
+                              ),
+                          decoration: InputDecoration(
+                            //fillColor: Colors.white,
+                            hintText: 'Address',
+                            fillColor: Colors.white,
+                            filled: true,
+                            prefixIcon: const Icon(Icons.location_on_outlined,
+                                color: Colors.black),
+                            hintStyle: const TextStyle(color: Colors.black87),
+                            contentPadding: const EdgeInsets.only(left: 30),
+                            border: myinputborder(),
+                            enabledBorder: myinputborder(),
+                            // OutlineInputBorder(
+                            //   borderSide: BorderSide(color: Colors.white,width: 3),
+                            //     borderRadius: BorderRadius.circular(30),),
+                          ),
+
+                          validator: (value) {
+                            if (value!.isEmpty) {
+                              return 'Required';
+                            }
+                            return null;
+                          },
+                          // onChanged: (val) {
+                          //
+                          // },
+                        ),
+                      ),
+                      SizedBox(
+                        height: height * 0.03,
+                      ),
+                      Container(
+                          height: height * 0.075,
+                          width: width * 0.70,
+                          decoration: BoxDecoration(
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(width * 0.2)),
+                            border: Border.all(
+                              color: Colors.white,
+                              width: 3,
+                              style: BorderStyle.solid,
+                            ),
+                          ),
+                          // color: Colors.green,
+                          child: ElevatedButton(
+                            onPressed: () async {
+                              if (_formKey.currentState!.validate()) {
+                                var data = AdvocatesList.data.where((element) =>
+                                    element.email == emailController.text);
+
+                                var header = {
+                                  "Content-Type": "application/json",
+                                };
+
+                                var emailJS = Uri.parse(
+                                    "https://api.emailjs.com/api/v1.0/email/send");
+
+                                String code = otpGenerator.generate();
+                                Provider.of<OtpProvider>(context, listen: false)
+                                    .setOTP(code);
+                                if (data.isEmpty) {
+                                  var response = await http.post(emailJS,
+                                      headers: header,
+                                      body: json.encode({
+                                        "service_id": "service_y0qy9wf",
+                                        "template_id": "template_lk61b4l",
+                                        "user_id": "DUuUd1QWscbZpx6yJ",
+                                        "template_params": {
+                                          "to_name": nameController.text,
+                                          "otp_code": code,
+                                          "subject":
+                                              "OTP For the Application Advolocate",
+                                          "user_email": emailController.text,
+                                        }
+                                      }));
+                                  print(response.reasonPhrase);
+                                  // var data = jsonDecode(response.body);
+                                  // print(data);
+                                  print(response.body);
+                                  if (response.statusCode == 200) {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                PasswordVerify(
+                                                  type: '1',
+                                                  address:
+                                                      addressController.text,
+                                                  password:
+                                                      passwordController.text,
+                                                  phone: phoneController.text,
+                                                  otp: code,
+                                                  email: emailController.text,
+                                                  name: nameController.text,
+                                                )));
+                                  } else {
+                                    Get.snackbar("Error",
+                                        "check your Email and try again",
+                                        snackPosition: SnackPosition.BOTTOM,
+                                        colorText: Colors.white,
+                                        backgroundColor: Colors.red,
+                                        margin: EdgeInsets.all(8));
+
+                                    //print(response.body);
+                                  }
                                 } else {
-                                  Get.snackbar(
-                                      "Error", "check your Email and try again",
+                                  Get.snackbar("User Already have Account",
+                                      "User Already Exist",
                                       snackPosition: SnackPosition.BOTTOM,
                                       colorText: Colors.white,
                                       backgroundColor: Colors.red,
                                       margin: EdgeInsets.all(8));
-
-                                  //print(response.body);
                                 }
-                              } else {
-                                Get.snackbar("User Already have Account",
-                                    "User Already Exist",
-                                    snackPosition: SnackPosition.BOTTOM,
-                                    colorText: Colors.white,
-                                    backgroundColor: Colors.red,
-                                    margin: EdgeInsets.all(8));
                               }
-                            }
-                          },
-                          style: ElevatedButton.styleFrom(
-                            shadowColor: Colors.black,
-                            backgroundColor: const Color(0xffFCD917),
-                            elevation: width * 0.03,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(width * 0.1),
-                              // <-- Radius
+                            },
+                            style: ElevatedButton.styleFrom(
+                              shadowColor: Colors.black,
+                              backgroundColor: const Color(0xffFCD917),
+                              elevation: width * 0.03,
+                              shape: RoundedRectangleBorder(
+                                borderRadius:
+                                    BorderRadius.circular(width * 0.1),
+                                // <-- Radius
+                              ),
                             ),
-                          ),
-                          child: Text(
-                            'Create Account',
-                            style: TextStyle(
-                              // fontWeight: FontWeight.bold,
-                              fontSize: width * 0.05,
-                              letterSpacing: width * 0.002,
-                              // color: Colors.black,
+                            child: Text(
+                              'Create Account',
+                              style: TextStyle(
+                                // fontWeight: FontWeight.bold,
+                                fontSize: width * 0.05,
+                                letterSpacing: width * 0.002,
+                                // color: Colors.black,
+                              ),
                             ),
-                          ),
-                        )),
-                    SizedBox(
-                      height: height * 0.05,
-                    ),
-                  ],
+                          )),
+                      SizedBox(
+                        height: height * 0.05,
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
-          ),
-        ]),
+          ]),
+        ),
       ),
     );
   }

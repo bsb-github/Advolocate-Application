@@ -181,699 +181,717 @@ class _CreateAdvocateAccountState extends State<CreateAdvocateAccount> {
   Widget build(BuildContext context) {
     var height = MediaQuery.of(context).size.height;
     var width = MediaQuery.of(context).size.width;
-    return SafeArea(
-      child: Scaffold(
-        body: loading == false
-            ?
-            // color: Color(0xffff5722),
-            Column(children: [
-                Image.asset(
-                  'images/splashlogo.png',
-                  height: 250,
-                ),
-                const Padding(
-                  padding: EdgeInsets.only(left: 18.0),
-                  child: Align(
-                      alignment: Alignment.topLeft,
-                      child: Text(
-                        'Create Account',
-                        style: TextStyle(
-                            fontSize: 35,
-                            color: Colors.black,
-                            fontWeight: FontWeight.bold),
-                      )),
-                ),
-                Form(
-                  key: _formKey,
-                  child: Expanded(
-                    child: SingleChildScrollView(
-                      child: Column(
-                        children: [
-                          const SizedBox(
-                            height: 10,
-                          ),
-
-                          const SizedBox(
-                            height: 20,
-                          ),
-                          Container(
-                            margin: EdgeInsets.only(
-                                left: width * 0.05, right: width * 0.05),
-                            child: TextFormField(
-                              controller: _fullNameController,
-                              maxLines: 1,
-                              style: const TextStyle(
-                                  //color: Colors.black
-                                  ),
-                              decoration: InputDecoration(
-                                //fillColor: Colors.white,
-                                hintText: 'Full Name',
-                                fillColor: Colors.white,
-                                filled: true,
-                                prefixIcon: const Icon(Icons.person,
-                                    color: Colors.black),
-                                hintStyle:
-                                    const TextStyle(color: Colors.black87),
-                                contentPadding: const EdgeInsets.only(left: 30),
-                                border: myinputborder(),
-                                enabledBorder: myinputborder(),
-                              ),
-                              validator: (value) {
-                                if (value!.isEmpty || value == ' ') {
-                                  return 'Required';
-                                }
-                                return null;
-                              },
+    return ExcludeSemantics(
+      child: SafeArea(
+        child: Scaffold(
+          body: loading == false
+              ?
+              // color: Color(0xffff5722),
+              Column(children: [
+                  Image.asset(
+                    'images/splashlogo.png',
+                    height: 250,
+                  ),
+                  const Padding(
+                    padding: EdgeInsets.only(left: 18.0),
+                    child: Align(
+                        alignment: Alignment.topLeft,
+                        child: Text(
+                          'Create Account',
+                          style: TextStyle(
+                              fontSize: 35,
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold),
+                        )),
+                  ),
+                  Form(
+                    key: _formKey,
+                    child: Expanded(
+                      child: SingleChildScrollView(
+                        child: Column(
+                          children: [
+                            const SizedBox(
+                              height: 10,
                             ),
-                          ),
-                          SizedBox(
-                            height: height * 0.03,
-                          ),
-                          Container(
-                            margin: EdgeInsets.only(
-                                left: width * 0.05, right: width * 0.05),
-                            child: TextFormField(
-                              controller: _emailController,
-                              maxLines: 1,
-                              style: const TextStyle(
-                                  //color: Colors.black
-                                  ),
-                              decoration: InputDecoration(
-                                //fillColor: Colors.white,
-                                hintText: 'Email Address',
-                                fillColor: Colors.white,
-                                filled: true,
-                                prefixIcon: const Icon(Icons.email_outlined,
-                                    color: Colors.black),
-                                hintStyle:
-                                    const TextStyle(color: Colors.black87),
-                                contentPadding: const EdgeInsets.only(left: 30),
-                                border: myinputborder(),
-                                enabledBorder: myinputborder(),
-                              ),
-                              validator: (value) {
-                                if (value!.isEmpty || value == ' ') {
-                                  return 'Required';
-                                }
-                                return null;
-                              },
+
+                            const SizedBox(
+                              height: 20,
                             ),
-                          ),
-                          SizedBox(
-                            height: height * 0.03,
-                          ),
-                          Container(
-                            margin: EdgeInsets.only(
-                                left: width * 0.05, right: width * 0.05),
-                            child: TextFormField(
-                              controller: _passwordController,
-                              maxLines: 1,
-                              obscureText: true,
-                              style: const TextStyle(
-                                  //color: Colors.black
-                                  ),
-                              decoration: InputDecoration(
-                                //fillColor: Colors.white,
-                                hintText: 'Password',
-                                fillColor: Colors.white,
-                                filled: true,
-                                prefixIcon: const Icon(Icons.password_outlined,
-                                    color: Colors.black),
-                                hintStyle:
-                                    const TextStyle(color: Colors.black87),
-                                contentPadding: const EdgeInsets.only(left: 30),
-                                border: myinputborder(),
-                                enabledBorder: myinputborder(),
-                              ),
-                              validator: (value) {
-                                if (value!.isEmpty || value == ' ') {
-                                  return 'Required';
-                                }
-                                return null;
-                              },
-                            ),
-                          ),
-                          SizedBox(
-                            height: height * 0.03,
-                          ),
-                          Container(
-                            margin: EdgeInsets.only(
-                                left: width * 0.05, right: width * 0.05),
-                            child: TextFormField(
-                              controller: _phoneNumberController,
-                              keyboardType: TextInputType.number,
-                              maxLines: 1,
-                              style: const TextStyle(
-                                  //color: Colors.black
-                                  ),
-                              decoration: InputDecoration(
-                                //fillColor: Colors.white,
-                                hintText: 'Phone Number',
-                                fillColor: Colors.white,
-                                filled: true,
-                                prefixIcon: const Icon(Icons.phone,
-                                    color: Colors.black),
-                                hintStyle:
-                                    const TextStyle(color: Colors.black87),
-                                contentPadding: const EdgeInsets.only(left: 30),
-                                border: myinputborder(),
-                                enabledBorder: myinputborder(),
-                              ),
-                              validator: (value) {
-                                if (value!.isEmpty || value == ' ') {
-                                  return 'Required';
-                                }
-                                return null;
-                              },
-                            ),
-                          ),
-                          SizedBox(
-                            height: height * 0.03,
-                          ),
-                          Container(
-                            margin: EdgeInsets.only(
-                                left: width * 0.05, right: width * 0.05),
-                            child: TextFormField(
-                              controller: _addressController,
-                              style: const TextStyle(
-                                  //color: Colors.black
-                                  ),
-                              decoration: InputDecoration(
-                                //fillColor: Colors.white,
-                                hintText: 'Address',
-                                fillColor: Colors.white,
-                                filled: true,
-                                prefixIcon: const Icon(
-                                    Icons.location_on_outlined,
-                                    color: Colors.black),
-                                hintStyle:
-                                    const TextStyle(color: Colors.black87),
-                                contentPadding: const EdgeInsets.only(left: 30),
-                                border: myinputborder(),
-                                enabledBorder: myinputborder(),
-                                // OutlineInputBorder(
-                                //   borderSide: BorderSide(color: Colors.white,width: 3),
-                                //     borderRadius: BorderRadius.circular(30),),
-                              ),
-
-                              validator: (value) {
-                                if (value!.isEmpty || value == ' ') {
-                                  return 'Required';
-                                }
-                                return null;
-                              },
-                              // onChanged: (val) {
-                              //
-                              // },
-                            ),
-                          ),
-                          SizedBox(
-                            height: height * 0.03,
-                          ),
-                          Container(
-                            margin: EdgeInsets.only(
-                                left: width * 0.05, right: width * 0.05),
-                            child: TextFormField(
-                              controller: _professionController,
-                              //maxLines: 1,
-                              style: const TextStyle(
-                                  //color: Colors.black
-                                  ),
-                              decoration: InputDecoration(
-                                //fillColor: Colors.white,
-                                hintText: 'Profession',
-                                fillColor: Colors.white,
-                                filled: true,
-                                prefixIcon: const Icon(
-                                    Icons.business_center_outlined,
-                                    color: Colors.black),
-                                hintStyle:
-                                    const TextStyle(color: Colors.black87),
-                                contentPadding: const EdgeInsets.only(left: 30),
-                                border: myinputborder(),
-                                enabledBorder: myinputborder(),
-                                // OutlineInputBorder(
-                                //   borderSide: BorderSide(color: Colors.white,width: 3),
-                                //     borderRadius: BorderRadius.circular(30),),
-                              ),
-
-                              validator: (value) {
-                                if (value!.isEmpty || value == ' ') {
-                                  return 'Required';
-                                }
-                                return null;
-                              },
-                            ),
-                          ),
-                          SizedBox(
-                            height: height * 0.03,
-                          ),
-                          Container(
-                            margin: EdgeInsets.only(
-                                left: width * 0.05, right: width * 0.05),
-                            child: TextFormField(
-                              controller: _ageController,
-                              keyboardType: TextInputType.number,
-                              style: const TextStyle(),
-                              decoration: InputDecoration(
-                                //fillColor: Colors.white,
-                                hintText: 'Age',
-                                fillColor: Colors.white,
-                                filled: true,
-                                prefixIcon: const Icon(Icons.person_outline,
-                                    color: Colors.black),
-                                hintStyle:
-                                    const TextStyle(color: Colors.black87),
-                                contentPadding: const EdgeInsets.only(left: 30),
-                                border: myinputborder(),
-                                enabledBorder: myinputborder(),
-                              ),
-                              validator: (value) {
-                                if (value!.isEmpty || value == ' ') {
-                                  return 'Required';
-                                }
-
-                                return null;
-                              },
-                            ),
-                          ),
-                          SizedBox(
-                            height: height * 0.03,
-                          ),
-                          Container(
-                            margin: EdgeInsets.only(
-                                left: width * 0.05, right: width * 0.05),
-                            child: TextFormField(
-                              controller: _coveredAreaController,
-                              //maxLines: 1,
-                              style: const TextStyle(
-                                  //color: Colors.black
-                                  ),
-                              decoration: InputDecoration(
-                                //fillColor: Colors.white,
-                                hintText: 'Covered Area',
-                                fillColor: Colors.white,
-                                filled: true,
-                                prefixIcon: const Icon(
-                                    Icons.location_on_outlined,
-                                    color: Colors.black),
-                                hintStyle:
-                                    const TextStyle(color: Colors.black87),
-                                contentPadding: const EdgeInsets.only(left: 30),
-                                border: myinputborder(),
-                                enabledBorder: myinputborder(),
-                              ),
-
-                              validator: (value) {
-                                if (value!.isEmpty || value == ' ') {
-                                  return 'Required';
-                                }
-                                return null;
-                              },
-                              // onChanged: (val) {
-                              //
-                              // },
-                            ),
-                          ),
-                          SizedBox(
-                            height: height * 0.03,
-                          ),
-                          FormHelper.dropDownWidget(
-                            context,
-                            '    Region',
-                            regionsid,
-                            regions,
-                            (onChangedval) {
-                              regionsid = onChangedval;
-                            },
-                            (onValidate) {
-                              if (onValidate == null) {
-                                return '   Required';
-                              }
-                              return null;
-                            },
-                            optionValue: 'value',
-                            optionLabel: 'label',
-                            textColor: Colors.black,
-                            borderColor: const Color(0xffFCD917),
-                            borderWidth: 1,
-                            hintFontSize: width * 0.045,
-                            hintColor: Colors.black,
-                            borderFocusColor: const Color(0xffFCD917),
-                            validationColor: Colors.red,
-                          ),
-                          SizedBox(
-                            height: height * 0.03,
-                          ),
-
-                          FormHelper.dropDownWidget(
-                            context,
-                            '    Country',
-                            countriesId,
-                            countries,
-                            (onChangedval) {
-                              countriesId = onChangedval;
-
-                              getCities(data!, lenght);
-                            },
-                            (onValidate) {
-                              if (onValidate == null) {
-                                return '    Required';
-                              }
-                              return null;
-                            },
-                            optionValue: 'value',
-                            optionLabel: 'label',
-                            textColor: Colors.black,
-                            borderColor: const Color(0xffFCD917),
-                            borderWidth: 1,
-                            hintFontSize: width * 0.045,
-                            hintColor: Colors.black,
-                            borderFocusColor: const Color(0xffFCD917),
-                            validationColor: Colors.red,
-                          ),
-                          SizedBox(
-                            height: height * 0.03,
-                          ),
-                          //
-                          // city
-                          Padding(
-                              padding:
-                                  const EdgeInsets.only(left: 24, right: 12),
-                              child: DropdownSearch<String>(
-                                onChanged: (value) {
-                                  var obj = cities.where(
-                                      (element) => element["label"] == value);
-                                  setState(() {
-                                    citiesId = obj.first["value"].toString();
-                                  });
-
-                                  print(citiesId);
-                                },
-                                items: List.from(cities.map((e) => e["label"])),
-                                dropdownDecoratorProps: DropDownDecoratorProps(
-                                    baseStyle: TextStyle(
-                                      color: Colors.black,
-                                    ),
-                                    dropdownSearchDecoration: InputDecoration(
-                                      enabledBorder: OutlineInputBorder(
-                                          borderSide: BorderSide(
-                                              color: Theme.of(context)
-                                                  .primaryColor),
-                                          borderRadius:
-                                              BorderRadius.circular(200)),
-                                      border: OutlineInputBorder(
-                                          borderSide: BorderSide(
-                                              color: Theme.of(context)
-                                                  .primaryColor),
-                                          borderRadius:
-                                              BorderRadius.circular(200)),
-                                    )),
-                                selectedItem: cities.first["label"],
-                                popupProps: const PopupProps.dialog(
-                                    fit: FlexFit.loose,
-                                    showSearchBox: true,
-                                    searchFieldProps: TextFieldProps(
-                                        decoration: InputDecoration(
-                                            hintText: "Search"))),
-                              )),
-                          SizedBox(
-                            height: height * 0.03,
-                          ),
-                          FormHelper.dropDownWidget(
-                            context,
-                            '    Select Probono',
-                            probonoId,
-                            probono,
-                            (onChangedval) {
-                              probonoId = onChangedval;
-                            },
-                            (onValidate) {
-                              if (onValidate == null) {
-                                return '   Required';
-                              }
-                              return null;
-                            },
-                            optionValue: 'value',
-                            optionLabel: 'label',
-                            textColor: Colors.black,
-                            borderColor: const Color(0xffFCD917),
-                            borderWidth: 1,
-                            hintFontSize: width * 0.045,
-                            hintColor: Colors.black,
-                            borderFocusColor: const Color(0xffFCD917),
-                            validationColor: Colors.red,
-                          ),
-                          SizedBox(
-                            height: height * 0.03,
-                          ),
-                          InkWell(
-                              child: Container(
-                                margin: EdgeInsets.only(
-                                    left: width * 0.05, right: width * 0.05),
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(30),
-                                  //  color: Colors.pink,
-                                  border: Border.all(
-                                    color: Color(0xffFCD917),
-                                  ),
-                                ),
-                                padding: EdgeInsets.only(
-                                    left: width * 0.075,
-                                    top: height * 0.02,
-                                    //right: width*0.065,
-                                    bottom: height * 0.02),
-                                child: Row(
-                                  children: [
-                                    Text(
-                                      'Field Of Services',
-                                      style: TextStyle(
-                                          fontSize: width * 0.045,
-                                          color: const Color.fromARGB(
-                                              255, 90, 89, 89)),
-                                    ),
-                                    SizedBox(
-                                      width: width * 0.4,
-                                    ),
-                                    const Icon(
-                                      Icons.arrow_drop_down,
-                                      color: Color.fromARGB(255, 90, 89, 89),
-                                    )
-                                  ],
-                                ),
-                              ),
-                              onTap: () => _showMultiSelect(context)),
-                          SizedBox(
-                            height: height * 0.03,
-                          ),
-
-                          GestureDetector(
-                            onTap: () {
-                              debugPrint('hello');
-                              getImage();
-                            },
-                            child: Container(
-                              height: height * 0.075,
-                              width: width,
+                            Container(
                               margin: EdgeInsets.only(
                                   left: width * 0.05, right: width * 0.05),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.all(
-                                    Radius.circular(width * 0.1)),
-                                border: Border.all(
-                                  color: Color(0xffFCD917),
-                                  width: 2,
-                                  style: BorderStyle.solid,
+                              child: TextFormField(
+                                controller: _fullNameController,
+                                maxLines: 1,
+                                style: const TextStyle(
+                                    //color: Colors.black
+                                    ),
+                                decoration: InputDecoration(
+                                  //fillColor: Colors.white,
+                                  hintText: 'Full Name',
+                                  fillColor: Colors.white,
+                                  filled: true,
+                                  prefixIcon: const Icon(Icons.person,
+                                      color: Colors.black),
+                                  hintStyle:
+                                      const TextStyle(color: Colors.black87),
+                                  contentPadding:
+                                      const EdgeInsets.only(left: 30),
+                                  border: myinputborder(),
+                                  enabledBorder: myinputborder(),
                                 ),
+                                validator: (value) {
+                                  if (value!.isEmpty || value == ' ') {
+                                    return 'Required';
+                                  }
+                                  return null;
+                                },
                               ),
-                              child: Center(
-                                child: Padding(
-                                  padding: EdgeInsets.only(left: width * 0.06),
+                            ),
+                            SizedBox(
+                              height: height * 0.03,
+                            ),
+                            Container(
+                              margin: EdgeInsets.only(
+                                  left: width * 0.05, right: width * 0.05),
+                              child: TextFormField(
+                                controller: _emailController,
+                                maxLines: 1,
+                                style: const TextStyle(
+                                    //color: Colors.black
+                                    ),
+                                decoration: InputDecoration(
+                                  //fillColor: Colors.white,
+                                  hintText: 'Email Address',
+                                  fillColor: Colors.white,
+                                  filled: true,
+                                  prefixIcon: const Icon(Icons.email_outlined,
+                                      color: Colors.black),
+                                  hintStyle:
+                                      const TextStyle(color: Colors.black87),
+                                  contentPadding:
+                                      const EdgeInsets.only(left: 30),
+                                  border: myinputborder(),
+                                  enabledBorder: myinputborder(),
+                                ),
+                                validator: (value) {
+                                  if (value!.isEmpty || value == ' ') {
+                                    return 'Required';
+                                  }
+                                  return null;
+                                },
+                              ),
+                            ),
+                            SizedBox(
+                              height: height * 0.03,
+                            ),
+                            Container(
+                              margin: EdgeInsets.only(
+                                  left: width * 0.05, right: width * 0.05),
+                              child: TextFormField(
+                                controller: _passwordController,
+                                maxLines: 1,
+                                obscureText: true,
+                                style: const TextStyle(
+                                    //color: Colors.black
+                                    ),
+                                decoration: InputDecoration(
+                                  //fillColor: Colors.white,
+                                  hintText: 'Password',
+                                  fillColor: Colors.white,
+                                  filled: true,
+                                  prefixIcon: const Icon(
+                                      Icons.password_outlined,
+                                      color: Colors.black),
+                                  hintStyle:
+                                      const TextStyle(color: Colors.black87),
+                                  contentPadding:
+                                      const EdgeInsets.only(left: 30),
+                                  border: myinputborder(),
+                                  enabledBorder: myinputborder(),
+                                ),
+                                validator: (value) {
+                                  if (value!.isEmpty || value == ' ') {
+                                    return 'Required';
+                                  }
+                                  return null;
+                                },
+                              ),
+                            ),
+                            SizedBox(
+                              height: height * 0.03,
+                            ),
+                            Container(
+                              margin: EdgeInsets.only(
+                                  left: width * 0.05, right: width * 0.05),
+                              child: TextFormField(
+                                controller: _phoneNumberController,
+                                keyboardType: TextInputType.number,
+                                maxLines: 1,
+                                style: const TextStyle(
+                                    //color: Colors.black
+                                    ),
+                                decoration: InputDecoration(
+                                  //fillColor: Colors.white,
+                                  hintText: 'Phone Number',
+                                  fillColor: Colors.white,
+                                  filled: true,
+                                  prefixIcon: const Icon(Icons.phone,
+                                      color: Colors.black),
+                                  hintStyle:
+                                      const TextStyle(color: Colors.black87),
+                                  contentPadding:
+                                      const EdgeInsets.only(left: 30),
+                                  border: myinputborder(),
+                                  enabledBorder: myinputborder(),
+                                ),
+                                validator: (value) {
+                                  if (value!.isEmpty || value == ' ') {
+                                    return 'Required';
+                                  }
+                                  return null;
+                                },
+                              ),
+                            ),
+                            SizedBox(
+                              height: height * 0.03,
+                            ),
+                            Container(
+                              margin: EdgeInsets.only(
+                                  left: width * 0.05, right: width * 0.05),
+                              child: TextFormField(
+                                controller: _addressController,
+                                style: const TextStyle(
+                                    //color: Colors.black
+                                    ),
+                                decoration: InputDecoration(
+                                  //fillColor: Colors.white,
+                                  hintText: 'Address',
+                                  fillColor: Colors.white,
+                                  filled: true,
+                                  prefixIcon: const Icon(
+                                      Icons.location_on_outlined,
+                                      color: Colors.black),
+                                  hintStyle:
+                                      const TextStyle(color: Colors.black87),
+                                  contentPadding:
+                                      const EdgeInsets.only(left: 30),
+                                  border: myinputborder(),
+                                  enabledBorder: myinputborder(),
+                                  // OutlineInputBorder(
+                                  //   borderSide: BorderSide(color: Colors.white,width: 3),
+                                  //     borderRadius: BorderRadius.circular(30),),
+                                ),
+
+                                validator: (value) {
+                                  if (value!.isEmpty || value == ' ') {
+                                    return 'Required';
+                                  }
+                                  return null;
+                                },
+                                // onChanged: (val) {
+                                //
+                                // },
+                              ),
+                            ),
+                            SizedBox(
+                              height: height * 0.03,
+                            ),
+                            Container(
+                              margin: EdgeInsets.only(
+                                  left: width * 0.05, right: width * 0.05),
+                              child: TextFormField(
+                                controller: _professionController,
+                                //maxLines: 1,
+                                style: const TextStyle(
+                                    //color: Colors.black
+                                    ),
+                                decoration: InputDecoration(
+                                  //fillColor: Colors.white,
+                                  hintText: 'Profession',
+                                  fillColor: Colors.white,
+                                  filled: true,
+                                  prefixIcon: const Icon(
+                                      Icons.business_center_outlined,
+                                      color: Colors.black),
+                                  hintStyle:
+                                      const TextStyle(color: Colors.black87),
+                                  contentPadding:
+                                      const EdgeInsets.only(left: 30),
+                                  border: myinputborder(),
+                                  enabledBorder: myinputborder(),
+                                  // OutlineInputBorder(
+                                  //   borderSide: BorderSide(color: Colors.white,width: 3),
+                                  //     borderRadius: BorderRadius.circular(30),),
+                                ),
+
+                                validator: (value) {
+                                  if (value!.isEmpty || value == ' ') {
+                                    return 'Required';
+                                  }
+                                  return null;
+                                },
+                              ),
+                            ),
+                            SizedBox(
+                              height: height * 0.03,
+                            ),
+                            Container(
+                              margin: EdgeInsets.only(
+                                  left: width * 0.05, right: width * 0.05),
+                              child: TextFormField(
+                                controller: _ageController,
+                                keyboardType: TextInputType.number,
+                                style: const TextStyle(),
+                                decoration: InputDecoration(
+                                  //fillColor: Colors.white,
+                                  hintText: 'Age',
+                                  fillColor: Colors.white,
+                                  filled: true,
+                                  prefixIcon: const Icon(Icons.person_outline,
+                                      color: Colors.black),
+                                  hintStyle:
+                                      const TextStyle(color: Colors.black87),
+                                  contentPadding:
+                                      const EdgeInsets.only(left: 30),
+                                  border: myinputborder(),
+                                  enabledBorder: myinputborder(),
+                                ),
+                                validator: (value) {
+                                  if (value!.isEmpty || value == ' ') {
+                                    return 'Required';
+                                  }
+
+                                  return null;
+                                },
+                              ),
+                            ),
+                            SizedBox(
+                              height: height * 0.03,
+                            ),
+                            Container(
+                              margin: EdgeInsets.only(
+                                  left: width * 0.05, right: width * 0.05),
+                              child: TextFormField(
+                                controller: _coveredAreaController,
+                                //maxLines: 1,
+                                style: const TextStyle(
+                                    //color: Colors.black
+                                    ),
+                                decoration: InputDecoration(
+                                  //fillColor: Colors.white,
+                                  hintText: 'Covered Area',
+                                  fillColor: Colors.white,
+                                  filled: true,
+                                  prefixIcon: const Icon(
+                                      Icons.location_on_outlined,
+                                      color: Colors.black),
+                                  hintStyle:
+                                      const TextStyle(color: Colors.black87),
+                                  contentPadding:
+                                      const EdgeInsets.only(left: 30),
+                                  border: myinputborder(),
+                                  enabledBorder: myinputborder(),
+                                ),
+
+                                validator: (value) {
+                                  if (value!.isEmpty || value == ' ') {
+                                    return 'Required';
+                                  }
+                                  return null;
+                                },
+                                // onChanged: (val) {
+                                //
+                                // },
+                              ),
+                            ),
+                            SizedBox(
+                              height: height * 0.03,
+                            ),
+                            FormHelper.dropDownWidget(
+                              context,
+                              '    Region',
+                              regionsid,
+                              regions,
+                              (onChangedval) {
+                                regionsid = onChangedval;
+                              },
+                              (onValidate) {
+                                if (onValidate == null) {
+                                  return '   Required';
+                                }
+                                return null;
+                              },
+                              optionValue: 'value',
+                              optionLabel: 'label',
+                              textColor: Colors.black,
+                              borderColor: const Color(0xffFCD917),
+                              borderWidth: 1,
+                              hintFontSize: width * 0.045,
+                              hintColor: Colors.black,
+                              borderFocusColor: const Color(0xffFCD917),
+                              validationColor: Colors.red,
+                            ),
+                            SizedBox(
+                              height: height * 0.03,
+                            ),
+
+                            FormHelper.dropDownWidget(
+                              context,
+                              '    Country',
+                              countriesId,
+                              countries,
+                              (onChangedval) {
+                                countriesId = onChangedval;
+
+                                getCities(data!, lenght);
+                              },
+                              (onValidate) {
+                                if (onValidate == null) {
+                                  return '    Required';
+                                }
+                                return null;
+                              },
+                              optionValue: 'value',
+                              optionLabel: 'label',
+                              textColor: Colors.black,
+                              borderColor: const Color(0xffFCD917),
+                              borderWidth: 1,
+                              hintFontSize: width * 0.045,
+                              hintColor: Colors.black,
+                              borderFocusColor: const Color(0xffFCD917),
+                              validationColor: Colors.red,
+                            ),
+                            SizedBox(
+                              height: height * 0.03,
+                            ),
+                            //
+                            // city
+                            Padding(
+                                padding:
+                                    const EdgeInsets.only(left: 24, right: 12),
+                                child: DropdownSearch<String>(
+                                  onChanged: (value) {
+                                    var obj = cities.where(
+                                        (element) => element["label"] == value);
+                                    setState(() {
+                                      citiesId = obj.first["value"].toString();
+                                    });
+
+                                    print(citiesId);
+                                  },
+                                  items:
+                                      List.from(cities.map((e) => e["label"])),
+                                  dropdownDecoratorProps:
+                                      DropDownDecoratorProps(
+                                          baseStyle: TextStyle(
+                                            color: Colors.black,
+                                          ),
+                                          dropdownSearchDecoration:
+                                              InputDecoration(
+                                            enabledBorder: OutlineInputBorder(
+                                                borderSide: BorderSide(
+                                                    color: Theme.of(context)
+                                                        .primaryColor),
+                                                borderRadius:
+                                                    BorderRadius.circular(200)),
+                                            border: OutlineInputBorder(
+                                                borderSide: BorderSide(
+                                                    color: Theme.of(context)
+                                                        .primaryColor),
+                                                borderRadius:
+                                                    BorderRadius.circular(200)),
+                                          )),
+                                  selectedItem: cities.first["label"],
+                                  popupProps: const PopupProps.dialog(
+                                      fit: FlexFit.loose,
+                                      showSearchBox: true,
+                                      searchFieldProps: TextFieldProps(
+                                          decoration: InputDecoration(
+                                              hintText: "Search"))),
+                                )),
+                            SizedBox(
+                              height: height * 0.03,
+                            ),
+                            FormHelper.dropDownWidget(
+                              context,
+                              '    Select Probono',
+                              probonoId,
+                              probono,
+                              (onChangedval) {
+                                probonoId = onChangedval;
+                              },
+                              (onValidate) {
+                                if (onValidate == null) {
+                                  return '   Required';
+                                }
+                                return null;
+                              },
+                              optionValue: 'value',
+                              optionLabel: 'label',
+                              textColor: Colors.black,
+                              borderColor: const Color(0xffFCD917),
+                              borderWidth: 1,
+                              hintFontSize: width * 0.045,
+                              hintColor: Colors.black,
+                              borderFocusColor: const Color(0xffFCD917),
+                              validationColor: Colors.red,
+                            ),
+                            SizedBox(
+                              height: height * 0.03,
+                            ),
+                            InkWell(
+                                child: Container(
+                                  margin: EdgeInsets.only(
+                                      left: width * 0.05, right: width * 0.05),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(30),
+                                    //  color: Colors.pink,
+                                    border: Border.all(
+                                      color: Color(0xffFCD917),
+                                    ),
+                                  ),
+                                  padding: EdgeInsets.only(
+                                      left: width * 0.075,
+                                      top: height * 0.02,
+                                      //right: width*0.065,
+                                      bottom: height * 0.02),
                                   child: Row(
                                     children: [
-                                      Flexible(
-                                        child: Container(
-                                          height: height * 0.050,
-                                          width: width * 0.40,
-                                          decoration: BoxDecoration(
-                                            border: Border.all(
-                                              color: Color(0xffFCD917),
-                                              width: 1,
-                                              style: BorderStyle.solid,
-                                            ),
-                                          ),
-                                          child: image == null
-                                              ? Center(
-                                                  child: Text('Choose File',
-                                                      style: TextStyle()),
-                                                )
-                                              : Center(
-                                                  child: Text(
-                                                    '${image!.path}',
-                                                    overflow:
-                                                        TextOverflow.ellipsis,
-                                                    maxLines: 1,
-                                                  ),
-                                                ),
-                                        ),
+                                      Text(
+                                        'Field Of Services',
+                                        style: TextStyle(
+                                            fontSize: width * 0.045,
+                                            color: const Color.fromARGB(
+                                                255, 90, 89, 89)),
                                       ),
+                                      SizedBox(
+                                        width: width * 0.4,
+                                      ),
+                                      const Icon(
+                                        Icons.arrow_drop_down,
+                                        color: Color.fromARGB(255, 90, 89, 89),
+                                      )
                                     ],
                                   ),
                                 ),
-                              ),
+                                onTap: () => _showMultiSelect(context)),
+                            SizedBox(
+                              height: height * 0.03,
                             ),
-                          ),
-                          SizedBox(
-                            height: 40,
-                          ),
-                          Container(
-                              height: 60,
-                              width: 200,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.all(
-                                    Radius.circular(width * 0.2)),
-                                border: Border.all(
-                                  color: Colors.white,
-                                  width: 1,
-                                  style: BorderStyle.solid,
+
+                            GestureDetector(
+                              onTap: () {
+                                debugPrint('hello');
+                                getImage();
+                              },
+                              child: Container(
+                                height: height * 0.075,
+                                width: width,
+                                margin: EdgeInsets.only(
+                                    left: width * 0.05, right: width * 0.05),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.all(
+                                      Radius.circular(width * 0.1)),
+                                  border: Border.all(
+                                    color: Color(0xffFCD917),
+                                    width: 2,
+                                    style: BorderStyle.solid,
+                                  ),
+                                ),
+                                child: Center(
+                                  child: Padding(
+                                    padding:
+                                        EdgeInsets.only(left: width * 0.06),
+                                    child: Row(
+                                      children: [
+                                        Flexible(
+                                          child: Container(
+                                            height: height * 0.050,
+                                            width: width * 0.40,
+                                            decoration: BoxDecoration(
+                                              border: Border.all(
+                                                color: Color(0xffFCD917),
+                                                width: 1,
+                                                style: BorderStyle.solid,
+                                              ),
+                                            ),
+                                            child: image == null
+                                                ? Center(
+                                                    child: Text('Choose File',
+                                                        style: TextStyle()),
+                                                  )
+                                                : Center(
+                                                    child: Text(
+                                                      '${image!.path}',
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
+                                                      maxLines: 1,
+                                                    ),
+                                                  ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
                                 ),
                               ),
-                              // color: Colors.green,
-                              child: ElevatedButton(
-                                onPressed: () async {
-                                  debugPrint('printing services');
-                                  print(services.toString());
+                            ),
+                            SizedBox(
+                              height: 40,
+                            ),
+                            Container(
+                                height: 60,
+                                width: 200,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.all(
+                                      Radius.circular(width * 0.2)),
+                                  border: Border.all(
+                                    color: Colors.white,
+                                    width: 1,
+                                    style: BorderStyle.solid,
+                                  ),
+                                ),
+                                // color: Colors.green,
+                                child: ElevatedButton(
+                                  onPressed: () async {
+                                    debugPrint('printing services');
+                                    print(services.toString());
 
-                                  if (_formKey.currentState!.validate()) {
-                                    if (image == null) {
-                                      Get.snackbar(
-                                        "Input Not Allowed",
-                                        "Please select licenses",
-                                        backgroundColor: Colors.red,
-                                        snackStyle: SnackStyle.FLOATING,
-                                      );
-                                    } else {
-                                      var data = AdvocatesList.data.where(
-                                          (element) =>
-                                              element.email ==
-                                              _emailController.text);
-                                      if (data.isEmpty) {
-                                        var emailJS = Uri.parse(
-                                            "https://api.emailjs.com/api/v1.0/email/send");
-                                        var header = {
-                                          "Content-Type": "application/json",
-                                        };
-                                        String code = otpGenerator.generate();
-
-                                        var response = await http.post(emailJS,
-                                            headers: header,
-                                            body: json.encode({
-                                              "service_id": "service_y0qy9wf",
-                                              "template_id": "template_lk61b4l",
-                                              "user_id": "DUuUd1QWscbZpx6yJ",
-                                              "template_params": {
-                                                "to_name":
-                                                    _fullNameController.text,
-                                                "otp_code": code,
-                                                "subject":
-                                                    "${_fullNameController.text} OTP For the Application ADVOLOCATE",
-                                                "user_email":
-                                                    _emailController.text,
-                                              }
-                                            }));
-                                        if (response.statusCode == 200) {
-                                          // ignore: use_build_context_synchronously
-                                          Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      AdvocateEmailVerify(
-                                                        otp: code,
-                                                        email: _emailController
-                                                            .text,
-                                                        name:
-                                                            _fullNameController
-                                                                .text,
-                                                        phone:
-                                                            _phoneNumberController
-                                                                .text,
-                                                        password:
-                                                            _passwordController
-                                                                .text,
-                                                        address:
-                                                            _addressController
-                                                                .text,
-                                                        type: "2",
-                                                        profession:
-                                                            _professionController
-                                                                .text,
-                                                        age:
-                                                            _ageController.text,
-                                                        coveredArea:
-                                                            _coveredAreaController
-                                                                .text,
-                                                        regions: regionsid!,
-                                                        country: countriesId!,
-                                                        city: citiesId,
-                                                        probono: probonoId!,
-                                                        fOfServices:
-                                                            services.toString(),
-                                                        image: image!,
-                                                      )));
-                                        } else {
-                                          Get.snackbar(
-                                            "Account Registeration",
-                                            "Unable to sent Message Check Your Email",
-                                            backgroundColor: Colors.red,
-                                            snackStyle: SnackStyle.FLOATING,
-                                          );
-                                        }
-                                      } else {
+                                    if (_formKey.currentState!.validate()) {
+                                      if (image == null) {
                                         Get.snackbar(
-                                          "Account Registeration",
-                                          "Email Already Exist",
+                                          "Input Not Allowed",
+                                          "Please select licenses",
                                           backgroundColor: Colors.red,
                                           snackStyle: SnackStyle.FLOATING,
                                         );
-                                        Navigator.pop(context);
+                                      } else {
+                                        var data = AdvocatesList.data.where(
+                                            (element) =>
+                                                element.email ==
+                                                _emailController.text);
+                                        if (data.isEmpty) {
+                                          var emailJS = Uri.parse(
+                                              "https://api.emailjs.com/api/v1.0/email/send");
+                                          var header = {
+                                            "Content-Type": "application/json",
+                                          };
+                                          String code = otpGenerator.generate();
+
+                                          var response = await http.post(
+                                              emailJS,
+                                              headers: header,
+                                              body: json.encode({
+                                                "service_id": "service_y0qy9wf",
+                                                "template_id":
+                                                    "template_lk61b4l",
+                                                "user_id": "DUuUd1QWscbZpx6yJ",
+                                                "template_params": {
+                                                  "to_name":
+                                                      _fullNameController.text,
+                                                  "otp_code": code,
+                                                  "subject":
+                                                      "${_fullNameController.text} OTP For the Application ADVOLOCATE",
+                                                  "user_email":
+                                                      _emailController.text,
+                                                }
+                                              }));
+                                          if (response.statusCode == 200) {
+                                            // ignore: use_build_context_synchronously
+                                            Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        AdvocateEmailVerify(
+                                                          otp: code,
+                                                          email:
+                                                              _emailController
+                                                                  .text,
+                                                          name:
+                                                              _fullNameController
+                                                                  .text,
+                                                          phone:
+                                                              _phoneNumberController
+                                                                  .text,
+                                                          password:
+                                                              _passwordController
+                                                                  .text,
+                                                          address:
+                                                              _addressController
+                                                                  .text,
+                                                          type: "2",
+                                                          profession:
+                                                              _professionController
+                                                                  .text,
+                                                          age: _ageController
+                                                              .text,
+                                                          coveredArea:
+                                                              _coveredAreaController
+                                                                  .text,
+                                                          regions: regionsid!,
+                                                          country: countriesId!,
+                                                          city: citiesId,
+                                                          probono: probonoId!,
+                                                          fOfServices: services
+                                                              .toString(),
+                                                          image: image!,
+                                                        )));
+                                          } else {
+                                            Get.snackbar(
+                                              "Account Registeration",
+                                              "Unable to sent Message Check Your Email",
+                                              backgroundColor: Colors.red,
+                                              snackStyle: SnackStyle.FLOATING,
+                                            );
+                                          }
+                                        } else {
+                                          Get.snackbar(
+                                            "Account Registeration",
+                                            "Email Already Exist",
+                                            backgroundColor: Colors.red,
+                                            snackStyle: SnackStyle.FLOATING,
+                                          );
+                                          Navigator.pop(context);
+                                        }
                                       }
                                     }
-                                  }
-                                  // Navigator.push(context, MaterialPageRoute(builder: (context) => const home(),));
-                                },
-                                style: ElevatedButton.styleFrom(
-                                  shadowColor: Colors.black,
-                                  backgroundColor: const Color(0xffFCD917),
-                                  elevation: width * 0.03,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius:
-                                        BorderRadius.circular(width * 0.1),
-                                    // <-- Radius
+                                    // Navigator.push(context, MaterialPageRoute(builder: (context) => const home(),));
+                                  },
+                                  style: ElevatedButton.styleFrom(
+                                    shadowColor: Colors.black,
+                                    backgroundColor: const Color(0xffFCD917),
+                                    elevation: width * 0.03,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius:
+                                          BorderRadius.circular(width * 0.1),
+                                      // <-- Radius
+                                    ),
                                   ),
-                                ),
-                                child: Text(
-                                  'Create Account',
-                                  style: TextStyle(
-                                    // fontWeight: FontWeight.bold,
-                                    fontSize: width * 0.05,
-                                    letterSpacing: width * 0.002,
-                                    // color: Colors.black,
+                                  child: Text(
+                                    'Create Account',
+                                    style: TextStyle(
+                                      // fontWeight: FontWeight.bold,
+                                      fontSize: width * 0.05,
+                                      letterSpacing: width * 0.002,
+                                      // color: Colors.black,
+                                    ),
                                   ),
-                                ),
-                              )),
-                          SizedBox(
-                            height: height * 0.05,
-                          ),
-                        ],
+                                )),
+                            SizedBox(
+                              height: height * 0.05,
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ),
-                ),
-              ])
-            : Center(
-                child: CircularProgressIndicator(
-                color: Theme.of(context).primaryColor,
-              )),
+                ])
+              : Center(
+                  child: CircularProgressIndicator(
+                  color: Theme.of(context).primaryColor,
+                )),
+        ),
       ),
     );
   }

@@ -37,130 +37,133 @@ class _ProfileState extends State<Profile> {
     var height = size.height;
     var width = size.width;
 
-    return SafeArea(
-      child: loading == false
-          ? WillPopScope(
-              onWillPop: () async => false,
-              child: Scaffold(
-                floatingActionButton: FloatingActionButton(
-                  onPressed: () {},
-                  child: Center(
-                    child: Icon(Icons.edit),
-                  ),
-                ),
-                appBar: AppBar(
-                  automaticallyImplyLeading: false,
-                  iconTheme: const IconThemeData(color: Colors.black),
-                  centerTitle: true,
-                  title: const Text(
-                    'Profile',
-                    style: TextStyle(color: Colors.black),
-                  ),
-                  backgroundColor: Theme.of(context).primaryColor,
-                  elevation: 0,
-                ),
-                body: Stack(alignment: Alignment.center, children: [
-                  Positioned(
-                    child: Container(
-                      color: Theme.of(context).primaryColor,
+    return Semantics(
+      label: "Profile Screen",
+      child: SafeArea(
+        child: loading == false
+            ? WillPopScope(
+                onWillPop: () async => false,
+                child: Scaffold(
+                  floatingActionButton: FloatingActionButton(
+                    onPressed: () {},
+                    child: Center(
+                      child: Icon(Icons.edit),
                     ),
                   ),
-                  Positioned(
-                      top: height * 0.10,
-                      bottom: height * 0.001,
+                  appBar: AppBar(
+                    automaticallyImplyLeading: false,
+                    iconTheme: const IconThemeData(color: Colors.black),
+                    centerTitle: true,
+                    title: const Text(
+                      'Profile',
+                      style: TextStyle(color: Colors.black),
+                    ),
+                    backgroundColor: Theme.of(context).primaryColor,
+                    elevation: 0,
+                  ),
+                  body: Stack(alignment: Alignment.center, children: [
+                    Positioned(
                       child: Container(
-                        height: height,
-                        width: width,
-                        decoration: const BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.only(
-                              topLeft: Radius.circular(50.0),
-                              topRight: Radius.circular(50.0),
-                            )),
-                        child: Padding(
-                          padding: EdgeInsets.only(top: height * 0.1),
+                        color: Theme.of(context).primaryColor,
+                      ),
+                    ),
+                    Positioned(
+                        top: height * 0.10,
+                        bottom: height * 0.001,
+                        child: Container(
+                          height: height,
+                          width: width,
+                          decoration: const BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(50.0),
+                                topRight: Radius.circular(50.0),
+                              )),
+                          child: Padding(
+                            padding: EdgeInsets.only(top: height * 0.1),
 
-                          ///Lawyer name and address
+                            ///Lawyer name and address
 
-                          child: Column(
-                            children: [
-                              Column(
-                                children: [
-                                  Container(
-                                      child: Text(
-                                    '',
+                            child: Column(
+                              children: [
+                                Column(
+                                  children: [
+                                    Container(
+                                        child: Text(
+                                      '',
+                                      style: TextStyle(
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.bold),
+                                    )),
+                                    const SizedBox(
+                                      height: 10,
+                                    ),
+                                    Container(
+                                        child: const Text(
+                                      'Advocate High court',
+                                      style: TextStyle(fontSize: 18),
+                                    )),
+                                  ],
+                                ),
+
+                                ///general info
+                                Padding(
+                                  padding: EdgeInsets.only(
+                                      top: height * 0.01, right: width * 0.6),
+                                  child: Container(
+                                      child: const Text(
+                                    'General info',
                                     style: TextStyle(
                                         fontSize: 20,
                                         fontWeight: FontWeight.bold),
                                   )),
-                                  const SizedBox(
-                                    height: 10,
-                                  ),
-                                  Container(
+                                ),
+                                RowInfo(width, height, Icons.location_on,
+                                    'Location', '[Lawyer address]', context),
+                                RowInfo(width, height, Icons.balance,
+                                    'Lawsuits', '[No of clients]', context),
+                                RowInfo(width, height, Icons.file_open_rounded,
+                                    'File Achievement', '90%', context),
+                                RowInfo(width, height, Icons.warehouse_rounded,
+                                    'Experience', '10+ years', context),
+                                // contact me
+                                Padding(
+                                  padding: EdgeInsets.only(
+                                      top: height * 0.01, right: width * 0.6),
+                                  child: Container(
                                       child: const Text(
-                                    'Advocate High court',
-                                    style: TextStyle(fontSize: 18),
+                                    'Contact me',
+                                    style: TextStyle(
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.bold),
                                   )),
-                                ],
-                              ),
+                                ),
 
-                              ///general info
-                              Padding(
-                                padding: EdgeInsets.only(
-                                    top: height * 0.01, right: width * 0.6),
-                                child: Container(
-                                    child: const Text(
-                                  'General info',
-                                  style: TextStyle(
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.bold),
-                                )),
-                              ),
-                              RowInfo(width, height, Icons.location_on,
-                                  'Location', '[Lawyer address]', context),
-                              RowInfo(width, height, Icons.balance, 'Lawsuits',
-                                  '[No of clients]', context),
-                              RowInfo(width, height, Icons.file_open_rounded,
-                                  'File Achievement', '90%', context),
-                              RowInfo(width, height, Icons.warehouse_rounded,
-                                  'Experience', '10+ years', context),
-                              // contact me
-                              Padding(
-                                padding: EdgeInsets.only(
-                                    top: height * 0.01, right: width * 0.6),
-                                child: Container(
-                                    child: const Text(
-                                  'Contact me',
-                                  style: TextStyle(
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.bold),
-                                )),
-                              ),
-
-                              RowInfo(width, height, Icons.phone,
-                                  'Phone Number', '0333-*******', context),
-                              RowInfo(width, height, Icons.mail, 'Mail',
-                                  'name@gmail.com', context),
-                            ],
+                                RowInfo(width, height, Icons.phone,
+                                    'Phone Number', '0333-*******', context),
+                                RowInfo(width, height, Icons.mail, 'Mail',
+                                    'name@gmail.com', context),
+                              ],
+                            ),
                           ),
-                        ),
 
-                        ///Lawyer name and address
-                      )),
-                  Positioned(
-                      top: height * 0.01,
-                      // right: width*0.35,
-                      child: const CircleAvatar(
-                        backgroundColor: Color(0xffFCD917),
-                        radius: 60,
-                        child: CircleAvatar(radius: 55),
-                      ))
-                ]),
+                          ///Lawyer name and address
+                        )),
+                    Positioned(
+                        top: height * 0.01,
+                        // right: width*0.35,
+                        child: const CircleAvatar(
+                          backgroundColor: Color(0xffFCD917),
+                          radius: 60,
+                          child: CircleAvatar(radius: 55),
+                        ))
+                  ]),
+                ),
+              )
+            : Center(
+                child: CircularProgressIndicator(),
               ),
-            )
-          : Center(
-              child: CircularProgressIndicator(),
-            ),
+      ),
     );
   }
 }

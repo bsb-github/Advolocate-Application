@@ -43,33 +43,45 @@ void main() async {
         options: DefaultFirebaseOptions.currentPlatform);
     Firebase.app();
   }
-  runApp(MultiProvider(
-    providers: [
-      ChangeNotifierProvider(create: (_) => ConfigProvider()),
-      ChangeNotifierProvider(create: (_) => ImageUrlProvider()),
-      ChangeNotifierProvider(create: (_) => OtpProvider()),
-      ChangeNotifierProvider(
-        create: (_) => LawyerDataProvider(),
-      )
-    ],
-    child: GetMaterialApp(
-      theme: ThemeData(
-        primaryColor: const Color(0xffFCD917),
+
+  runApp(ExcludeSemantics(child: MainEntryPoint()));
+}
+
+class MainEntryPoint extends StatelessWidget {
+  const MainEntryPoint({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => ConfigProvider()),
+        ChangeNotifierProvider(create: (_) => ImageUrlProvider()),
+        ChangeNotifierProvider(create: (_) => OtpProvider()),
+        ChangeNotifierProvider(
+          create: (_) => LawyerDataProvider(),
+        )
+      ],
+      child: GetMaterialApp(
+        theme: ThemeData(
+          primaryColor: const Color(0xffFCD917),
+        ),
+        routes: {
+          '/home': (context) => const HomeScreen(),
+          '/profile': (context) => const UserProfile(),
+          '/privacy_policy': (context) => const PrivacyPolicy(),
+          '/cso_lawws': (context) => const CsoLaws(),
+          //
+        },
+        // home: const SignUpScreen(),
+        home: splashscreen(),
+        builder: EasyLoading.init(),
+        //  home: CreateUserAccount(),
+        debugShowCheckedModeBanner: false,
       ),
-      routes: {
-        '/home': (context) => const HomeScreen(),
-        '/profile': (context) => const UserProfile(),
-        '/privacy_policy': (context) => const PrivacyPolicy(),
-        '/cso_lawws': (context) => const CsoLaws(),
-        //
-      },
-      // home: const SignUpScreen(),
-      home: splashscreen(),
-      builder: EasyLoading.init(),
-      //  home: CreateUserAccount(),
-      debugShowCheckedModeBanner: false,
-    ),
-  ));
+    );
+  }
 }
 
 class MyApp extends StatefulWidget {
@@ -83,119 +95,12 @@ class _MyAppState extends State<MyApp> {
   Map<String, dynamic>? _userData;
   AccessToken? _accessToken;
   bool loading = false;
-  _checkIfidLoggedIn() async {
-    final accessToken = await FacebookAuth.instance.accessToken;
-    setState(() {
-      loading = false;
-    });
-
-    if (accessToken != null) {
-      print(accessToken.toJson());
-      final userData = await FacebookAuth.instance.getUserData();
-      print(userData);
-      _accessToken = accessToken;
-      print(userData);
-      setState(() {
-        _userData = userData;
-      });
-    } else {
-      print(1);
-      _login();
-    }
-  }
-
-  _login() async {
-    print(200);
-    final LoginResult result = await FacebookAuth.instance.login();
-    //_logout();
-    //_checkIfidLoggedIn();
-    print(result.message);
-    print(result.status);
-    if (result.status == LoginStatus.success) {
-      _accessToken = result.accessToken;
-      final userData = await FacebookAuth.instance.getUserData();
-      _userData = userData;
-      //var data = jsonEncode(userData);
-
-      print(userData);
-
-      FacebookData.data[0] = FaceBookLoginData.fromJson(userData);
-      setState(() {});
-      var data = FacebookData.data[0];
-      print(3);
-      getAdvocatesData();
-      var Data = AdvocatesList.data.where(
-        (element) => element.email == data.email,
-      );
-      print("sasdfghjkoll");
-      print("A~PI  DAta" + Data.first.email);
-
-      if (Data.isEmpty) {
-        showModalBottomSheet(
-          context: context,
-          builder: (context) => SelectionBottomScreen(
-              name: data.name.toString(),
-              social_id: data.id.toString(),
-              type: 2,
-              email: data.email.toString()),
-        );
-      } else {
-        loginGoogleUser(context,
-            type: 2, password: FacebookData.data[0].id.toString());
-      }
-
-      setState(() {
-        loading = false;
-      });
-    }
-    //   print(020);
-  }
-
-  Future<void> createFBUser(String email, int userType, String id, String name,
-      String address, int type) async {
-    //_logout();
-    var headers = {
-      'Content-Type': 'application/json',
-      'Accept': 'application/json',
-    };
-    var body = json.encode({
-      "email": email,
-      "user_type": type,
-      "password": id,
-      "name": name,
-      "contact_number": "01",
-      "social_id": id,
-      'address': address,
-      "link_type": type,
-      "city_name": address,
-    });
-    var response = await http.post(
-        Uri.parse('https://www.advolocate.info/api/register_social_customer'),
-        headers: headers,
-        body: body);
-    var data = jsonDecode(response.body.toString());
-    print(data);
-    if (response.statusCode == 200) {
-      print(data);
-      print(data['description']);
-      if (data['code'] == 0 || data['code'] == 5) {
-        print(0);
-
-        // loginGoogleUser(context, type: type, password: id);
-      } else {
-        Utils().toastMessage(data['description'].toString());
-      }
-    } else {
-      print(-1);
-      print(data['description']);
-      print(response.body);
-    }
-  }
 
   Future<void> loginGoogleUser(
     BuildContext context, {
     required int type,
     required String password,
+    required GoogleSignInAccount acc
   }) async {
     var headers = {
       'Content-Type': 'application/json',
@@ -206,6 +111,7 @@ class _MyAppState extends State<MyApp> {
         Uri.parse('https://www.advolocate.info/api/login_social_customer'),
         headers: headers,
         body: body);
+    print(response.body);
 
     final prefs = await SharedPreferences.getInstance();
     print("status code" + response.statusCode.toString());
@@ -219,6 +125,7 @@ class _MyAppState extends State<MyApp> {
         Utils().toastMessage('please check give correct email and password');
       } else if (data['description'].toString() == 'Login Successful') {
         print(data['result']['token']);
+        EasyLoading.dismiss();
         Get.snackbar(
           "Account Registeration",
           data["description"],
@@ -234,23 +141,30 @@ class _MyAppState extends State<MyApp> {
         });
         AdvocatesList.data.clear();
         getAdvocatesData();
-
-        if (type == 1) {
-          //  googleSignIn.disconnect();
-        } else {
-          _logout();
-        }
         getUserData(
             1, data['result']['token'].toString(), data['result']['user_id']);
       } else if (data["description"] == "Please register your account") {
+        EasyLoading.dismiss();
+        showModalBottomSheet(
+          context: context,
+          builder: (context) => SelectionBottomScreen(
+              name: acc.displayName.toString(),
+              social_id: password,
+              type: type,
+              email: acc.email),
+        );
         Get.snackbar(
           "Account Registeration",
           data["description"],
           backgroundColor: Colors.red,
           snackStyle: SnackStyle.FLOATING,
         );
+
         //Utils().toastMessage(data['description']);
       } else {
+        EasyLoading.showError(data["description"]);
+        EasyLoading.dismiss();
+
         Get.snackbar(
           "Account Registeration",
           data["description"],
@@ -260,6 +174,7 @@ class _MyAppState extends State<MyApp> {
         print(response.body);
       }
     } else {
+      EasyLoading.dismiss();
       Get.snackbar(
         "Account Registeration",
         "Cant Create Account (Check Your Internet Connection)",
@@ -290,10 +205,13 @@ class _MyAppState extends State<MyApp> {
     print(ProfileDataList.users[0].email);
     if (ProfileDataList.users[0].profession == "profession" ||
         ProfileDataList.users[0].profession == "123") {
+      EasyLoading.showSuccess("Login Success");
+      EasyLoading.dismiss();
       Navigator.pushReplacement(
           context, MaterialPageRoute(builder: (context) => HomePage()));
     } else if (advData.first.status >= 1) {
       context.read<LawyerDataProvider>().setAdvData(advData.first);
+      EasyLoading.dismiss();
       Navigator.pushReplacement(
           context,
           MaterialPageRoute(
@@ -302,6 +220,7 @@ class _MyAppState extends State<MyApp> {
       // push to advocate home
       // AdvocateResult result = AdvocateResult.fromJson(Provider.of<LawyerDataProvider>(context, listen: false).data.result);
     } else {
+      EasyLoading.dismiss();
       Navigator.pushReplacement(
           context,
           MaterialPageRoute(
@@ -331,23 +250,71 @@ class _MyAppState extends State<MyApp> {
   }
 
   GoogleSignIn googleSignIn = GoogleSignIn();
+  _login() async {
+    print(200);
+    final LoginResult result = await FacebookAuth.instance.login();
+
+    print(1);
+    EasyLoading.show();
+    print(result.message);
+    print(result.status);
+    if (result.status == LoginStatus.success) {
+      print("Success");
+      _accessToken = result.accessToken;
+      final userData = await FacebookAuth.instance.getUserData();
+      _userData = userData;
+      print(userData);
+
+      //   var Data = jsonEncode(userData);
+
+
+      FacebookData.data[0] = FaceBookLoginData.fromJson(userData);
+      setState(() {});
+      var data = FacebookData.data[0];
+      print(3);
+   //    getAdvocatesData();
+   //    var Data = AdvocatesList.data.where(
+   //      (element) => element.email == data.email,
+   //    );
+   // //   print(Data);
+   //    print("API  DAta" + Data.first.email);
+   //    if (Data.isEmpty) {
+   //      EasyLoading.dismiss();
+   //      showModalBottomSheet(
+   //        context: context,
+   //        builder: (context) => SelectionBottomScreen(
+   //            name: data.name.toString(),
+   //            social_id: data.id.toString(),
+   //            type: 2,
+   //            email: data.email.toString()),
+   //      );
+   //    } else {
+//        EasyLoading.dismiss();
+
+        // loginGoogleUser(context,
+        //     type: 2, password: FacebookData.data[0].id.toString());
+      }
+
+      setState(() {
+        loading = false;
+      });
+
+    //   print(020);
+  }
 
   googleLogin() async {
-    setState(() {
-      loading = true;
-    });
-    print("googleLogin method Called");
-
-    try {
+      print("googleLogin Called");
       var reslut = await googleSignIn.signIn();
-      googleSignIn.disconnect();
+      print(reslut);
+      EasyLoading.show();
+      print(1);
       setState(() {
         loading = false;
       });
 
       if (reslut == null) {
-        googleSignIn.disconnect();
-        return;
+        print("error");
+      return;
       }
       // ignore: use_build_context_synchronously
       getAdvocatesData();
@@ -355,287 +322,168 @@ class _MyAppState extends State<MyApp> {
         (element) => element.email == reslut.email,
       );
       print("sasdfghjkoll");
-      //print("A~PI  DAta" + Data.first.email);
-      if (Data.isEmpty) {
-        showModalBottomSheet(
-          context: context,
-          builder: (context) => SelectionBottomScreen(
-              name: reslut.displayName.toString(),
-              social_id: reslut.id,
-              type: 1,
-              email: reslut.email),
-        );
-      } else {
-        loginGoogleUser(context, type: 1, password: reslut.id);
-      }
-    } catch (error) {
-      print(error);
-      setState(() {
-        loading = false;
-      });
-    }
+      //print("A~PI  DAta" + Data.first.email);g
+      googleSignIn.disconnect();
+        loginGoogleUser(context, type: 1, password: reslut.id, acc: reslut);
+
+
   }
-
-  void loginUser(BuildContext context,
-      {required String email,
-      required String password,
-      required GoogleSignInAccount reslut}) async {
-    var headers = {
-      'Content-Type': 'application/json',
-      'Accept': 'application/json',
-    };
-
-    var body = json.encode({"social_id": password, "link_type": 1});
-    var response = await http.post(
-        Uri.parse('https://www.advolocate.info/api/login_social_customer'),
-        headers: headers,
-        body: body);
-
-    final prefs = await SharedPreferences.getInstance();
-    var data = jsonDecode(response.body);
-    print(data);
-    if (response.statusCode == 200) {
-      print(data['description']);
-      if (data['description'].toString() ==
-              'please check give correct email and password' ||
-          data['code'] == null) {
-        // Utils().toastMessage('please check give correct email and password');
-        print(reslut.email);
-        print(reslut.id);
-
-        //await signupUser(reslut.email, reslut.id);
-        // await createuser(reslut.email, 1, reslut.id,
-        //     reslut.displayName.toString(), "Hello", 1);
-      } else if (data['description'].toString() == 'Login Successful') {
-        print(data['result']['token']);
-        Provider.of<ConfigProvider>(context, listen: false)
-            .setToken(data['result']['token']);
-        Provider.of<ConfigProvider>(context, listen: false)
-            .setUserID(data['result']['user_id']);
-
-        setState(() {
-          prefs.setString('email', email);
-          prefs.setString('password', password);
-          prefs.setString('token', data['result']['token'].toString());
-          prefs.setInt('userId', data['result']['user_id']);
-          prefs.setString("loginType", "google");
-        });
-        // googleSignIn.disconnect();
-        Navigator.pushNamed(context, '/home');
-      } else {
-        // await createuser(reslut.email, 1, reslut.id,
-        //     reslut.displayName.toString(), "Hello", 1);
-      }
-    }
-  }
-
-  void addGoogleUserData({required GoogleSignInAccount data}) async {
-    final prefs = await SharedPreferences.getInstance();
-    await FirebaseFirestore.instance.collection("user").doc(data.id).set({
-      "email": data.email,
-      "user_type": 1,
-      "password": data.id,
-      "name": data.displayName,
-      "contact_number": "01",
-      //   "img_url": data.imageUrl,
-      "social_id": data.id,
-      'address': "Pakistan",
-      "link_type": 1,
-      "city_name": "KArachi",
-    }).then((value) {
-      setState(() {
-        prefs.setString('email', data.email);
-        prefs.setString('password', data.id);
-        prefs.setString('token', data.displayName.toString());
-        prefs.setInt('userId', 2343);
-        prefs.setString("loginType", "google");
-      });
-      //  getAdvoUserData();
-      Navigator.pushNamed(context, '/home');
-    });
-  }
-
-  void addFBUserData() async {
-    var data = FacebookData.data[0];
-    final prefs = await SharedPreferences.getInstance();
-    await FirebaseFirestore.instance.collection("user").doc(data.id).set({
-      "email": data.email,
-      "user_type": 2,
-      "password": data.id,
-      "name": data.name,
-      "contact_number": "01",
-      //   "img_url": data.imageUrl,
-      "social_id": data.id,
-      'address': "Pakistan",
-      "link_type": 2,
-      "city_name": "KArachi",
-    }).then((value) {
-      setState(() {
-        prefs.setString('email', data.email.toString());
-        prefs.setString('password', data.id.toString());
-        prefs.setString('token', data.name.toString());
-        prefs.setInt('userId', 2343);
-        prefs.setString("loginType", "google");
-      });
-      // getAdvoUserData();
-      Navigator.pushNamed(context, '/home');
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     var height = MediaQuery.of(context).size.height;
     var width = MediaQuery.of(context).size.width;
-    return SafeArea(
-      child: Scaffold(
-        body: Container(
-          color: Colors.white,
-          height: height,
-          width: width,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              SizedBox(height: height * 0.1),
-              CustomImage(
-                conheight: height * 0.3,
-                conwidth: width * 0.7,
-                Image: 'images/logosplash.png',
-              ),
-              Spacer(),
-              SizedBox(height: height * 0.04),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 30.0),
-                child: GestureDetector(
-                  onTap: () {
-                    _login();
-                  },
-                  child: Container(
-                    height: 55,
-                    width: height * 0.6,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(25),
-                      color: Color(0xff4A7AD8),
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        Image.asset("images/fb.png"),
-                        Text(
-                          "Login with Facebook",
-                          style: TextStyle(
-                            fontSize: 20,
-                            color: Colors.white,
+    return ExcludeSemantics(
+      child: SafeArea(
+        child: Scaffold(
+          body: Container(
+            color: Colors.white,
+            height: height,
+            width: width,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                SizedBox(height: height * 0.1),
+                CustomImage(
+                  conheight: height * 0.3,
+                  conwidth: width * 0.7,
+                  Image: 'images/logosplash.png',
+                ),
+                Spacer(),
+                SizedBox(height: height * 0.04),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 30.0),
+                  child: GestureDetector(
+                    onTap: () {
+                     // _login();
+                    },
+                    child: Container(
+                      height: 55,
+                      width: height * 0.6,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(25),
+                        color: Color(0xff4A7AD8),
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          Image.asset("images/fb.png"),
+                          Text(
+                            "Login with Facebook",
+                            style: TextStyle(
+                              fontSize: 20,
+                              color: Colors.white,
+                            ),
                           ),
-                        ),
-                        Icon(
-                          Icons.arrow_forward_ios,
-                          color: Colors.white,
-                        )
-                      ],
+                          Icon(
+                            Icons.arrow_forward_ios,
+                            color: Colors.white,
+                          )
+                        ],
+                      ),
                     ),
                   ),
                 ),
-              ),
-              SizedBox(height: height * 0.04),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 30.0),
-                child: GestureDetector(
-                  onTap: () {
-                    googleLogin();
-                  },
-                  child: Container(
-                    height: 55,
-                    width: height * 0.6,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(25),
-                      color: Color(0xffDB2F2F),
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        Image.asset("images/google.png"),
-                        Text(
-                          "Login with Google",
-                          style: TextStyle(
-                            fontSize: 20,
-                            color: Colors.white,
+                SizedBox(height: height * 0.04),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 30.0),
+                  child: GestureDetector(
+                    onTap: () {
+                      googleLogin();
+                    },
+                    child: Container(
+                      height: 55,
+                      width: height * 0.6,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(25),
+                        color: Color(0xffDB2F2F),
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          Image.asset("images/google.png"),
+                          Text(
+                            "Login with Google",
+                            style: TextStyle(
+                              fontSize: 20,
+                              color: Colors.white,
+                            ),
                           ),
-                        ),
-                        Icon(
-                          Icons.arrow_forward_ios,
-                          color: Colors.white,
-                        )
-                      ],
+                          Icon(
+                            Icons.arrow_forward_ios,
+                            color: Colors.white,
+                          )
+                        ],
+                      ),
                     ),
                   ),
                 ),
-              ),
-              SizedBox(height: height * 0.04),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 30.0),
-                child: GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const ManualLoginScreen()));
-                  },
-                  child: Container(
-                    height: 55,
-                    width: height * 0.6,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(25),
-                      color: Color(0xff362F2F),
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        Image.asset("images/person.png"),
-                        Text(
-                          "Login Manually",
-                          style: TextStyle(
-                            fontSize: 20,
-                            color: Colors.white,
+                SizedBox(height: height * 0.04),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 30.0),
+                  child: GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const ManualLoginScreen()));
+                    },
+                    child: Container(
+                      height: 55,
+                      width: height * 0.6,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(25),
+                        color: Color(0xff362F2F),
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          Image.asset("images/person.png"),
+                          Text(
+                            "Login Manually",
+                            style: TextStyle(
+                              fontSize: 20,
+                              color: Colors.white,
+                            ),
                           ),
-                        ),
-                        Icon(
-                          Icons.arrow_forward_ios,
-                          color: Colors.white,
-                        )
-                      ],
+                          Icon(
+                            Icons.arrow_forward_ios,
+                            color: Colors.white,
+                          )
+                        ],
+                      ),
                     ),
                   ),
                 ),
-              ),
-              SizedBox(height: height * 0.02),
-              Expanded(child: Container()),
-              Container(
-                margin: EdgeInsets.only(left: width * 0.3),
-                child: Row(
-                  children: [
-                    Text(
-                      "Don't have account?",
-                      style: TextStyle(
-                          fontSize: width * 0.04, wordSpacing: width * 0.002),
-                    ),
-                    TextButton(
-                        onPressed: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => const SelectionScreen(),
-                              ));
-                        },
-                        child: Text(
-                          'SignUp',
-                          style: TextStyle(
-                              color: const Color(0xffFCD917),
-                              fontSize: width * 0.04),
-                        )),
-                  ],
+                SizedBox(height: height * 0.02),
+                Expanded(child: Container()),
+                Container(
+                  margin: EdgeInsets.only(left: width * 0.3),
+                  child: Row(
+                    children: [
+                      Text(
+                        "Don't have account?",
+                        style: TextStyle(
+                            fontSize: width * 0.04, wordSpacing: width * 0.002),
+                      ),
+                      TextButton(
+                          onPressed: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => const SelectionScreen(),
+                                ));
+                          },
+                          child: Text(
+                            'SignUp',
+                            style: TextStyle(
+                                color: const Color(0xffFCD917),
+                                fontSize: width * 0.04),
+                          )),
+                    ],
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

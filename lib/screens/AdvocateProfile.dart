@@ -73,6 +73,7 @@ class _AdvocateProfileState extends State<AdvocateProfile> {
   }
 
   Future<void> UploadImage(String imageURl) async {
+    final bytes = File(image!.path).readAsBytesSync();
     print("data:image/jpeg;base64," + imgeUrl);
     var getCustomerInfoToken = context.read<ConfigProvider>().token;
     print(getCustomerInfoToken);
@@ -90,7 +91,7 @@ class _AdvocateProfileState extends State<AdvocateProfile> {
       "email": context.read<LawyerDataProvider>().advData.email,
       "address": context.read<LawyerDataProvider>().advData.address,
       "selectedCountry": context.read<LawyerDataProvider>().advData.country,
-      "img_url": "data:image/jpeg;base64," + imgeUrl,
+      "img_url": "data:image/png;base64,${base64Encode(bytes)}",
     });
     var response = await http.post(
         Uri.parse('https://www.advolocate.info/api/updateCustomerInfo'),
@@ -139,13 +140,6 @@ class _AdvocateProfileState extends State<AdvocateProfile> {
     super.initState();
     print('token');
     getData(context);
-    if (profileDataModel.result == null) {
-      if (data.userType <= 5) {
-        loadingFun();
-      } else {}
-    } else {
-      loadingFun();
-    }
   }
 
   loadingFun() {
@@ -162,384 +156,392 @@ class _AdvocateProfileState extends State<AdvocateProfile> {
     var data = context.read<LawyerDataProvider>().data;
     var list =
         List.from(context.read<LawyerDataProvider>().data.services.split(","));
-    return SafeArea(
-      child: loading == false
-          ? WillPopScope(
-              onWillPop: () async => false,
-              child: Scaffold(
-                floatingActionButton: FloatingActionButton(
-                  onPressed: () {
-                    showModalBottomSheet(
-                        context: context,
-                        builder: (context) => UpdateAdvocateBottomSheet(
-                            email: data.email,
-                            social_id: "",
-                            name: data.name,
-                            type: data.userType));
-                  },
-                  backgroundColor: Colors.amber[400],
-                  child: Center(
-                    child: Icon(
-                      Icons.edit,
-                      color: Colors.white,
+    return Semantics(
+      label: "Profile For Advocates",
+      child: SafeArea(
+        child: !loading
+            ? WillPopScope(
+                onWillPop: () async => false,
+                child: Scaffold(
+                  floatingActionButton: FloatingActionButton(
+                    onPressed: () {
+                      showModalBottomSheet(
+                          context: context,
+                          builder: (context) => UpdateAdvocateBottomSheet(
+                              email: data.email,
+                              social_id: "",
+                              name: data.name,
+                              type: data.userType));
+                    },
+                    backgroundColor: Colors.amber[400],
+                    child: Center(
+                      child: Icon(
+                        Icons.edit,
+                        color: Colors.white,
+                      ),
                     ),
                   ),
-                ),
-                appBar: AppBar(
-                  actions: [
-                    IconButton(
-                        onPressed: () async {
-                          final prefs = await SharedPreferences.getInstance();
-                          await prefs.clear();
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => const MyApp(),
-                              ));
-                        },
-                        icon: Icon(
-                          Icons.login,
-                          color: Colors.black,
-                          size: width * 0.07,
-                        ))
-                  ],
-                  automaticallyImplyLeading: false,
-                  centerTitle: true,
-                  title: const Text(
-                    'Profile',
-                    style: TextStyle(color: Colors.black),
-                  ),
-                  backgroundColor: Theme.of(context).primaryColor,
-                  elevation: 0,
-                ),
-                body: Stack(alignment: Alignment.center, children: [
-                  Positioned(
-                    child: Container(
-                      color: Theme.of(context).primaryColor,
+                  appBar: AppBar(
+                    actions: [
+                      IconButton(
+                          onPressed: () async {
+                            final prefs = await SharedPreferences.getInstance();
+                            await prefs.clear();
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => const MyApp(),
+                                ));
+                          },
+                          icon: Icon(
+                            Icons.login,
+                            color: Colors.black,
+                            size: width * 0.07,
+                          ))
+                    ],
+                    automaticallyImplyLeading: false,
+                    centerTitle: true,
+                    title: const Text(
+                      'Profile',
+                      style: TextStyle(color: Colors.black),
                     ),
+                    backgroundColor: Theme.of(context).primaryColor,
+                    elevation: 0,
                   ),
-                  Positioned(
-                      top: height * 0.08,
-                      bottom: height * 0.001,
+                  body: Stack(alignment: Alignment.center, children: [
+                    Positioned(
                       child: Container(
-                        height: height,
-                        width: width,
-                        decoration: const BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.only(
-                              topLeft: Radius.circular(40.0),
-                              topRight: Radius.circular(40.0),
-                            )),
-                        child: Padding(
-                          padding: EdgeInsets.only(top: height * 0.1),
+                        color: Theme.of(context).primaryColor,
+                      ),
+                    ),
+                    Positioned(
+                        top: height * 0.08,
+                        bottom: height * 0.001,
+                        child: Container(
+                          height: height,
+                          width: width,
+                          decoration: const BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(40.0),
+                                topRight: Radius.circular(40.0),
+                              )),
+                          child: Padding(
+                            padding: EdgeInsets.only(top: height * 0.1),
 
-                          ///Lawyer name and address
+                            ///Lawyer name and address
 
-                          child: SingleChildScrollView(
-                            child: Column(
-                              children: [
-                                loading == false
-                                    ? Consumer(
-                                        builder: (context, value, child) =>
-                                            Column(
-                                          children: [
-                                            Column(
-                                              children: [
-                                                Container(
-                                                    child: Text(
-                                                  context
-                                                      .read<
-                                                          LawyerDataProvider>()
-                                                      .data
-                                                      .name,
-                                                  style: const TextStyle(
-                                                      fontSize: 20,
-                                                      fontWeight:
-                                                          FontWeight.bold),
-                                                )),
-                                                const SizedBox(
-                                                  height: 10,
-                                                ),
-                                                Container(
-                                                    child: Text(
-                                                  context
-                                                      .read<
-                                                          LawyerDataProvider>()
-                                                      .data
-                                                      .covered_area,
-                                                  style: const TextStyle(
-                                                      fontSize: 18),
-                                                )),
-                                              ],
-                                            ),
-
-                                            ///general info
-                                            Column(
-                                              children: [
-                                                Padding(
-                                                  padding: EdgeInsets.only(
-                                                      right: width * 0.6),
-                                                  child: Container(
-                                                      child: const Text(
-                                                    'General info',
-                                                    style: TextStyle(
-                                                        fontSize: 20,
-                                                        fontWeight:
-                                                            FontWeight.bold),
-                                                  )),
-                                                ),
-                                                RowInfo(
-                                                    width,
-                                                    height,
-                                                    Icons.person,
-                                                    'Name',
+                            child: SingleChildScrollView(
+                              child: Column(
+                                children: [
+                                  loading == false
+                                      ? Consumer(
+                                          builder: (context, value, child) =>
+                                              Column(
+                                            children: [
+                                              Column(
+                                                children: [
+                                                  Container(
+                                                      child: Text(
                                                     context
                                                         .read<
                                                             LawyerDataProvider>()
                                                         .data
                                                         .name,
-                                                    context),
-                                                RowInfo(
-                                                    width,
-                                                    height,
-                                                    Icons.location_on,
-                                                    'Address',
-                                                    context
-                                                        .read<
-                                                            LawyerDataProvider>()
-                                                        .data
-                                                        .address,
-                                                    context),
-                                                SizedBox(
-                                                  child: Padding(
-                                                    padding: EdgeInsets.only(
-                                                        top: height * 0.01,
-                                                        left: width * 0.1),
-                                                    child: Row(
-                                                      children: [
-                                                        Container(
-                                                            decoration: BoxDecoration(
-                                                                color: const Color(
-                                                                    0xffFCD917),
-                                                                borderRadius:
-                                                                    BorderRadius
-                                                                        .circular(
-                                                                            7)),
-                                                            padding:
-                                                                const EdgeInsets
-                                                                    .all(7),
-                                                            child: Icon(
-                                                              Icons.work,
-                                                              size: 32,
-                                                            )),
-                                                        SizedBox(
-                                                          width: width * 0.03,
-                                                        ),
-                                                        Column(
-                                                          crossAxisAlignment:
-                                                              CrossAxisAlignment
-                                                                  .start,
-                                                          children: [
-                                                            const Text(
-                                                              "Services",
-                                                              maxLines: 5,
-                                                              softWrap: false,
-                                                              overflow:
-                                                                  TextOverflow
-                                                                      .ellipsis,
-                                                              textAlign:
-                                                                  TextAlign
-                                                                      .center,
-                                                              style: TextStyle(
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .bold,
-                                                                fontSize: 18,
-                                                              ),
-                                                            ),
-                                                            Container(
-                                                                constraints: BoxConstraints(
-                                                                    maxHeight:
-                                                                        300,
-                                                                    maxWidth:
-                                                                        width *
-                                                                            0.5,
-                                                                    minHeight:
-                                                                        20),
-
-                                                                // :
-                                                                //       list.length *
-                                                                //           20,
-                                                                //   width:
-                                                                //       width * 0.7,
-                                                                child: ListView
-                                                                    .builder(
-                                                                  shrinkWrap:
-                                                                      true,
-                                                                  itemCount: list
-                                                                      .length,
-                                                                  itemBuilder:
-                                                                      (context,
-                                                                          index) {
-                                                                    return Text(
-                                                                      index == 0
-                                                                          ? ' ' +
-                                                                              list[index]
-                                                                          : list[index],
-                                                                      style:
-                                                                          const TextStyle(
-                                                                        color: Colors
-                                                                            .black,
-                                                                        fontSize:
-                                                                            16,
-                                                                      ),
-                                                                    );
-                                                                  },
-                                                                ))
-                                                          ],
-                                                        )
-                                                      ],
-                                                    ),
-                                                  ),
-                                                ),
-                                                // RowInfo(
-                                                //     width,
-                                                //     height,
-                                                //     Icons.travel_explore,
-                                                //     'Country',
-                                                //     context
-                                                //         .read<
-                                                //             LawyerDataProvider>()
-                                                //         .data
-                                                //         .services,
-                                                //     context),
-                                                RowInfo(
-                                                    width,
-                                                    height,
-                                                    Icons.work,
-                                                    'Profession',
-                                                    context
-                                                        .read<
-                                                            LawyerDataProvider>()
-                                                        .advData
-                                                        .profession,
-                                                    context),
-                                                RowInfo(
-                                                    width,
-                                                    height,
-                                                    Icons.place,
-                                                    'Covered Area',
-                                                    context
-                                                        .read<
-                                                            LawyerDataProvider>()
-                                                        .advData
-                                                        .coveredArea,
-                                                    context),
-                                                // contact me
-                                                Padding(
-                                                  padding: EdgeInsets.only(
-                                                      top: height * 0.01,
-                                                      right: width * 0.6),
-                                                  child: Container(
-                                                      child: const Text(
-                                                    'Contact me',
-                                                    style: TextStyle(
+                                                    style: const TextStyle(
                                                         fontSize: 20,
                                                         fontWeight:
                                                             FontWeight.bold),
                                                   )),
-                                                ),
+                                                  const SizedBox(
+                                                    height: 10,
+                                                  ),
+                                                  Container(
+                                                      child: Text(
+                                                    context
+                                                        .read<
+                                                            LawyerDataProvider>()
+                                                        .data
+                                                        .covered_area,
+                                                    style: const TextStyle(
+                                                        fontSize: 18),
+                                                  )),
+                                                ],
+                                              ),
 
-                                                RowInfo(
-                                                    width,
-                                                    height,
-                                                    Icons.phone,
-                                                    'Phone Number',
-                                                    context
-                                                        .read<
-                                                            LawyerDataProvider>()
-                                                        .data
-                                                        .contact_number,
-                                                    context),
-                                                RowInfo(
-                                                    width,
-                                                    height,
-                                                    Icons.mail,
-                                                    'Mail',
-                                                    context
-                                                        .read<
-                                                            LawyerDataProvider>()
-                                                        .data
-                                                        .email,
-                                                    context),
-                                              ],
-                                            ),
-                                          ],
-                                        ),
-                                      )
-                                    : CircularProgressIndicator(
-                                        color: Colors.yellow,
-                                      )
-                              ],
+                                              ///general info
+                                              Column(
+                                                children: [
+                                                  Padding(
+                                                    padding: EdgeInsets.only(
+                                                        right: width * 0.6),
+                                                    child: Container(
+                                                        child: const Text(
+                                                      'General info',
+                                                      style: TextStyle(
+                                                          fontSize: 20,
+                                                          fontWeight:
+                                                              FontWeight.bold),
+                                                    )),
+                                                  ),
+                                                  RowInfo(
+                                                      width,
+                                                      height,
+                                                      Icons.person,
+                                                      'Name',
+                                                      context
+                                                          .read<
+                                                              LawyerDataProvider>()
+                                                          .data
+                                                          .name,
+                                                      context),
+                                                  RowInfo(
+                                                      width,
+                                                      height,
+                                                      Icons.location_on,
+                                                      'Address',
+                                                      context
+                                                          .read<
+                                                              LawyerDataProvider>()
+                                                          .data
+                                                          .address,
+                                                      context),
+                                                  SizedBox(
+                                                    child: Padding(
+                                                      padding: EdgeInsets.only(
+                                                          top: height * 0.01,
+                                                          left: width * 0.1),
+                                                      child: Row(
+                                                        children: [
+                                                          Container(
+                                                              decoration: BoxDecoration(
+                                                                  color: const Color(
+                                                                      0xffFCD917),
+                                                                  borderRadius:
+                                                                      BorderRadius
+                                                                          .circular(
+                                                                              7)),
+                                                              padding:
+                                                                  const EdgeInsets
+                                                                      .all(7),
+                                                              child: Icon(
+                                                                Icons.work,
+                                                                size: 32,
+                                                              )),
+                                                          SizedBox(
+                                                            width: width * 0.03,
+                                                          ),
+                                                          Column(
+                                                            crossAxisAlignment:
+                                                                CrossAxisAlignment
+                                                                    .start,
+                                                            children: [
+                                                              const Text(
+                                                                "Services",
+                                                                maxLines: 5,
+                                                                softWrap: false,
+                                                                overflow:
+                                                                    TextOverflow
+                                                                        .ellipsis,
+                                                                textAlign:
+                                                                    TextAlign
+                                                                        .center,
+                                                                style:
+                                                                    TextStyle(
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold,
+                                                                  fontSize: 18,
+                                                                ),
+                                                              ),
+                                                              Container(
+                                                                  constraints: BoxConstraints(
+                                                                      maxHeight:
+                                                                          300,
+                                                                      maxWidth:
+                                                                          width *
+                                                                              0.5,
+                                                                      minHeight:
+                                                                          20),
+
+                                                                  // :
+                                                                  //       list.length *
+                                                                  //           20,
+                                                                  //   width:
+                                                                  //       width * 0.7,
+                                                                  child: ListView
+                                                                      .builder(
+                                                                    shrinkWrap:
+                                                                        true,
+                                                                    itemCount: list
+                                                                        .length,
+                                                                    itemBuilder:
+                                                                        (context,
+                                                                            index) {
+                                                                      return Text(
+                                                                        index ==
+                                                                                0
+                                                                            ? ' ' +
+                                                                                list[index]
+                                                                            : list[index],
+                                                                        style:
+                                                                            const TextStyle(
+                                                                          color:
+                                                                              Colors.black,
+                                                                          fontSize:
+                                                                              16,
+                                                                        ),
+                                                                      );
+                                                                    },
+                                                                  ))
+                                                            ],
+                                                          )
+                                                        ],
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  // RowInfo(
+                                                  //     width,
+                                                  //     height,
+                                                  //     Icons.travel_explore,
+                                                  //     'Country',
+                                                  //     context
+                                                  //         .read<
+                                                  //             LawyerDataProvider>()
+                                                  //         .data
+                                                  //         .services,
+                                                  //     context),
+                                                  RowInfo(
+                                                      width,
+                                                      height,
+                                                      Icons.work,
+                                                      'Profession',
+                                                      context
+                                                          .read<
+                                                              LawyerDataProvider>()
+                                                          .advData
+                                                          .profession,
+                                                      context),
+                                                  RowInfo(
+                                                      width,
+                                                      height,
+                                                      Icons.place,
+                                                      'Covered Area',
+                                                      context
+                                                          .read<
+                                                              LawyerDataProvider>()
+                                                          .advData
+                                                          .coveredArea,
+                                                      context),
+                                                  // contact me
+                                                  Padding(
+                                                    padding: EdgeInsets.only(
+                                                        top: height * 0.01,
+                                                        right: width * 0.6),
+                                                    child: Container(
+                                                        child: const Text(
+                                                      'Contact me',
+                                                      style: TextStyle(
+                                                          fontSize: 20,
+                                                          fontWeight:
+                                                              FontWeight.bold),
+                                                    )),
+                                                  ),
+
+                                                  RowInfo(
+                                                      width,
+                                                      height,
+                                                      Icons.phone,
+                                                      'Phone Number',
+                                                      context
+                                                          .read<
+                                                              LawyerDataProvider>()
+                                                          .data
+                                                          .contact_number,
+                                                      context),
+                                                  RowInfo(
+                                                      width,
+                                                      height,
+                                                      Icons.mail,
+                                                      'Mail',
+                                                      context
+                                                          .read<
+                                                              LawyerDataProvider>()
+                                                          .data
+                                                          .email,
+                                                      context),
+                                                ],
+                                              ),
+                                            ],
+                                          ),
+                                        )
+                                      : CircularProgressIndicator(
+                                          color: Colors.yellow,
+                                        )
+                                ],
+                              ),
                             ),
                           ),
-                        ),
 
-                        ///Lawyer name and address
-                      )),
-                  Positioned(
-                    top: height * 0.01,
-                    // right: width*0.35,
-                    child: Stack(
-                      children: [
-                        GestureDetector(
-                          onTap: () {
-                            pickImage();
-                          },
-                          child: CircleAvatar(
-                              backgroundColor: Color(0xffFCD917),
-                              radius: 60,
-                              child: CircleAvatar(
-                                  radius: 55,
-                                  backgroundImage:
-                                      profileDataModel.result?.imgUrl == null
-                                          ? NetworkImage(context
-                                              .watch<ImageUrlProvider>()
-                                              .imageUrl)
-                                          : NetworkImage(
-                                              "https://www.advolocate.info" +
-                                                  profileDataModel
-                                                      .result!.imgUrl
-                                                      .toString()))),
-                        ),
-                        Container(
-                            height: 37,
-                            width: 37,
-                            decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(20)),
-                            child: Center(
-                                child: Icon(
-                              Icons.edit,
-                              color: Theme.of(context).primaryColor,
-                            ))),
-                      ],
-                    ),
-                  )
-                ]),
-              ),
-            )
-          : Scaffold(
-              body: Center(
-                child: CircularProgressIndicator(
-                  color: Colors.yellow,
+                          ///Lawyer name and address
+                        )),
+                    Positioned(
+                      top: height * 0.01,
+                      // right: width*0.35,
+                      child: Stack(
+                        children: [
+                          GestureDetector(
+                            onTap: () {
+                              pickImage();
+                            },
+                            child: CircleAvatar(
+                                backgroundColor: Color(0xffFCD917),
+                                radius: 60,
+                                child: CircleAvatar(
+                                    radius: 55,
+                                    backgroundImage:
+                                        profileDataModel.result?.imgUrl == null
+                                            ? NetworkImage(context
+                                                .watch<ImageUrlProvider>()
+                                                .imageUrl)
+                                            : NetworkImage(
+                                                "https://www.advolocate.info/" +
+                                                    profileDataModel
+                                                        .result!.imgUrl
+                                                        .toString()))),
+                          ),
+                          Container(
+                              height: 37,
+                              width: 37,
+                              decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(20)),
+                              child: Center(
+                                  child: Icon(
+                                Icons.edit,
+                                color: Theme.of(context).primaryColor,
+                              ))),
+                        ],
+                      ),
+                    )
+                  ]),
+                ),
+              )
+            : Scaffold(
+                body: Center(
+                  child: CircularProgressIndicator(
+                    color: Colors.yellow,
+                  ),
                 ),
               ),
-            ),
+      ),
     );
   }
 
   Future<void> getData(BuildContext context) async {
+    setState(() {
+      loading = true;
+    });
     final prefs = await SharedPreferences.getInstance();
 
     final String? token = prefs.getString('token');
@@ -561,7 +563,9 @@ class _AdvocateProfileState extends State<AdvocateProfile> {
       // ignore: use_build_context_synchronously
       Provider.of<LawyerDataProvider>(context, listen: false)
           .setData(ProfileData.fromJson(jsonDecode(response.body)["result"]));
-      setState(() {});
+      setState(() {
+        loading = false;
+      });
       //profileDataModel = ProfileDataModel.fromJson(jsonDecode(response.body));
     }
   }

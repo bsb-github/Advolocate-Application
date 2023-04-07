@@ -145,109 +145,114 @@ class _ResultPageState extends State<ResultPage> {
     var width = size.width;
     SearchResultModel searchResult = widget.searchResultModel;
 
-    return SafeArea(
-        child: Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(
-        leading: IconButton(
-            onPressed: () {
-              Navigator.pop(context);
-            },
-            icon: Icon(Icons.arrow_back_ios)),
-        elevation: 0,
-        title: const Text(
-          'Lawyers',
-          style: TextStyle(
-              color: Colors.black,
-              fontWeight: FontWeight.bold,
-              letterSpacing: 1),
+    return Semantics(
+      label: "Search Result",
+      child: SafeArea(
+          child: Scaffold(
+        backgroundColor: Colors.white,
+        appBar: AppBar(
+          leading: IconButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              icon: Icon(Icons.arrow_back_ios)),
+          elevation: 0,
+          title: const Text(
+            'Lawyers',
+            style: TextStyle(
+                color: Colors.black,
+                fontWeight: FontWeight.bold,
+                letterSpacing: 1),
+          ),
+          centerTitle: true,
+          iconTheme: const IconThemeData(color: Colors.black),
+          backgroundColor: Theme.of(context).primaryColor,
         ),
-        centerTitle: true,
-        iconTheme: const IconThemeData(color: Colors.black),
-        backgroundColor: Theme.of(context).primaryColor,
-      ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: EdgeInsets.only(
-              top: height * 0.04, left: width * 0.08, right: width * 0.08),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Available Lawyers',
-                style: TextStyle(
-                    fontSize: width * 0.08,
-                    fontWeight: FontWeight.bold,
-                    letterSpacing: 0.5),
-              ),
-              SizedBox(
-                height: height * 0.01,
-              ),
-              Text('View Lawyer Profile',
+        body: SingleChildScrollView(
+          child: Padding(
+            padding: EdgeInsets.only(
+                top: height * 0.04, left: width * 0.08, right: width * 0.08),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Available Lawyers',
                   style: TextStyle(
-                    fontSize: width * 0.065,
-                  )),
-              ListView.builder(
-                controller: _scrollController,
-                physics: ScrollPhysics(),
-                shrinkWrap: true,
-                scrollDirection: Axis.vertical,
-                itemCount: searchResult.result!.data!.length,
-                itemBuilder: (context, index) {
-                  var data = searchResult.result!.data![index];
+                      fontSize: width * 0.08,
+                      fontWeight: FontWeight.bold,
+                      letterSpacing: 0.5),
+                ),
+                SizedBox(
+                  height: height * 0.01,
+                ),
+                Text('View Lawyer Profile',
+                    style: TextStyle(
+                      fontSize: width * 0.065,
+                    )),
+                ListView.builder(
+                  controller: _scrollController,
+                  physics: ScrollPhysics(),
+                  shrinkWrap: true,
+                  scrollDirection: Axis.vertical,
+                  itemCount: searchResult.result!.data!.length,
+                  itemBuilder: (context, index) {
+                    var data = searchResult.result!.data![index];
 
-                  return Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 18.0),
-                    child: GestureDetector(
-                      onTap: () {
-                        var Data = AdvocatesList.data
-                            .where((element) => element.uid == data.userId);
-                        Provider.of<LawyerDataProvider>(context, listen: false)
-                            .setAdvData(Data.first);
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => LawyerPage(
-                                  name: Data.first.name,
-                                  email: Data.first.email,
-                                  information: Data.first.services,
-                                  address: Data.first.address,
-                                  probono: Data.first.probono,
-                                  contactNumber: Data.first.contact),
-                            ));
-                        // Navigator.push(
-                        //     context,
-                        //     MaterialPageRoute(
-                        //         builder: (context) => LawyerPage(
-                        //             name: Data.first.name,
-                        //             contactNumber: Data.first.contact,
-                        //             email: Data.first.email,
-                        //             information: Data.first.services,
-                        //             address: Data.first.address,
-                        //             probono: Data.first.probono)));
-                      },
-                      child: Card(
-                        elevation: 8.0,
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(15)),
-                        child: LawyerWidget(
-                          name: searchResult.result!.data![index].name!,
-                          address: searchResult.result!.data![index].cityName!,
-                          noOfClients: "0",
-                          imgUrl:
-                              "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png",
-                          rating: index,
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 18.0),
+                      child: GestureDetector(
+                        onTap: () {
+                          var Data = AdvocatesList.data
+                              .where((element) => element.uid == data.userId);
+                          Provider.of<LawyerDataProvider>(context,
+                                  listen: false)
+                              .setAdvData(Data.first);
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => LawyerPage(
+                                    name: Data.first.name,
+                                    email: Data.first.email,
+                                    information: Data.first.services,
+                                    address: Data.first.address,
+                                    probono: Data.first.probono,
+                                    contactNumber: Data.first.contact),
+                              ));
+                          // Navigator.push(
+                          //     context,
+                          //     MaterialPageRoute(
+                          //         builder: (context) => LawyerPage(
+                          //             name: Data.first.name,
+                          //             contactNumber: Data.first.contact,
+                          //             email: Data.first.email,
+                          //             information: Data.first.services,
+                          //             address: Data.first.address,
+                          //             probono: Data.first.probono)));
+                        },
+                        child: Card(
+                          elevation: 8.0,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(15)),
+                          child: LawyerWidget(
+                            name: searchResult.result!.data![index].name!,
+                            address:
+                                searchResult.result!.data![index].cityName!,
+                            noOfClients: "0",
+                            imgUrl:
+                                "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png",
+                            rating: index,
+                          ),
                         ),
                       ),
-                    ),
-                  );
-                },
-              ),
-            ],
+                    );
+                  },
+                ),
+              ],
+            ),
           ),
         ),
-      ),
-    ));
+      )),
+    );
   }
 
   void _scrollListener() {

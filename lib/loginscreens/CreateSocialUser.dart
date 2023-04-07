@@ -64,245 +64,248 @@ class _CreateSocialUserState extends State<CreateSocialUser> {
   Widget build(BuildContext context) {
     var height = MediaQuery.of(context).size.height;
     var width = MediaQuery.of(context).size.width;
-    return SafeArea(
-      child: Scaffold(
-        body: Column(children: [
-          Image.asset(
-            'images/logosplash.png',
-            height: 250,
-          ),
-          Form(
-            key: _formKey,
-            child: Expanded(
-              child: SingleChildScrollView(
-                child: Column(
-                  children: [
-                    SizedBox(
-                      height: 30,
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 10.0),
-                      child: Align(
-                        alignment: Alignment.topLeft,
-                        child: Text(
-                          'Create Account',
-                          style: TextStyle(
-                              fontSize: 35,
-                              color: Colors.black,
-                              fontWeight: FontWeight.bold),
-                        ),
+    return ExcludeSemantics(
+      child: SafeArea(
+        child: Scaffold(
+          body: Column(children: [
+            Image.asset(
+              'images/logosplash.png',
+              height: 250,
+            ),
+            Form(
+              key: _formKey,
+              child: Expanded(
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      SizedBox(
+                        height: 30,
                       ),
-                    ),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    Container(
-                      margin: EdgeInsets.only(
-                          left: width * 0.05, right: width * 0.05),
-                      child: TextFormField(
-                        controller: nameController,
-                        //controller: emailComtroller,
-                        maxLines: 1,
-                        enabled: false,
-                        style: const TextStyle(
-                            //color: Colors.black
-                            ),
-                        decoration: InputDecoration(
-                          //fillColor: Colors.white,
-                          hintText: 'Full Name',
-                          fillColor: Colors.white,
-                          filled: true,
-                          prefixIcon:
-                              const Icon(Icons.person, color: Colors.black),
-                          hintStyle: const TextStyle(color: Colors.black87),
-                          contentPadding: const EdgeInsets.only(left: 30),
-                          border: myinputborder(),
-                          enabledBorder: myinputborder(),
-                          // OutlineInputBorder(
-                          //   borderSide: BorderSide(color: Colors.white,width: 3),
-                          //     borderRadius: BorderRadius.circular(30),),
-                        ),
-                        validator: (value) {
-                          if (value!.isEmpty) {
-                            return 'Required';
-                          }
-                          return null;
-                        },
-                      ),
-                    ),
-                    SizedBox(
-                      height: height * 0.04,
-                    ),
-                    Container(
-                      margin: EdgeInsets.only(
-                          left: width * 0.05, right: width * 0.05),
-                      child: TextFormField(
-                        controller: emailController,
-                        //maxLines: 1,
-                        style: const TextStyle(
-                            //color: Colors.black
-
-                            ),
-                        enabled: false,
-                        //  initialValue: widget.email,
-                        decoration: InputDecoration(
-                          //fillColor: Colors.white,
-                          hintText: 'Email Address',
-                          fillColor: Colors.white,
-                          filled: true,
-                          prefixIcon:
-                              const Icon(Icons.email, color: Colors.black),
-
-                          hintStyle: const TextStyle(color: Colors.black87),
-                          contentPadding: const EdgeInsets.only(left: 30),
-                          border: myinputborder(),
-                          enabledBorder: myinputborder(),
-                        ),
-
-                        validator: (value) {
-                          if (value!.isEmpty) {
-                            return 'Required';
-                          }
-                          return null;
-                        },
-                      ),
-                    ),
-                    SizedBox(
-                      height: height * 0.04,
-                    ),
-                    Container(
-                      margin: EdgeInsets.only(
-                          left: width * 0.05, right: width * 0.05),
-                      child: TextFormField(
-                        keyboardType: TextInputType.number,
-                        //   controller: emailComtroller,
-                        controller: phoneController,
-                        //maxLines: 1,
-                        style: const TextStyle(
-                            //color: Colors.black
-                            ),
-                        decoration: InputDecoration(
-                          //fillColor: Colors.white,
-                          hintText: 'Phone Number',
-                          fillColor: Colors.white,
-                          filled: true,
-                          prefixIcon:
-                              const Icon(Icons.phone, color: Colors.black),
-                          hintStyle: const TextStyle(color: Colors.black87),
-                          contentPadding: const EdgeInsets.only(left: 30),
-                          border: myinputborder(),
-                          enabledBorder: myinputborder(),
-                          // OutlineInputBorder(
-                          //   borderSide: BorderSide(color: Colors.white,width: 3),
-                          //     borderRadius: BorderRadius.circular(30),),
-                        ),
-
-                        validator: (value) {
-                          if (value!.isEmpty) {
-                            return 'Required';
-                          }
-                          return null;
-                        },
-                      ),
-                    ),
-                    SizedBox(
-                      height: height * 0.04,
-                    ),
-                    Container(
-                      margin: EdgeInsets.only(
-                          left: width * 0.05, right: width * 0.05),
-                      // decoration: BoxDecoration(
-                      //   boxShadow: [
-                      //     BoxShadow(
-                      //       color: Colors.grey.withOpacity(0.4),
-                      //       spreadRadius: 2,
-                      //       blurRadius: 8,
-                      //     ),
-                      //   ],
-                      // ),
-                      child: TextFormField(
-                        controller: addressController,
-                        //maxLines: 1,
-                        style: const TextStyle(
-                            //color: Colors.black
-                            ),
-                        decoration: InputDecoration(
-                          //fillColor: Colors.white,
-                          hintText: 'Address',
-                          fillColor: Colors.white,
-                          filled: true,
-                          prefixIcon: const Icon(Icons.location_on_outlined,
-                              color: Colors.black),
-                          hintStyle: const TextStyle(color: Colors.black87),
-                          contentPadding: const EdgeInsets.only(left: 30),
-                          border: myinputborder(),
-                          enabledBorder: myinputborder(),
-                          // OutlineInputBorder(
-                          //   borderSide: BorderSide(color: Colors.white,width: 3),
-                          //     borderRadius: BorderRadius.circular(30),),
-                        ),
-
-                        validator: (value) {
-                          if (value!.isEmpty) {
-                            return 'Required';
-                          }
-                          return null;
-                        },
-                        // onChanged: (val) {
-                        //
-                        // },
-                      ),
-                    ),
-                    SizedBox(
-                      height: height * 0.1,
-                    ),
-                    Container(
-                        height: height * 0.075,
-                        width: width * 0.85,
-                        decoration: BoxDecoration(
-                          borderRadius:
-                              BorderRadius.all(Radius.circular(width * 0.2)),
-                          border: Border.all(
-                            color: Colors.white,
-                            width: 3,
-                            style: BorderStyle.solid,
-                          ),
-                        ),
-                        // color: Colors.green,
-                        child: ElevatedButton(
-                          onPressed: () async {
-                            if (_formKey.currentState!.validate()) {
-                              createUser();
-                            }
-                          },
-                          style: ElevatedButton.styleFrom(
-                            shadowColor: Colors.black,
-                            backgroundColor: const Color(0xffFCD917),
-                            elevation: width * 0.03,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(width * 0.1),
-                              // <-- Radius
-                            ),
-                          ),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 10.0),
+                        child: Align(
+                          alignment: Alignment.topLeft,
                           child: Text(
                             'Create Account',
                             style: TextStyle(
-                              // fontWeight: FontWeight.bold,
-                              fontSize: width * 0.05,
-                              letterSpacing: width * 0.002,
-                              // color: Colors.black,
+                                fontSize: 35,
+                                color: Colors.black,
+                                fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Container(
+                        margin: EdgeInsets.only(
+                            left: width * 0.05, right: width * 0.05),
+                        child: TextFormField(
+                          controller: nameController,
+                          //controller: emailComtroller,
+                          maxLines: 1,
+                          enabled: false,
+                          style: const TextStyle(
+                              //color: Colors.black
+                              ),
+                          decoration: InputDecoration(
+                            //fillColor: Colors.white,
+                            hintText: 'Full Name',
+                            fillColor: Colors.white,
+                            filled: true,
+                            prefixIcon:
+                                const Icon(Icons.person, color: Colors.black),
+                            hintStyle: const TextStyle(color: Colors.black87),
+                            contentPadding: const EdgeInsets.only(left: 30),
+                            border: myinputborder(),
+                            enabledBorder: myinputborder(),
+                            // OutlineInputBorder(
+                            //   borderSide: BorderSide(color: Colors.white,width: 3),
+                            //     borderRadius: BorderRadius.circular(30),),
+                          ),
+                          validator: (value) {
+                            if (value!.isEmpty) {
+                              return 'Required';
+                            }
+                            return null;
+                          },
+                        ),
+                      ),
+                      SizedBox(
+                        height: height * 0.04,
+                      ),
+                      Container(
+                        margin: EdgeInsets.only(
+                            left: width * 0.05, right: width * 0.05),
+                        child: TextFormField(
+                          controller: emailController,
+                          //maxLines: 1,
+                          style: const TextStyle(
+                              //color: Colors.black
+
+                              ),
+                          enabled: false,
+                          //  initialValue: widget.email,
+                          decoration: InputDecoration(
+                            //fillColor: Colors.white,
+                            hintText: 'Email Address',
+                            fillColor: Colors.white,
+                            filled: true,
+                            prefixIcon:
+                                const Icon(Icons.email, color: Colors.black),
+
+                            hintStyle: const TextStyle(color: Colors.black87),
+                            contentPadding: const EdgeInsets.only(left: 30),
+                            border: myinputborder(),
+                            enabledBorder: myinputborder(),
+                          ),
+
+                          validator: (value) {
+                            if (value!.isEmpty) {
+                              return 'Required';
+                            }
+                            return null;
+                          },
+                        ),
+                      ),
+                      SizedBox(
+                        height: height * 0.04,
+                      ),
+                      Container(
+                        margin: EdgeInsets.only(
+                            left: width * 0.05, right: width * 0.05),
+                        child: TextFormField(
+                          keyboardType: TextInputType.number,
+                          //   controller: emailComtroller,
+                          controller: phoneController,
+                          //maxLines: 1,
+                          style: const TextStyle(
+                              //color: Colors.black
+                              ),
+                          decoration: InputDecoration(
+                            //fillColor: Colors.white,
+                            hintText: 'Phone Number',
+                            fillColor: Colors.white,
+                            filled: true,
+                            prefixIcon:
+                                const Icon(Icons.phone, color: Colors.black),
+                            hintStyle: const TextStyle(color: Colors.black87),
+                            contentPadding: const EdgeInsets.only(left: 30),
+                            border: myinputborder(),
+                            enabledBorder: myinputborder(),
+                            // OutlineInputBorder(
+                            //   borderSide: BorderSide(color: Colors.white,width: 3),
+                            //     borderRadius: BorderRadius.circular(30),),
+                          ),
+
+                          validator: (value) {
+                            if (value!.isEmpty) {
+                              return 'Required';
+                            }
+                            return null;
+                          },
+                        ),
+                      ),
+                      SizedBox(
+                        height: height * 0.04,
+                      ),
+                      Container(
+                        margin: EdgeInsets.only(
+                            left: width * 0.05, right: width * 0.05),
+                        // decoration: BoxDecoration(
+                        //   boxShadow: [
+                        //     BoxShadow(
+                        //       color: Colors.grey.withOpacity(0.4),
+                        //       spreadRadius: 2,
+                        //       blurRadius: 8,
+                        //     ),
+                        //   ],
+                        // ),
+                        child: TextFormField(
+                          controller: addressController,
+                          //maxLines: 1,
+                          style: const TextStyle(
+                              //color: Colors.black
+                              ),
+                          decoration: InputDecoration(
+                            //fillColor: Colors.white,
+                            hintText: 'Address',
+                            fillColor: Colors.white,
+                            filled: true,
+                            prefixIcon: const Icon(Icons.location_on_outlined,
+                                color: Colors.black),
+                            hintStyle: const TextStyle(color: Colors.black87),
+                            contentPadding: const EdgeInsets.only(left: 30),
+                            border: myinputborder(),
+                            enabledBorder: myinputborder(),
+                            // OutlineInputBorder(
+                            //   borderSide: BorderSide(color: Colors.white,width: 3),
+                            //     borderRadius: BorderRadius.circular(30),),
+                          ),
+
+                          validator: (value) {
+                            if (value!.isEmpty) {
+                              return 'Required';
+                            }
+                            return null;
+                          },
+                          // onChanged: (val) {
+                          //
+                          // },
+                        ),
+                      ),
+                      SizedBox(
+                        height: height * 0.1,
+                      ),
+                      Container(
+                          height: height * 0.075,
+                          width: width * 0.85,
+                          decoration: BoxDecoration(
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(width * 0.2)),
+                            border: Border.all(
+                              color: Colors.white,
+                              width: 3,
+                              style: BorderStyle.solid,
                             ),
                           ),
-                        )),
-                    SizedBox(
-                      height: height * 0.05,
-                    ),
-                  ],
+                          // color: Colors.green,
+                          child: ElevatedButton(
+                            onPressed: () async {
+                              if (_formKey.currentState!.validate()) {
+                                createUser();
+                              }
+                            },
+                            style: ElevatedButton.styleFrom(
+                              shadowColor: Colors.black,
+                              backgroundColor: const Color(0xffFCD917),
+                              elevation: width * 0.03,
+                              shape: RoundedRectangleBorder(
+                                borderRadius:
+                                    BorderRadius.circular(width * 0.1),
+                                // <-- Radius
+                              ),
+                            ),
+                            child: Text(
+                              'Create Account',
+                              style: TextStyle(
+                                // fontWeight: FontWeight.bold,
+                                fontSize: width * 0.05,
+                                letterSpacing: width * 0.002,
+                                // color: Colors.black,
+                              ),
+                            ),
+                          )),
+                      SizedBox(
+                        height: height * 0.05,
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
-          ),
-        ]),
+          ]),
+        ),
       ),
     );
   }

@@ -204,363 +204,368 @@ class _HomeScreenState extends State<HomeScreen> {
     var width = size.width;
     // final listServices = sel.where((element) => element.);
 
-    return SafeArea(
-        child: Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        backgroundColor: const Color(0xffFCD917),
-        elevation: 0,
-        centerTitle: true,
-        title: const Text(
-          'Home',
-          style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+    return Semantics(
+      label: "homepage for User",
+      child: SafeArea(
+          child: Scaffold(
+        backgroundColor: Colors.white,
+        appBar: AppBar(
+          automaticallyImplyLeading: false,
+          backgroundColor: const Color(0xffFCD917),
+          elevation: 0,
+          centerTitle: true,
+          title: const Text(
+            'Home',
+            style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+          ),
+          actions: [
+            IconButton(
+                onPressed: () async {
+                  final prefs = await SharedPreferences.getInstance();
+                  await prefs.clear();
+                  Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const MyApp(),
+                      ));
+                },
+                icon: Icon(
+                  Icons.login,
+                  color: Colors.black,
+                  size: width * 0.07,
+                ))
+          ],
         ),
-        actions: [
-          IconButton(
-              onPressed: () async {
-                final prefs = await SharedPreferences.getInstance();
-                await prefs.clear();
-                Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const MyApp(),
-                    ));
-              },
-              icon: Icon(
-                Icons.login,
-                color: Colors.black,
-                size: width * 0.07,
-              ))
-        ],
-      ),
-      body: loading == true
-          ? Center(
-              child: CircularProgressIndicator(
-                color: Theme.of(context).primaryColor,
-              ),
-            )
-          : ListView(
-              children: [
-                const SizedBox(
-                  height: 10,
+        body: loading == true
+            ? Center(
+                child: CircularProgressIndicator(
+                  color: Theme.of(context).primaryColor,
                 ),
-                //image
-                Container(
-                  height: 225,
-                  child: const Image(
-                    image: AssetImage('images/splashlogo.png'),
-                    fit: BoxFit.cover,
+              )
+            : ListView(
+                children: [
+                  const SizedBox(
+                    height: 10,
                   ),
-                ),
-
-                //text heading
-                Container(
-                    padding: const EdgeInsets.only(left: 10),
-                    alignment: Alignment.center,
-                    child: const Text(
-                      'Search Advocate Here',
-                      style: TextStyle(
-                        fontSize: 22,
-                        //  fontWeight: FontWeight.w600,
-                        // letterSpacing: 1
-                      ),
-                    )),
-
-                //dropdown selector
-                Container(
-                  padding: EdgeInsets.symmetric(
-                      horizontal: width * 0.1, vertical: height * 0.01),
-                  child: Form(
-                    key: _formKey,
-                    child: Column(
-                      children: [
-                        //country
-
-                        FormHelper.dropDownWidget(
-                          context,
-                          'Country',
-                          countriesId,
-                          countries,
-                          (onChangedval) {
-                            countriesId = onChangedval;
-                            getCities(data!, lenght);
-                          },
-                          (onValidate) {
-                            if (onValidate == null) {
-                              return 'Required';
-                            }
-                            return null;
-                          },
-                          optionValue: 'value',
-                          optionLabel: 'label',
-                          textColor: Colors.black,
-                          borderColor: Colors.white,
-                          borderWidth: 1,
-                          hintFontSize: width * 0.040,
-                          hintColor: Colors.black,
-                          borderFocusColor: Colors.white,
-                          validationColor: Colors.red,
-                        ),
-                        Divider(
-                          thickness: width * 0.006,
-                          color: Theme.of(context).primaryColor,
-                          indent: width * 0.03,
-                          endIndent: width * 0.03,
-                          height: height * 0.03,
-                        ),
-
-                        // MultiSelectDialogField(
-                        //   items: cities
-                        //       .map((e) => MultiSelectItem(e, e["label"]))
-                        //       .toList(),
-                        //   searchable: true,
-                        //   onConfirm: (values) {
-                        //     print(values);
-                        //   },
-
-                        // ),
-                        ValueListenableBuilder(
-                          builder: (context, value, child) => Padding(
-                            padding: const EdgeInsets.only(left: 24, right: 12),
-                            child: DropdownSearch<String>(
-                              onChanged: (value) {
-                                var obj = cities.where(
-                                    (element) => element["label"] == value);
-                                setState(() {
-                                  citiesId = obj.first["value"].toString();
-                                });
-                              },
-                              items: List.from(cities.map((e) => e["label"])),
-                              dropdownDecoratorProps: DropDownDecoratorProps(
-                                  baseStyle: TextStyle(
-                                      color: Colors.black,
-                                      fontSize: width * 0.035),
-                                  dropdownSearchDecoration: InputDecoration(
-                                      border: InputBorder.none)),
-                              selectedItem: cities.length == 1
-                                  ? name
-                                  : cities.first["label"],
-                              popupProps: const PopupProps.dialog(
-                                  fit: FlexFit.loose,
-                                  showSearchBox: true,
-                                  searchFieldProps: TextFieldProps(
-                                      decoration:
-                                          InputDecoration(hintText: "Search"))),
-                            ),
-                          ),
-                          valueListenable: valueNotifier,
-                        ),
-
-                        // FormHelper.dropDownWidget(
-                        //   context,
-                        //   '    City',
-                        //   citiesId,
-                        //   cities,
-                        //   (onChangedval) {
-                        //     print(cities.first['label']);
-                        //     citiesId = onChangedval;
-                        //   },
-                        //   (onValidate) {
-                        //     // if(onValidate == null)
-                        //     // {
-                        //     //   return '    Required';
-                        //     // }
-                        //     // return null;
-                        //   },
-                        //   optionValue: 'value',
-                        //   optionLabel: 'label',
-                        //   textColor: Colors.black,
-                        //   borderColor: Colors.white,
-                        //   borderWidth: 1,
-                        //   hintFontSize: width * 0.045,
-                        //   hintColor: Colors.black,
-                        //   borderFocusColor: Colors.white,
-                        //   validationColor: Colors.red,
-                        // ),
-                        Divider(
-                          thickness: width * 0.006,
-                          color: Theme.of(context).primaryColor,
-                          indent: width * 0.03,
-                          endIndent: width * 0.03,
-                          height: height * 0.03,
-                        ),
-
-                        //field of services
-                        FormHelper.dropDownWidget(
-                          context,
-                          'Select Probono',
-                          probonoId,
-                          probono,
-                          (onChangedval) {
-                            probonoId = onChangedval;
-                          },
-                          (onValidate) {
-                            // if(onValidate == null)
-                            // {
-                            //   return '   Required';
-                            // }
-                            // return null;
-                          },
-                          optionValue: 'value',
-                          optionLabel: 'label',
-                          textColor: Colors.black,
-                          borderColor: Colors.white,
-                          borderWidth: 1,
-                          hintFontSize: width * 0.040,
-                          hintColor: Colors.black,
-                          borderFocusColor: Colors.white,
-                          validationColor: Colors.red,
-                        ),
-
-                        Divider(
-                          thickness: width * 0.006,
-                          color: Theme.of(context).primaryColor,
-                          indent: width * 0.03,
-                          endIndent: width * 0.03,
-                          height: height * 0.03,
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(13.0),
-                          child: MultipleSearchSelection(
-                            items: Item, // List<Country>
-
-                            fieldToCheck: (c) {
-                              return c; // String
-                            },
-                            itemBuilder: (country) {
-                              return Padding(
-                                padding: const EdgeInsets.all(6.0),
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(6),
-                                    color: Theme.of(context).primaryColor,
-                                  ),
-                                  child: Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                      vertical: 20.0,
-                                      horizontal: 12,
-                                    ),
-                                    child: Text(
-                                      country,
-                                      style: const TextStyle(
-                                          color: Colors.black,
-                                          fontWeight: FontWeight.w600),
-                                    ),
-                                  ),
-                                ),
-                              );
-                            },
-                            pickedItemBuilder: (country) {
-                              return Container(
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(6),
-                                  border: Border.all(
-                                      color: Theme.of(context).primaryColor),
-                                ),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8),
-                                  child: Text(
-                                    country,
-                                    style: TextStyle(
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.w600,
-                                    ),
-                                  ),
-                                ),
-                              );
-                            },
-                            onTapShowedItem: () {},
-                            onPickedChange: (items) {},
-                            onItemAdded: (item) {
-                              services.add(Item.indexOf(item) + 15);
-                            },
-                            onItemRemoved: (item) {
-                              services.remove(Item.indexOf(item) + 15);
-                            },
-                            onTapClearAll: () {
-                              services.clear();
-                            },
-                            onTapSelectAll: () {
-                              services.clear();
-                              services.addAll(valuestopopulate.keys);
-                            },
-                            sortShowedItems: true,
-                            sortPickedItems: true,
-                            fuzzySearch: FuzzySearch.jaro,
-                            itemsVisibility: ShowedItemsVisibility.alwaysOn,
-                            title: Padding(
-                              padding: EdgeInsets.only(bottom: 8.0, left: 4.0),
-                              child: Text(
-                                'Field of Services',
-                                style: TextStyle(
-                                  fontSize: width * 0.045,
-                                ),
-                              ),
-                            ),
-                            showSelectAllButton: true,
-                            // :
-                            //     const EdgeInsets.symmetric(horizontal: 10),
-                            maximumShowItemsHeight: 200,
-                          ),
-                        ),
-                        Divider(
-                          thickness: width * 0.006,
-                          color: Theme.of(context).primaryColor,
-                          indent: width * 0.03,
-                          endIndent: width * 0.03,
-                          height: height * 0.03,
-                        ),
-                        const SizedBox(
-                            // height: height*0.01,
-                            ),
-                        //buttons
-                        Row(
-                          children: [
-                            Button(const Color(0xffFCD917), 'Search',
-                                Colors.white, width, height, () async {
-                              if (_formKey.currentState!.validate()) {
-                                print(countriesId);
-                                print(citiesId);
-                                fetchAdovate(int.parse(countriesId),
-                                    int.parse(citiesId), int.parse(probonoId),
-                                    servicesList: services);
-                                // Navigator.push(
-                                //     context,
-                                //     MaterialPageRoute(
-                                //         builder: (context) => ResultPage(
-                                //               countryID: int.parse(countriesId),
-                                //               cityID: int.parse(citiesId),
-                                //               probonoID: int.parse(probonoId),
-                                //               ServicesList: services,
-                                //             )));
-                              }
-                            }),
-                            const Spacer(),
-                            Button(
-                              Colors.white,
-                              'Reset',
-                              const Color(0xffFCD917),
-                              width,
-                              height,
-                              () async {
-                                Navigator.pushReplacement(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => HomePage(),
-                                    ));
-                              },
-                            )
-                          ],
-                        )
-                      ],
+                  //image
+                  Container(
+                    height: 225,
+                    child: const Image(
+                      image: AssetImage('images/splashlogo.png'),
+                      fit: BoxFit.cover,
                     ),
                   ),
-                ),
-              ],
-            ),
-    ));
+
+                  //text heading
+                  Container(
+                      padding: const EdgeInsets.only(left: 10),
+                      alignment: Alignment.center,
+                      child: const Text(
+                        'Search Advocate Here',
+                        style: TextStyle(
+                          fontSize: 22,
+                          //  fontWeight: FontWeight.w600,
+                          // letterSpacing: 1
+                        ),
+                      )),
+
+                  //dropdown selector
+                  Container(
+                    padding: EdgeInsets.symmetric(
+                        horizontal: width * 0.1, vertical: height * 0.01),
+                    child: Form(
+                      key: _formKey,
+                      child: Column(
+                        children: [
+                          //country
+
+                          FormHelper.dropDownWidget(
+                            context,
+                            'Country',
+                            countriesId,
+                            countries,
+                            (onChangedval) {
+                              countriesId = onChangedval;
+                              getCities(data!, lenght);
+                            },
+                            (onValidate) {
+                              if (onValidate == null) {
+                                return 'Required';
+                              }
+                              return null;
+                            },
+                            optionValue: 'value',
+                            optionLabel: 'label',
+                            textColor: Colors.black,
+                            borderColor: Colors.white,
+                            borderWidth: 1,
+                            hintFontSize: width * 0.040,
+                            hintColor: Colors.black,
+                            borderFocusColor: Colors.white,
+                            validationColor: Colors.red,
+                          ),
+                          Divider(
+                            thickness: width * 0.006,
+                            color: Theme.of(context).primaryColor,
+                            indent: width * 0.03,
+                            endIndent: width * 0.03,
+                            height: height * 0.03,
+                          ),
+
+                          // MultiSelectDialogField(
+                          //   items: cities
+                          //       .map((e) => MultiSelectItem(e, e["label"]))
+                          //       .toList(),
+                          //   searchable: true,
+                          //   onConfirm: (values) {
+                          //     print(values);
+                          //   },
+
+                          // ),
+                          ValueListenableBuilder(
+                            builder: (context, value, child) => Padding(
+                              padding:
+                                  const EdgeInsets.only(left: 24, right: 12),
+                              child: DropdownSearch<String>(
+                                onChanged: (value) {
+                                  var obj = cities.where(
+                                      (element) => element["label"] == value);
+                                  setState(() {
+                                    citiesId = obj.first["value"].toString();
+                                  });
+                                },
+                                items: List.from(cities.map((e) => e["label"])),
+                                dropdownDecoratorProps: DropDownDecoratorProps(
+                                    baseStyle: TextStyle(
+                                        color: Colors.black,
+                                        fontSize: width * 0.035),
+                                    dropdownSearchDecoration: InputDecoration(
+                                        border: InputBorder.none)),
+                                selectedItem: cities.length == 1
+                                    ? name
+                                    : cities.first["label"],
+                                popupProps: const PopupProps.dialog(
+                                    fit: FlexFit.loose,
+                                    showSearchBox: true,
+                                    searchFieldProps: TextFieldProps(
+                                        decoration: InputDecoration(
+                                            hintText: "Search"))),
+                              ),
+                            ),
+                            valueListenable: valueNotifier,
+                          ),
+
+                          // FormHelper.dropDownWidget(
+                          //   context,
+                          //   '    City',
+                          //   citiesId,
+                          //   cities,
+                          //   (onChangedval) {
+                          //     print(cities.first['label']);
+                          //     citiesId = onChangedval;
+                          //   },
+                          //   (onValidate) {
+                          //     // if(onValidate == null)
+                          //     // {
+                          //     //   return '    Required';
+                          //     // }
+                          //     // return null;
+                          //   },
+                          //   optionValue: 'value',
+                          //   optionLabel: 'label',
+                          //   textColor: Colors.black,
+                          //   borderColor: Colors.white,
+                          //   borderWidth: 1,
+                          //   hintFontSize: width * 0.045,
+                          //   hintColor: Colors.black,
+                          //   borderFocusColor: Colors.white,
+                          //   validationColor: Colors.red,
+                          // ),
+                          Divider(
+                            thickness: width * 0.006,
+                            color: Theme.of(context).primaryColor,
+                            indent: width * 0.03,
+                            endIndent: width * 0.03,
+                            height: height * 0.03,
+                          ),
+
+                          //field of services
+                          FormHelper.dropDownWidget(
+                            context,
+                            'Select Probono',
+                            probonoId,
+                            probono,
+                            (onChangedval) {
+                              probonoId = onChangedval;
+                            },
+                            (onValidate) {
+                              // if(onValidate == null)
+                              // {
+                              //   return '   Required';
+                              // }
+                              // return null;
+                            },
+                            optionValue: 'value',
+                            optionLabel: 'label',
+                            textColor: Colors.black,
+                            borderColor: Colors.white,
+                            borderWidth: 1,
+                            hintFontSize: width * 0.040,
+                            hintColor: Colors.black,
+                            borderFocusColor: Colors.white,
+                            validationColor: Colors.red,
+                          ),
+
+                          Divider(
+                            thickness: width * 0.006,
+                            color: Theme.of(context).primaryColor,
+                            indent: width * 0.03,
+                            endIndent: width * 0.03,
+                            height: height * 0.03,
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(13.0),
+                            child: MultipleSearchSelection(
+                              items: Item, // List<Country>
+
+                              fieldToCheck: (c) {
+                                return c; // String
+                              },
+                              itemBuilder: (country) {
+                                return Padding(
+                                  padding: const EdgeInsets.all(6.0),
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(6),
+                                      color: Theme.of(context).primaryColor,
+                                    ),
+                                    child: Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                        vertical: 20.0,
+                                        horizontal: 12,
+                                      ),
+                                      child: Text(
+                                        country,
+                                        style: const TextStyle(
+                                            color: Colors.black,
+                                            fontWeight: FontWeight.w600),
+                                      ),
+                                    ),
+                                  ),
+                                );
+                              },
+                              pickedItemBuilder: (country) {
+                                return Container(
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(6),
+                                    border: Border.all(
+                                        color: Theme.of(context).primaryColor),
+                                  ),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8),
+                                    child: Text(
+                                      country,
+                                      style: TextStyle(
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
+                                  ),
+                                );
+                              },
+                              onTapShowedItem: () {},
+                              onPickedChange: (items) {},
+                              onItemAdded: (item) {
+                                services.add(Item.indexOf(item) + 15);
+                              },
+                              onItemRemoved: (item) {
+                                services.remove(Item.indexOf(item) + 15);
+                              },
+                              onTapClearAll: () {
+                                services.clear();
+                              },
+                              onTapSelectAll: () {
+                                services.clear();
+                                services.addAll(valuestopopulate.keys);
+                              },
+                              sortShowedItems: true,
+                              sortPickedItems: true,
+                              fuzzySearch: FuzzySearch.jaro,
+                              itemsVisibility: ShowedItemsVisibility.alwaysOn,
+                              title: Padding(
+                                padding:
+                                    EdgeInsets.only(bottom: 8.0, left: 4.0),
+                                child: Text(
+                                  'Field of Services',
+                                  style: TextStyle(
+                                    fontSize: width * 0.045,
+                                  ),
+                                ),
+                              ),
+                              showSelectAllButton: true,
+                              // :
+                              //     const EdgeInsets.symmetric(horizontal: 10),
+                              maximumShowItemsHeight: 200,
+                            ),
+                          ),
+                          Divider(
+                            thickness: width * 0.006,
+                            color: Theme.of(context).primaryColor,
+                            indent: width * 0.03,
+                            endIndent: width * 0.03,
+                            height: height * 0.03,
+                          ),
+                          const SizedBox(
+                              // height: height*0.01,
+                              ),
+                          //buttons
+                          Row(
+                            children: [
+                              Button(const Color(0xffFCD917), 'Search',
+                                  Colors.white, width, height, () async {
+                                if (_formKey.currentState!.validate()) {
+                                  print(countriesId);
+                                  print(citiesId);
+                                  fetchAdovate(int.parse(countriesId),
+                                      int.parse(citiesId), int.parse(probonoId),
+                                      servicesList: services);
+                                  // Navigator.push(
+                                  //     context,
+                                  //     MaterialPageRoute(
+                                  //         builder: (context) => ResultPage(
+                                  //               countryID: int.parse(countriesId),
+                                  //               cityID: int.parse(citiesId),
+                                  //               probonoID: int.parse(probonoId),
+                                  //               ServicesList: services,
+                                  //             )));
+                                }
+                              }),
+                              const Spacer(),
+                              Button(
+                                Colors.white,
+                                'Reset',
+                                const Color(0xffFCD917),
+                                width,
+                                height,
+                                () async {
+                                  Navigator.pushReplacement(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => HomePage(),
+                                      ));
+                                },
+                              )
+                            ],
+                          )
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+      )),
+    );
   }
 
   Future<void> fetchAdovate(int countryID, int cityID, int probonoID,

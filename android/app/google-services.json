@@ -8,20 +8,12 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:550436674713:android:19e8c7075ede7179812c08",
+        "mobilesdk_app_id": "1:550436674713:android:6999bb6982310d3f812c08",
         "android_client_info": {
-          "package_name": "com.example.advolocate_app"
+          "package_name": "com.advolocate"
         }
       },
       "oauth_client": [
-        {
-          "client_id": "550436674713-cc4a2qhikmabdg1sn6knjb1ou6pd5fgu.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.example.advolocate_app",
-            "certificate_hash": "b5957b9e56965686fdd7ac57a89ada6c32de30ed"
-          }
-        },
         {
           "client_id": "550436674713-mt8mf63dqlvonpgl3edq7jrq76a5mqvs.apps.googleusercontent.com",
           "client_type": 3

@@ -23,25 +23,29 @@ class _AdvocateHomePageState extends State<AdvocateHomePage> {
   ];
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: tabs[_selectedIndex],
-      bottomNavigationBar: BottomNavigationBar(
-          selectedItemColor: Theme.of(context).primaryColor,
-          unselectedItemColor: Colors.black,
-          currentIndex: _selectedIndex,
-          onTap: (index) {
-            setState(() {
-              _selectedIndex = index;
-            });
-          },
-          type: BottomNavigationBarType.fixed,
-          items: const [
-            BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
-            BottomNavigationBarItem(
-                icon: Icon(Icons.privacy_tip), label: 'Privacy Policy'),
-            BottomNavigationBarItem(
-                icon: Icon(Icons.description_outlined), label: 'CSO Laws'),
-          ]),
+    return Semantics(
+      label: "Home Page For Advocates",
+      child: Scaffold(
+        body: tabs[_selectedIndex],
+        bottomNavigationBar: BottomNavigationBar(
+            selectedItemColor: Theme.of(context).primaryColor,
+            unselectedItemColor: Colors.black,
+            currentIndex: _selectedIndex,
+            onTap: (index) {
+              setState(() {
+                _selectedIndex = index;
+              });
+            },
+            type: BottomNavigationBarType.fixed,
+            items: const [
+              BottomNavigationBarItem(
+                  icon: Icon(Icons.person), label: 'Profile'),
+              BottomNavigationBarItem(
+                  icon: Icon(Icons.privacy_tip), label: 'Privacy Policy'),
+              BottomNavigationBarItem(
+                  icon: Icon(Icons.description_outlined), label: 'CSO Laws'),
+            ]),
+      ),
     );
   }
 }

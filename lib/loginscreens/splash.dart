@@ -1,32 +1,21 @@
 import 'dart:async';
 import 'dart:convert';
-
 import 'package:advolocate_app/Model/AdvocatesData.dart';
 import 'package:advolocate_app/Model/adovacate_data_model.dart';
 import 'package:advolocate_app/Providers/LawyerDataProvider.dart';
-import 'package:advolocate_app/home.dart';
 import 'package:advolocate_app/main.dart';
 import 'package:advolocate_app/screens/AdvocateHomePage.dart';
 import 'package:advolocate_app/screens/HomePage.dart';
 import 'package:advolocate_app/screens/ProfilePending.dart';
-import 'package:advolocate_app/screens/homepage.dart';
-import 'package:advolocate_app/screens/lawyer_page.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dio/dio.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../Model/profile_data_model.dart';
 import '../Providers/ConfigProviders.dart';
 import '../config.dart';
-import '../custom_button.dart';
 import 'package:http/http.dart' as http;
-
-import '../utils/utils.dart';
-
 class splashscreen extends StatefulWidget {
   const splashscreen({Key? key}) : super(key: key);
 
@@ -92,52 +81,54 @@ class _splashscreenState extends State<splashscreen> {
   Widget build(BuildContext context) {
     var height = MediaQuery.of(context).size.height;
     var width = MediaQuery.of(context).size.width;
-    return Scaffold(
-      body: Center(
-        child: Container(
-          child: Stack(
-            alignment: Alignment.center,
-            children: <Widget>[
-              Opacity(
-                // opacity: 0.2,
-                // // With Background Image
-                // child: Image(
-                //   image: AssetImage(captainMarvel),
-                //   height: 800.0,
-                //   fit: BoxFit.fitHeight,
-                // ),
-                // With Background Color
-                opacity: 0.8,
-                child: Container(
-                  decoration: const BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment.topRight,
-                      end: Alignment.bottomLeft,
-                      colors: [
-                        Colors.black,
-                        Colors.white,
-                      ],
+    return ExcludeSemantics(
+      child: Scaffold(
+        body: Center(
+          child: Container(
+            child: Stack(
+              alignment: Alignment.center,
+              children: <Widget>[
+                Opacity(
+                  // opacity: 0.2,
+                  // // With Background Image
+                  // child: Image(
+                  //   image: AssetImage(captainMarvel),
+                  //   height: 800.0,
+                  //   fit: BoxFit.fitHeight,
+                  // ),
+                  // With Background Color
+                  opacity: 0.8,
+                  child: Container(
+                    decoration: const BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.topRight,
+                        end: Alignment.bottomLeft,
+                        colors: [
+                          Colors.black,
+                          Colors.white,
+                        ],
+                      ),
+                      // image: DecorationImage(
+                      //   image: AssetImage('images/logosplash.png'),
+                      //   opacity: 2,
+                      // )
                     ),
-                    // image: DecorationImage(
-                    //   image: AssetImage('images/logosplash.png'),
-                    //   opacity: 2,
-                    // )
                   ),
                 ),
-              ),
-              // CustomImage(
-              //   conheight: height * 0.3,
-              //   conwidth: width * 0.7,
-              //   borderColor: Colors.transparent,
-              //   Image: 'images/logosplash.png',
-              // ),
-              Image.asset(
-                "images/logosplash.png",
-                height: height * 0.3,
-                width: width * 0.7,
-                fit: BoxFit.cover,
-              )
-            ],
+                // CustomImage(
+                //   conheight: height * 0.3,
+                //   conwidth: width * 0.7,
+                //   borderColor: Colors.transparent,
+                //   Image: 'images/logosplash.png',
+                // ),
+                Image.asset(
+                  "images/logosplash.png",
+                  height: height * 0.3,
+                  width: width * 0.7,
+                  fit: BoxFit.cover,
+                )
+              ],
+            ),
           ),
         ),
       ),
