@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'dart:convert';
 import 'package:advolocate_app/Model/AdvocatesData.dart';
 import 'package:advolocate_app/Model/FacebookLoginData.dart';
@@ -11,13 +13,12 @@ import 'package:advolocate_app/loginscreens/SelectionBottomScreens.dart';
 import 'package:advolocate_app/loginscreens/manuallogin.dart';
 import 'package:advolocate_app/loginscreens/splash.dart';
 import 'package:advolocate_app/screens/AdvocateHomePage.dart';
-import 'package:advolocate_app/screens/HomePage.dart';
+import 'package:advolocate_app/screens/HomePages.dart';
 import 'package:advolocate_app/screens/ProfilePending.dart';
 import 'package:advolocate_app/screens/cso_laws.dart';
 import 'package:advolocate_app/screens/homepage.dart';
 import 'package:advolocate_app/screens/privacy_policy.dart';
 import 'package:advolocate_app/screens/user_profile.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -33,16 +34,8 @@ import 'utils/utils.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  if (Firebase.apps.isNotEmpty) {
-    await Firebase.initializeApp(
-        name: "advolocate1234567",
-        options: DefaultFirebaseOptions.currentPlatform);
-  } else {
-    await Firebase.initializeApp(
-        name: "advolocate1234567",
-        options: DefaultFirebaseOptions.currentPlatform);
-    Firebase.app();
-  }
+
+  await Firebase.initializeApp();
 
   runApp(ExcludeSemantics(child: MainEntryPoint()));
 }
@@ -96,12 +89,10 @@ class _MyAppState extends State<MyApp> {
   AccessToken? _accessToken;
   bool loading = false;
 
-  Future<void> loginGoogleUser(
-    BuildContext context, {
-    required int type,
-    required String password,
-    required GoogleSignInAccount acc
-  }) async {
+  Future<void> loginGoogleUser(BuildContext context,
+      {required int type,
+      required String password,
+      required GoogleSignInAccount acc}) async {
     var headers = {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
@@ -267,45 +258,45 @@ class _MyAppState extends State<MyApp> {
 
       //   var Data = jsonEncode(userData);
 
-
       FacebookData.data[0] = FaceBookLoginData.fromJson(userData);
       setState(() {});
       var data = FacebookData.data[0];
       print(3);
-   //    getAdvocatesData();
-   //    var Data = AdvocatesList.data.where(
-   //      (element) => element.email == data.email,
-   //    );
-   // //   print(Data);
-   //    print("API  DAta" + Data.first.email);
-   //    if (Data.isEmpty) {
-   //      EasyLoading.dismiss();
-   //      showModalBottomSheet(
-   //        context: context,
-   //        builder: (context) => SelectionBottomScreen(
-   //            name: data.name.toString(),
-   //            social_id: data.id.toString(),
-   //            type: 2,
-   //            email: data.email.toString()),
-   //      );
-   //    } else {
+      print(data); //    getAdvocatesData();
+      //    var Data = AdvocatesList.data.where(
+      //      (element) => element.email == data.email,
+      //    );
+      // //   print(Data);
+      //    print("API  DAta" + Data.first.email);
+      //    if (Data.isEmpty) {
+      //      EasyLoading.dismiss();
+      //      showModalBottomSheet(
+      //        context: context,
+      //        builder: (context) => SelectionBottomScreen(
+      //            name: data.name.toString(),
+      //            social_id: data.id.toString(),
+      //            type: 2,
+      //            email: data.email.toString()),
+      //      );
+      //    } else {
 //        EasyLoading.dismiss();
 
-        // loginGoogleUser(context,
-        //     type: 2, password: FacebookData.data[0].id.toString());
-      }
+      // loginGoogleUser(context,
+      //     type: 2, password: FacebookData.data[0].id.toString());
+    }
 
-      setState(() {
-        loading = false;
-      });
+    setState(() {
+      loading = false;
+    });
 
     //   print(020);
   }
 
   googleLogin() async {
+    try {
       print("googleLogin Called");
+      googleSignIn.disconnect();
       var reslut = await googleSignIn.signIn();
-      print(reslut);
       EasyLoading.show();
       print(1);
       setState(() {
@@ -314,7 +305,7 @@ class _MyAppState extends State<MyApp> {
 
       if (reslut == null) {
         print("error");
-      return;
+        return;
       }
       // ignore: use_build_context_synchronously
       getAdvocatesData();
@@ -324,10 +315,17 @@ class _MyAppState extends State<MyApp> {
       print("sasdfghjkoll");
       //print("A~PI  DAta" + Data.first.email);g
       googleSignIn.disconnect();
-        loginGoogleUser(context, type: 1, password: reslut.id, acc: reslut);
-
-
+      // ignore: use_build_context_synchronously
+      loginGoogleUser(context, type: 1, password: reslut.id, acc: reslut);
+    } catch (e) {
+      print(e);
+      EasyLoading.dismiss();
+      EasyLoading.showError(
+        "Cant Create Account (Check Your Internet Connection)",
+      );
+    }
   }
+
   @override
   Widget build(BuildContext context) {
     var height = MediaQuery.of(context).size.height;
@@ -354,7 +352,7 @@ class _MyAppState extends State<MyApp> {
                   padding: const EdgeInsets.symmetric(horizontal: 30.0),
                   child: GestureDetector(
                     onTap: () {
-                     // _login();
+                      //
                     },
                     child: Container(
                       height: 55,
@@ -388,6 +386,12 @@ class _MyAppState extends State<MyApp> {
                   padding: const EdgeInsets.symmetric(horizontal: 30.0),
                   child: GestureDetector(
                     onTap: () {
+                      print("google");
+                      // try {
+                      //   googleLogin();
+                      // } catch (e) {
+                      //   print(e);
+                      // }
                       googleLogin();
                     },
                     child: Container(

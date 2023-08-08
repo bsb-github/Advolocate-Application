@@ -5,7 +5,7 @@ import 'package:advolocate_app/Model/adovacate_data_model.dart';
 import 'package:advolocate_app/Providers/LawyerDataProvider.dart';
 import 'package:advolocate_app/main.dart';
 import 'package:advolocate_app/screens/AdvocateHomePage.dart';
-import 'package:advolocate_app/screens/HomePage.dart';
+import 'package:advolocate_app/screens/HomePages.dart';
 import 'package:advolocate_app/screens/ProfilePending.dart';
 import 'package:dio/dio.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -16,6 +16,7 @@ import '../Model/profile_data_model.dart';
 import '../Providers/ConfigProviders.dart';
 import '../config.dart';
 import 'package:http/http.dart' as http;
+
 class splashscreen extends StatefulWidget {
   const splashscreen({Key? key}) : super(key: key);
 

@@ -1,16 +1,9 @@
-import 'package:advolocate_app/Model/profile_data_model.dart';
 import 'package:advolocate_app/main.dart';
-import 'package:advolocate_app/screens/HomePage.dart';
-import 'package:advolocate_app/screens/cso_laws.dart';
-import 'package:advolocate_app/screens/privacy_policy.dart';
+import 'package:advolocate_app/screens/HomePages.dart';
 import 'package:advolocate_app/screens/search_results.dart';
-import 'package:advolocate_app/screens/user_profile.dart';
 import 'package:dropdown_search/dropdown_search.dart';
-import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:get/get.dart';
-import 'package:google_sign_in/google_sign_in.dart';
-import 'package:multi_select_flutter/multi_select_flutter.dart';
 import 'package:multiple_search_selection/multiple_search_selection.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -22,7 +15,6 @@ import '../util/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:snippet_coder_utils/FormHelper.dart';
 import 'dart:convert';
-import 'dart:io';
 import 'package:http/http.dart' as http;
 
 class HomeScreen extends StatefulWidget {
@@ -250,9 +242,12 @@ class _HomeScreenState extends State<HomeScreen> {
                   //image
                   Container(
                     height: 225,
-                    child: const Image(
-                      image: AssetImage('images/splashlogo.png'),
-                      fit: BoxFit.cover,
+                    child: Center(
+                      child: const Image(
+                        image: AssetImage('images/splashlogo.png'),
+                        fit: BoxFit.cover,
+                        height: 230,
+                      ),
                     ),
                   ),
 
@@ -643,11 +638,12 @@ class _HomeScreenState extends State<HomeScreen> {
       setState(() {});
     }
     print(body);
-
+    //?page=1
     var response = await http.post(
-        Uri.parse('https://www.advolocate.info/api/searchAdvocate?page=1'),
+        Uri.parse('https://www.advolocate.info/api/searchAdvocate'),
         headers: headers,
         body: body);
+    print(response.statusCode);
     print(response.body);
     if (response.statusCode == 200) {
       var data = jsonDecode(response.body.toString());

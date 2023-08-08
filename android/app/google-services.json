@@ -1,38 +1,61 @@
 {
   "project_info": {
-    "project_number": "550436674713",
-    "firebase_url": "https://advolocate1234567-default-rtdb.firebaseio.com",
-    "project_id": "advolocate1234567",
-    "storage_bucket": "advolocate1234567.appspot.com"
+    "project_number": "1068133822033",
+    "project_id": "advolocate-521e4",
+    "storage_bucket": "advolocate-521e4.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:550436674713:android:6999bb6982310d3f812c08",
+        "mobilesdk_app_id": "1:1068133822033:android:a011881ef7f39353dc9270",
         "android_client_info": {
           "package_name": "com.advolocate"
         }
       },
       "oauth_client": [
         {
-          "client_id": "550436674713-mt8mf63dqlvonpgl3edq7jrq76a5mqvs.apps.googleusercontent.com",
-          "client_type": 3
+          "client_id": "1068133822033-hnul5s908oephghr8ulbd823ess7b7m8.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.advolocate",
+            "certificate_hash": "52c507bbfa6ab4ae420696fb1dad9a23c74bf6c6"
+          }
+        },
+        {
+          "client_id": "1068133822033-koj2dktlg6tp9k3qeog9n1a63fsvbjr4.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.advolocate",
+            "certificate_hash": "b5957b9e56965686fdd7ac57a89ada6c32de30ed"
+          }
+        },
+        {
+          "client_id": "1068133822033-srdql7hvjb01fthcfq4q421kt6208nt3.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.advolocate",
+            "certificate_hash": "bab56dd3ec544ac7fc61b36df3eeee2f9d37609e"
+          }
+        },
+        {
+          "client_id": "1068133822033-tj87pu5kvsqevof4k5ofdvj57u8fh9rs.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.advolocate",
+            "certificate_hash": "6b9939e57de12ffb3833203afcebda60bbcdadd5"
+          }
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyAqOExxS3lSGYoL_2LKdgbYJKkYum89Rfw"
+          "current_key": "AIzaSyAKBvacwpsBfM3DDg_EGL74ped33STrMHQ"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "550436674713-6qhgd8dpt5rijs9p8o4eteisrgduc1nl.apps.googleusercontent.com",
-              "client_type": 3
-            },
-            {
-              "client_id": "550436674713-iochimtj5s4tn4905iqpcpaac8mkh9be.apps.googleusercontent.com",
+              "client_id": "1068133822033-v6j5b2c61qm1v0c3hda58jfqp7uaf3v3.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
                 "bundle_id": "com.example.advolocateApp"

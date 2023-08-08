@@ -194,9 +194,9 @@ class _ResultPageState extends State<ResultPage> {
                   physics: ScrollPhysics(),
                   shrinkWrap: true,
                   scrollDirection: Axis.vertical,
-                  itemCount: searchResult.result!.data!.length,
+                  itemCount: searchResult.result!.length,
                   itemBuilder: (context, index) {
-                    var data = searchResult.result!.data![index];
+                    var data = searchResult.result![index];
 
                     return Padding(
                       padding: const EdgeInsets.symmetric(vertical: 18.0),
@@ -234,11 +234,10 @@ class _ResultPageState extends State<ResultPage> {
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(15)),
                           child: LawyerWidget(
-                            name: searchResult.result!.data![index].name!,
-                            address:
-                                searchResult.result!.data![index].cityName!,
+                            name: searchResult.result![index].name!,
+                            address: searchResult.result![index].cityName!,
                             noOfClients: "0",
-                            imgUrl:
+                            imgUrl: searchResult.result![index].imgUrl ??
                                 "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png",
                             rating: index,
                           ),
